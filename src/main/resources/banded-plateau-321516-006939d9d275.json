@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "banded-plateau-321516",
+  "private_key_id": "006939d9d275242324aa81d15282aabb4150967d",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDAKhRmY419Tpde\nGZZa9xbQsLFLqlWBFGuX9yNp+SopSddcYWFYQuvphtsudtxXMjIp/p60Qd3Pbfk9\n7pxJKmFC97wnIw6uHvqiYBao9q8tBMnmZtSeF9HAY/ccVWSaugbCG4nn+cD+DDVh\nSNGKdpXXKyq0G7LXiL7W9U5tKt8jh5bgnXN7XtMkIhwCy6xs/O/S55YHNla4fWDk\nfsJQOiLBBBp5FPbSPdmU+Zsl0k4gnt9CA3fpq5fmrqC64PvH+xQuHzWSClY46C7W\ncyoK3DAzHo5kPu4la/++gredUtv3IZKAYKY26e7CZWx/BKzZ30IeAjANjtQJsRuX\n+gdDLXZVAgMBAAECggEACB4e835UHU2DHnIFRH14pMM6EiC1cPj8XJSPlev1KH5a\njyf79T8KeTh9rNZPk41myhhb+vBnXtpd84xPZNXZ+vq9I4gbGCbt3oshmeyl1MiF\ngOqqI62M6kwuxa8jy1d9bpi8OCT4TqMUZDIvy+IbjVXg/W/IG8vGiA0fzYPInlcK\ntfZesbrBikoW7x/51/7DaCm0oYeTCDHMp0KKfBEUBBTF8LcEhd7bYjX2OCiJdTRv\nrAvDNrXsBUMVzOTctyDCtZ6IFx57t4iSMoS0q9XBaOchZ03SrFuACdZpsL0hQH0N\nNNRYyVfxDo9pNAJv9s090IyixvgXz+mIsu2eygXHBwKBgQDrvWDgdOa/jLywrWCf\njEP+nL+wch2QdkiV04Mm5TRyvsThnYrsxubPOhafZfZyuJPeBIqZPqjlYCd+22W5\nSgX3bU1uHw0fz05D8yjqQaNKGgAW0ALvHSxhCXpDggVE0j8D6B9F59C1XKVgXpYE\nx4TY/krHDRJ4AwD2q2Iob1ErBwKBgQDQrfqJfeWsZFdjuzwUO1T+ElBTIuD2u9F+\n6apll1rvqKoFidjM+p0/Pa5IWUmDrWeIA96/F6YdWzJJUBfwJkDEUV9IhZGMONfx\nWjbEVhr2Z3uODhZdDm2KVTGNqQc49CA3OQHujgCi/yiyn8uLPtugBgPCXQNKsA8Z\ndihJYnzQwwKBgFVdeptNOdHbcOi5n+emr2if8no+mJ4bdyVqNm/7SAbVNg5NMmWT\nkTkxW8fU8G2SkVkwY9AidJ67NxIk+K0kNQzoM8XQ0LvYIgtRHlvV8P+Acs/P+4AD\nHHL3L6MKjkXhrJgJkmmKDHXgWrKPDdwlM+IwE3wJK8rxq4OnhCAIT2g5AoGAD8vr\nuDa4iRk7aEhHHvzyzRzTycdNIkBLdoD3riML9jJdVHf/2lxqRNxFciKYJwicWrZ4\nSRzgLT63CseuWDZ9Fp9WSCYcQ3IWHqYGmUwvVFG3D6TPWpH6Bsu2KZQPAOex/Jwr\nIkTLlYsdKJBiFxNWCsIJzM+/rQqwyeug1xVGf4MCgYBFY3TsZpAb24ceg6m+C1Sn\nF0WUcHQXimKD7KsVVfo7Cttvl2T1dR+vQgHw4MiPmywT80V8/eiWGF4tEoEunbZ3\nv10FpR21Xd1EIQ8C51pxinmtsSIDgyrfK7AnJd4IAL+mySF0KYHRYaDdJKj90Mu3\ncYzk8GJ2AEz+64GP11oT8Q==\n-----END PRIVATE KEY-----\n",
+  "client_email": "servspace-bucket-access@banded-plateau-321516.iam.gserviceaccount.com",
+  "client_id": "102516018932540655632",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/servspace-bucket-access%40banded-plateau-321516.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
