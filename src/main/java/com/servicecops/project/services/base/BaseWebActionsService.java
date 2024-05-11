@@ -1,6 +1,6 @@
 package com.servicecops.project.services.base;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.servicecops.project.config.ApplicationConf;
 import com.servicecops.project.models.database.SystemRoleModel;
 import com.servicecops.project.models.database.SystemUserModel;

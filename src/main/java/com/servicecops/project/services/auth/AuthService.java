@@ -1,6 +1,6 @@
 package com.servicecops.project.services.auth;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.servicecops.project.config.ApplicationConf;
 import com.servicecops.project.config.JwtUtility;
 import com.servicecops.project.models.database.SystemUserModel;
