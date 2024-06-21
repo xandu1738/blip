@@ -1,6 +1,6 @@
 package com.servicecops.project.services.base;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.servicecops.project.config.ApplicationConf;
 import com.servicecops.project.models.database.SystemRoleModel;
 import com.servicecops.project.models.database.SystemUserModel;
@@ -48,7 +48,7 @@ public abstract class BaseWebActionsService implements BaseWebActionsImpl {
     public void requires(List<String> fields, JSONObject request){
         for (String field: fields){
             if (!request.containsKey(field) || request.get(field) == null){
-                throw new IllegalArgumentException(field.replaceAll("_"," ")+" cannot be empty");
+                throw new IllegalArgumentException(field.replace("_"," ")+" cannot be empty");
             }
         }
     }
@@ -58,18 +58,18 @@ public abstract class BaseWebActionsService implements BaseWebActionsImpl {
      * This will check for one field at a time
      * @param field String - The key to look for
      * @param request JSONObject - The object to check in
-     * @return
+     * @return true or false
      */
     public Boolean requires(String field, JSONObject request){
         if (!request.containsKey(field) || request.get(field) == null){
-            throw new IllegalArgumentException(field.replaceAll("_"," ")+" cannot be empty");
+            throw new IllegalArgumentException(field.replace("_"," ")+" cannot be empty");
         }
         return true;
     }
 
     /**
-     * If the user is logged[has provided the JWT in the Headers], calling this method will return the user
-     * @return
+     * If the user is logged in, [has provided the JWT in the Headers], calling this method will return the user
+     * @return user details
      */
     public UserDetails getContextUserDetails(){
         return authenticatedUser();
@@ -90,17 +90,17 @@ public abstract class BaseWebActionsService implements BaseWebActionsImpl {
      * This prevents a user from accessing a service if they are not logged in
      */
     public void requiresAuth(){
-        if (!isAuthenticated()){
+        if (Boolean.FALSE.equals(isAuthenticated())){
             throw new IllegalArgumentException("AUTHENTICATION REQUIRED");
         }
     }
 
     /**
-     * Returns the currently logged in user.
+     * Returns the currently logged-in user.
      * @return SystemUserModel | UserDetails
      */
     public SystemUserModel authenticatedUser(){
-        if (isAuthenticated()){
+        if (Boolean.TRUE.equals(isAuthenticated())){
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             return userRepository.findFirstByUsername(userDetails.getUsername());
@@ -109,24 +109,24 @@ public abstract class BaseWebActionsService implements BaseWebActionsImpl {
     }
 
     /**
-     * Check if the logged in user has a certain role
-     * @param role_code The code of the role to check for.
+     * Check if the logged-in user has a certain role
+     * @param roleCode The code of the role to check for.
      * @return Boolean
      */
-    public Boolean hasRole(String role_code){
+    public Boolean hasRole(String roleCode){
         SystemUserModel usersModel = authenticatedUser();
         if (usersModel != null){
             Optional<SystemRoleModel> rolesModel = roleRepository.findFirstByRoleCode(usersModel.getRoleCode());
             if (rolesModel.isPresent()){
                 SystemRoleModel role= rolesModel.get();
-                return Objects.equals(role.getRoleCode(), role_code);
+                return Objects.equals(role.getRoleCode(), roleCode);
             }
         }
         throw new IllegalStateException("USER HAS LESS PRIVILEGES");
     }
 
     /**
-     * This method checks if the logged in user has a certain permission.
+     * This method checks if the logged-in user has a certain permission.
      * @param permission The permission to check for
      * @param username Optional - If given, it will override using the logged-in user but instead use the user with this username
      * @return Boolean
@@ -166,7 +166,7 @@ public abstract class BaseWebActionsService implements BaseWebActionsImpl {
     }
 
     /**
-     * Returns all the permissions of the logged in user
+     * Returns all the permissions of the logged-in user
      * @param username Optional - if this is provided, it will override and get the permission of the user with the given username
      * @return List of permissions
      */

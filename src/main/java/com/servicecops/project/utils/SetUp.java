@@ -19,11 +19,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ReflectionUtils;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
- * This class runs on every app boot to set up all the defaults likes permissions, domains, etc
+ * This class runs on every app boot to set up all the defaults likes permissions, domains, etc.
  * To add more actions that shall always run on app start, create a method in here and
  * annotate it with @Bean
  */
@@ -48,12 +47,12 @@ public class SetUp {
 
     @Bean
     protected void setupDomains(){
-        if (useDomains){
+        if (Boolean.TRUE.equals(useDomains)){
             log.info("Domains supported, setting them up.");
             domainRepository.deleteAll();
             for(AppDomains domain: AppDomains.values()){
                 // check if domain exists orElse create it
-                log.info("Adding "+domain.name()+" domain");
+                log.info("Adding {} domain", domain.name());
                 var md = SystemDomainModel.builder();
                 md.domainName(String.valueOf(domain));
                 domainRepository.save(md.build());
@@ -72,26 +71,26 @@ public class SetUp {
         Permisions obj = new Permisions();
         ReflectionUtils.doWithFields(obj.getClass(), field -> {
             field.setAccessible(true);
-            log.info("Adding "+field.getName()+" permission");
+            log.info("Adding {} permission", field.getName());
             Permission perm = (Permission) field.get(obj);
             SystemPermissionModel permissionsModel = new SystemPermissionModel();
             permissionsModel.setPermissionCode(perm.getCode());
             permissionsModel.setPermissionName(perm.getName());
-            if (useDomains) {
+            if (Boolean.TRUE.equals(useDomains)) {
                 permissionsModel.setPermissionDomain(perm.getDomain());
             }
             permissionRepository.save(permissionsModel);
-            log.info(field.getName()+" permission added successfully");
+            log.info("{} permission added successfully", field.getName());
         });
         log.info("Permissions setup successfully");
         // Create the default admin role if not exists
-        Optional<SystemRoleModel> check_if_admin_role_exists = roleRepository.findFirstByRoleCode("ADMINISTRATOR");
-        if (check_if_admin_role_exists.isEmpty()){
+        Optional<SystemRoleModel> checkIfAdminRoleExists = roleRepository.findFirstByRoleCode("ADMINISTRATOR");
+        if (checkIfAdminRoleExists.isEmpty()){
             // create the role here
             var adminRole = SystemRoleModel.builder();
             adminRole.roleName("Administrator");
 
-            if (useDomains) {
+            if (Boolean.TRUE.equals(useDomains)) {
                 if (StringUtils.isBlank(adminRoleName)){
                     adminRoleName = "ADMINISTRATOR";
                 }
@@ -125,7 +124,7 @@ public class SetUp {
         ReflectionUtils.doWithFields(obj.getClass(), field -> {
             field.setAccessible(true);
             Permission perm = (Permission) field.get(obj);
-            if (perm.getShipWithAdmin()){
+            if (Boolean.TRUE.equals(perm.getShipWithAdmin())){
                 Optional<SystemRolePermissionAssignmentModel> assignmentModel = permissionAssignmentRepository.findFirstByRoleCodeAndPermissionCode("ADMINISTRATOR", perm.getCode());
                 if (assignmentModel.isEmpty()){
                     var assignment = SystemRolePermissionAssignmentModel.builder();

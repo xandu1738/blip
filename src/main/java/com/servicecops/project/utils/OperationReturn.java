@@ -13,6 +13,7 @@ public class OperationReturn {
 
     public void setReturnCodeAndReturnMessage(Integer returnCode, String returnMessage) {
         this.returnCode = returnCode;
+         this.returnMessage = returnMessage;
     }
 }
 
