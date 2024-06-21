@@ -1,10 +1,6 @@
 package com.servicecops.project.utils;
 
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @AllArgsConstructor
@@ -22,4 +18,5 @@ public class OperationReturnObject extends OperationReturn{
         this.returnCode = returnCode;
         this.returnMessage = message;
     }
+
 }
