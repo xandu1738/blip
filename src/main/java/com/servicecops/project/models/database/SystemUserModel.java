@@ -74,17 +74,17 @@ public class SystemUserModel implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return !this.getIsActive();
+        return this.getIsActive();
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return !this.getIsActive();
+        return this.getIsActive();
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return !getIsActive();
+        return getIsActive();
     }
 
     @Override
