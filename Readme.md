@@ -159,19 +159,22 @@ the database level through say `triggers` or something like that.
 Usage:
 
 ```java
-import com.servicecops.project.models.jpahelpers.repository.JetRepository;
+import repository.jpa_helpers.models.com.ceres.project.JetRepository;
 
 //        declaration.
+
 @Repository
 public interface AccountsRepository extends JetRepository<AccountsModel, Long> {
 }
 
-    //....
+//....
 //       auto-wiring it 
-    private final AccountsRepository accountsRepository;
-    // saving 
-    AccountsModal saved = accountsRepository.save(someModal);
-        accountsRepository.refresh();
+private final AccountsRepository accountsRepository;
+// saving 
+AccountsModal saved = accountsRepository.save(someModal);
+        accountsRepository.
+
+refresh();
 // here accessing 'saved' from here onwards will consist of fresh data from the db including the auto-generated one.
 ```
 
