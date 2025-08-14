@@ -43,13 +43,13 @@ public class JwtUtility {
         return generateToken(new HashMap<>(), userDetails);
     }
 
-    public boolean isTokenValid(String token, UserDetails userDetails) throws Exception {
+    public boolean isTokenValid(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername())) && !isTokenExpired(token, username);
     }
 
     /**
-     * @implNote Will check for two things, if the token is expired as per eat claim
+     * @implNote Will check for two things if the token is expired as per eat claim
      * and will also check of the user has already requested for another token, requesting for another token
      * makes all the previously generated token expired.
      *
@@ -57,18 +57,18 @@ public class JwtUtility {
      * @param username username used when setting up userDetails, for our case, we use username
      * @return Boolean
      */
-    private boolean isTokenExpired(String token, String username) throws Exception {
+    private boolean isTokenExpired(String token, String username) {
         SystemUserModel usersModel = userRepository.findFirstByUsername(username);
         if (usersModel == null){
             throw new IllegalStateException("User not found");
         }else if(extractExpiration(token).before(new Date())){
-            throw new Exception("SESSION EXPIRED");
+            throw new IllegalStateException("SESSION EXPIRED");
         } else if (usersModel.getLastLoggedInAt() == null) {
             throw new IllegalStateException("INVALID TOKEN");
         } else if (extractIssuedAt(token).after(usersModel.getLastLoggedInAt())) {
-            throw new Exception("EXPIRED TOKEN USED");
-        } else if (!usersModel.getIsActive()){
-            throw new Exception("ACCOUNT INACTIVE");
+            throw new IllegalStateException("EXPIRED TOKEN USED");
+        } else if (Boolean.FALSE.equals(usersModel.getIsActive())){
+            throw new IllegalStateException("ACCOUNT INACTIVE");
         }
         return false;
     }
@@ -84,10 +84,13 @@ public class JwtUtility {
 
         SystemUserModel user = userRepository.findFirstByUsername(userDetails.getUsername());
 
-        // archived staff members should not login
+        // archived staff members should not log in
         user.setLastLoggedInAt(stamp);
         userRepository.save(user);
         Optional<SystemRoleModel> rolesModel = roleRepository.findFirstByRoleCode(user.getRoleCode());
+        if (rolesModel.isEmpty()){
+            throw new IllegalStateException("Role not found for user: " + user.getUsername());
+        }
         SystemRoleModel role = rolesModel.get();
         claims.put("role", role.getRoleName());
         claims.put("role_code", role.getRoleCode());

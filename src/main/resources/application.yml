@@ -1,0 +1,66 @@
+# database settings
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    properties:
+      hibernate:
+        jdbc.lob.non_contextual_creation: true
+
+    hibernate:
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+      ddl-auto: none
+
+    show-sql: false
+
+  liquibase:
+    change-log: classpath:liquibase/db.changelog.xml
+
+  mail:
+    default-encoding: UTF-8
+    properties:
+      protocol: smtp
+      test-connection: false
+      mail:
+        smtp:
+          auth: true
+        starttls:
+          enable: true
+
+    smtp:
+    host: smtp.gmail.com
+    port: 587
+
+    username: ${smtpUsername}
+    password: ${smtpPassword}
+
+  profiles:
+    active: uat
+
+  cloud:
+    gcp:
+      credentials:
+        location: ${gcpCredentialsFile}
+      config:
+        project-id: ${gcpProjectId}
+gcp:
+  bucket:
+    name: ${gcpBucketName}
+
+secret: 25432A462D4A614E645267556B586E3272357538782F413F4428472B4B6250655368566D5971337336763979244226452948404D635166546A576E5A72347537
+
+app:
+  name: ceres-projects
+  version: VER20240713001
+
+file.upload-dir: ceres_files
+
+
+USE_DOMAINS: true
+ADMIN_ROLE_DOMAIN: BACK_OFFICE
+ADMIN_ROLE_NAME: ADMINISTRATOR
+
+logging:
+  level:
+    web: DEBUG

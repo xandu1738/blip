@@ -11,6 +11,7 @@ import com.ceres.project.repositories.SystemDomainRepository;
 import com.ceres.project.repositories.SystemPermissionRepository;
 import com.ceres.project.repositories.SystemRolePermissionRepository;
 import com.ceres.project.repositories.SystemRoleRepository;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -45,7 +46,7 @@ public class SetUp {
     private final SystemRolePermissionRepository permissionAssignmentRepository;
     private final SystemRoleRepository roleRepository;
 
-    @Bean
+    @PostConstruct
     protected void setupDomains(){
         if (Boolean.TRUE.equals(useDomains)){
             log.info("Domains supported, setting them up.");
@@ -65,7 +66,7 @@ public class SetUp {
 
 
 
-    @Bean
+    @PostConstruct
     public void setupPermissions(){
         permissionRepository.deleteAll();
         Permisions obj = new Permisions();
@@ -116,7 +117,7 @@ public class SetUp {
     }
 
     /**
-     * By default, the system creates the first role of ADMINISTRATOR, therefore, this method is to assign it its default permissions.
+     * By default, the system creates the first role of ADMINISTRATOR; therefore, this method is to assign it its default permissions.
      * This will assign all the permissions that set 'shipWithAdmin' to true.
      */
     private void setUpAdminPerms(){
