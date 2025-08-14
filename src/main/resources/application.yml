@@ -44,6 +44,10 @@ spring:
         location: ${gcpCredentialsFile}
       config:
         project-id: ${gcpProjectId}
+  data:
+    redis:
+      host: ${SPRING_REDIS_HOST:localhost}
+      port: ${SPRING_REDIS_PORT:6379}
 gcp:
   bucket:
     name: ${gcpBucketName}
