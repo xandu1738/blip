@@ -9,7 +9,6 @@ spring:
         jdbc.lob.non_contextual_creation: true
 
     hibernate:
-      dialect: org.hibernate.dialect.PostgreSQLDialect
       ddl-auto: none
 
     show-sql: false
@@ -68,3 +67,26 @@ ADMIN_ROLE_NAME: ADMINISTRATOR
 logging:
   level:
     web: DEBUG
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+      base-path: /actuator
+
+  endpoint:
+    health:
+      show-details: always
+    status:
+      http-mapping:
+        up: 200
+        down: 503
+        unknown: 503
+
+  tracing:
+    sampling:
+      probability: 1.0
+server:
+  jetty:
+    connection-idle-timeout: 150000 # 150 seconds

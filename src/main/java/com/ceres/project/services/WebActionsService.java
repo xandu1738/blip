@@ -13,7 +13,7 @@ public class WebActionsService {
     private final AuthService authService;
     public OperationReturnObject processAction(String service, String action, JSONObject payload) {
         return switch (service) {
-            case "Auth" -> authService.process(action, payload);
+            case "Authenticate" -> authService.process(action, payload);
             default -> {
                 OperationReturnObject res = new OperationReturnObject();
                 res.setReturnCodeAndReturnMessage(404, "UNKNOWN SERVICE");

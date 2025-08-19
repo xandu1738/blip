@@ -2,13 +2,11 @@ package com.ceres.project.models.database;
 
 import com.ceres.project.models.jpa_helpers.enums.AppDomains;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder

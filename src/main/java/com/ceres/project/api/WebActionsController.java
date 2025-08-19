@@ -7,8 +7,8 @@ import com.ceres.project.services.WebActionsService;
 import com.ceres.project.utils.OperationReturnObject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -36,7 +36,7 @@ public class WebActionsController {
     /**
      * @implNote  For every request, it must define a SERVICE and an ACTION plus the rest of the data as per action implementation.
      * Without the first two, it will fail from this controller.
-     * All requests, authenticated and unauthenticated reach here.
+     * All requests, authenticated and unauthenticated, reach here.
      * Checking for authentication happens on the service or request level.
      * @see BaseWebActionsService
      *
@@ -44,11 +44,15 @@ public class WebActionsController {
      * @return OperationReturnObject
      */
     @PostMapping
-    public OperationReturnObject processServiceRequest(@RequestBody @Nullable String requestBody){
+    public OperationReturnObject processServiceRequest(@RequestBody String requestBody){
         log.info("Request:{}", requestBody);
         // grab the service name from the request body
         try {
             // let's avoid parsing twice, and parse from here once and for all.
+            if (StringUtils.isBlank(requestBody)){
+                throw new IllegalStateException("Request body is empty");
+            }
+
             JSONObject jsonObject = JSON.parseObject(requestBody);
             if (!jsonObject.containsKey("SERVICE")){
                 throw new IllegalStateException("SERVICE UNDEFINED");
@@ -61,7 +65,7 @@ public class WebActionsController {
             }
         } catch (Exception e){
             OperationReturnObject responseWithError = new OperationReturnObject();
-            responseWithError.setReturnCodeAndReturnMessage(500, e.getMessage());
+            responseWithError.setReturnCodeAndReturnMessage(400, e.getMessage());
             return responseWithError;
         }
     }

@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.lang.NonNull;
+import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -17,42 +18,54 @@ import org.springframework.web.servlet.resource.ResourceResolverChain;
 
 import java.util.List;
 
-import static java.util.Objects.nonNull;
-
 @Configuration
 public class WebRoutingConfig implements WebMvcConfigurer {
+
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
+        // When a route is not found, forward to index.html (for SPA)
         registry.addViewController("/urlNotFound")
-                .setViewName("forward:index.html");
+                .setViewName("forward:/index.html");
     }
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        this.serveDirectory(registry, "/", "classpath:/static/");
+        // Serve frontend static files (ONLY for frontend paths)
+        registry.addResourceHandler(
+                        "/",
+                        "/index.html",
+                        "/favicon.ico",
+                        "/static/**",
+                        "/assets/**") // adjust if your frontend has other folders
+                .addResourceLocations("classpath:/static/")
+                .resourceChain(false)
+                .addResolver(new PathResourceResolver() {
+                    @Override
+                    public Resource resolveResource(HttpServletRequest request,
+                                                    @NonNull String requestPath,
+                                                    @NonNull List<? extends Resource> locations,
+                                                    @NonNull ResourceResolverChain chain) {
+                        // Try to find the resource
+                        Resource resource = super.resolveResource(request, requestPath, locations, chain);
+                        if (resource != null) {
+                            return resource;
+                        }
+                        // Fallback to index.html (SPA)
+                        return super.resolveResource(request, "index.html", locations, chain);
+                    }
+                });
+    }
+
+    @Override
+    public void configurePathMatch(PathMatchConfigurer configurer) {
+        configurer.setUseSuffixPatternMatch(false);
     }
 
     @Bean
     public WebServerFactoryCustomizer<ConfigurableServletWebServerFactory> containerCustomizer() {
-        return container -> container.addErrorPages(new ErrorPage(HttpStatus.NOT_FOUND, "/urlNotFound"));
-    }
-
-    private void serveDirectory(ResourceHandlerRegistry registry, String endpoint, String location) {
-        String[] endpointPatterns = endpoint.endsWith("/")
-                ? new String[]{endpoint.substring(0, endpoint.length() - 1), endpoint, endpoint + "**"}
-                : new String[]{endpoint, endpoint + "/", endpoint + "/**"};
-        registry.addResourceHandler(endpointPatterns)
-                .addResourceLocations(location.endsWith("/") ? location : location + "/")
-                .resourceChain(false)
-                .addResolver(new PathResourceResolver() {
-                    @Override
-                    public Resource resolveResource(HttpServletRequest request, @NonNull String requestPath, @NonNull List<? extends Resource> locations, @NonNull ResourceResolverChain chain) {
-                        Resource resource = super.resolveResource(request, requestPath, locations, chain);
-                        if (nonNull(resource)) {
-                            return resource;
-                        }
-                        return super.resolveResource(request, "/index.html", locations, chain);
-                    }
-                });
+        return container -> container.addErrorPages(
+                new ErrorPage(HttpStatus.NOT_FOUND, "/urlNotFound")
+        );
     }
 }
+

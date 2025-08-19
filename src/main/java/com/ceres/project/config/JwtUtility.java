@@ -9,7 +9,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,7 +21,7 @@ import java.util.*;
 import java.util.function.Function;
 
 @Service
-@Data
+@RequiredArgsConstructor
 public class JwtUtility {
 
     private final SystemUserRepository userRepository;
@@ -30,7 +30,7 @@ public class JwtUtility {
     @Value("${secret}")
     private String secret;
 
-    public static final long JWT_TOKEN_VALIDITY = 12 * 60 * 60;
+    public static final long JWT_TOKEN_VALIDITY = 12 * 60 * 60L;// 12 hours
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
