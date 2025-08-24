@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -50,7 +51,7 @@ public class AccessLogsFilter extends OncePerRequestFilter {
 
         if (authentication != null
             && authentication.isAuthenticated()
-            && !(authentication instanceof AnonymousAuthenticationToken)){
+            && !(authentication instanceof AnonymousAuthenticationToken)) {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             if (userDetails != null && userDetails.getUsername() != null) {
                 username = userDetails.getUsername();
@@ -94,62 +95,31 @@ public class AccessLogsFilter extends OncePerRequestFilter {
 
 
         SystemUserModel user = null;
-        if (!isLoginRequest) {
-            user = (SystemUserModel) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-                if (user != null) {
-                    SystemRoleModel role = systemRoleRepository.findByRoleCode(user.getRoleCode()).orElseThrow(() -> new IllegalStateException("Couldn't resolve Role"));
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (!isLoginRequest && principal instanceof SystemUserModel) {
+            user = (SystemUserModel) principal;
+            SystemRoleModel role = systemRoleRepository.findByRoleCode(user.getRoleCode()).orElseThrow(() -> new IllegalStateException("Couldn't resolve Role"));
 //                only log requests from web users
 //                    if (Objects.equals(role.getRoleDomain(), AppDomains.CLIENT)) {
-                        wrappedResponse.copyBodyToResponse();
-                        return;
+            wrappedResponse.copyBodyToResponse();
+            return;
 //                    }
-                }
         }
 
         JSONObject responseJson = JSON.parseObject(responseBody);
         JSONObject requestJson = null;
 
-        if (!isLoginRequest && user != null) {
-            accessLog.setUsername(user.getEmail());
-            accessLog.setRequest(
-                    requestJson != null ? requestJson.toString() :
-                            Stream.of(wrappedRequest.getParameterMap())
-                                    .flatMap(map -> map.entrySet().stream())
-                                    .collect(Collectors.toMap(Map.Entry::getKey, entry -> String.join(" ", entry.getValue())))
-                                    .toString()
-            );
-        } else {
-            if (requestJson == null || !requestJson.containsKey("email")) {
-                wrappedResponse.copyBodyToResponse();
-                return;
-            }
-            accessLog.setUsername(requestJson.getString("email"));
-            accessLog.setRequest("Login");
-        }
-
-        accessLog.setResponse(JSON.toJSONString(responseJson));
-
-        if (wrappedResponse.getStatus() >= 300 || wrappedResponse.getStatus() < 200) {
-            accessLog.setResponse(responseJson.getString("returnMessage") == null ? responseJson.getString("message")
-                    : responseJson.getString("returnMessage"));
-            accessLog.setIsError(true);
-        }
-
-        if (responseJson != null && responseJson.containsKey("returnMessage") && responseJson.getString("returnMessage") != null) {
-            accessLog.setResponse(responseJson.getString("returnMessage") == null ?
-                    (responseJson.toString().length() > 256 ? responseJson.toString().substring(0, 240).concat("(truncated)...") :
-                            responseJson.toString()) : responseJson.getString("returnMessage"));
-        }
-        // Save the access log to the database
-//        accessLogRepository.save(accessLog);
-
-        // Log the access details
-        log.info("Access Log: Method={}, URI={}, RemoteAddr={}, Status={}, Duration={}ms", method, uri, remoteAddr, status, duration);
+        wrappedResponse.copyBodyToResponse();
+        return;
     }
 
     public boolean isLoginRequest(ContentCachingRequestWrapper requestWrapper) {
         String requestBody = new String(requestWrapper.getContentAsByteArray());
-        return requestBody.contains("\"ACTION\": \"login\"");
+        JSONObject requestJson = JSON.parseObject(requestBody);
+        if (requestJson == null || requestJson.isEmpty()) {
+            return false;
+        }
+        return requestJson.containsKey("ACTION") && Objects.equals(requestJson.getString("ACTION"), "login");
     }
 
     private String getClientIp(HttpServletRequest request) {

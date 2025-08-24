@@ -12,9 +12,9 @@
     <artifactId>blip</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>blip</name>
-    <description>Spring boot starter template with pre-configurations for mail, file management and 0auth</description>
+    <description>Transport and logistics management Saas System</description>
     <properties>
-        <java.version>17</java.version>
+        <java.version>21</java.version>
         <spring-cloud-gcp.version>6.0.0</spring-cloud-gcp.version>
         <spring-cloud.version>2024.0.0</spring-cloud.version>
     </properties>
@@ -118,6 +118,11 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.18.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+            <version>3.2.4</version>
         </dependency>
 <!--        <dependency>-->
 <!--            <groupId>org.springframework.boot</groupId>-->

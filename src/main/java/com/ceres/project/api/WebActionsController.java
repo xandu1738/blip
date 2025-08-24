@@ -5,6 +5,7 @@ import com.alibaba.fastjson2.JSONObject;
 import com.ceres.project.services.base.BaseWebActionsService;
 import com.ceres.project.services.WebActionsService;
 import com.ceres.project.utils.OperationReturnObject;
+import io.micrometer.observation.annotation.Observed;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -42,6 +43,7 @@ public class WebActionsController {
      * @return OperationReturnObject
      */
     @PostMapping
+    @Observed(name = "web_actions_controller_process_service_request")
     public OperationReturnObject processServiceRequest(@RequestBody String requestBody){
         log.info("Request:{}", requestBody);
         // grab the service name from the request body
