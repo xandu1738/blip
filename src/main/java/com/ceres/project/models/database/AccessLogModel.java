@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
-import java.time.Instant;
+import java.sql.Timestamp;
 
 @Getter
 @Setter
@@ -50,7 +50,7 @@ public class AccessLogModel {
 
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "created_at", nullable = false)
-    private Instant createdAt;
+    private Timestamp createdAt;
 
     @Column(name = "partner_code")
     private String partnerCode;

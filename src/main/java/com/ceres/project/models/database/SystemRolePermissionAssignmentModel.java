@@ -9,7 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "system_role_permission_assignment", schema = "public", catalog = "project_db")
+@Table(name = "system_role_permission_assignment", schema = "public")
 public class SystemRolePermissionAssignmentModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id

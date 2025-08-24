@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from the repository -->
     </parent>
     <groupId>com.ceres</groupId>
-    <artifactId>project</artifactId>
+    <artifactId>blip</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>project</name>
+    <name>blip</name>
     <description>Spring boot starter template with pre-configurations for mail, file management and 0auth</description>
     <properties>
         <java.version>17</java.version>
@@ -119,12 +119,12 @@
             <artifactId>commons-lang3</artifactId>
             <version>3.18.0</version>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <scope>runtime</scope>
-            <optional>true</optional>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-devtools</artifactId>-->
+<!--            <scope>runtime</scope>-->
+<!--            <optional>true</optional>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>

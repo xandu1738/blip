@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface SystemRoleRepository extends JetRepository<SystemRoleModel, Long> {
-    Optional<SystemRoleModel> findFirstByRoleCode(String code);
+    Optional<SystemRoleModel> findByRoleCode(String code);
 }

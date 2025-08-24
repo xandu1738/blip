@@ -32,7 +32,6 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Value("${app.version}")
     private String appVersion;
-    OperationReturnObject errorDetails = new OperationReturnObject();
 
     @Override
     protected void doFilterInternal(
@@ -66,16 +65,15 @@ public class JwtFilter extends OncePerRequestFilter {
             }
         }
         } catch (ExpiredJwtException e) {
-            errorDetails.setReturnCodeAndReturnMessage(HttpStatus.UNAUTHORIZED.value(), "TOKEN EXPIRED");
+            var errorDetails = new OperationReturnObject(HttpStatus.UNAUTHORIZED.value(), "TOKEN EXPIRED", null);
             response.setStatus(HttpStatus.OK.value());
             response.setContentType(String.valueOf(MediaType.APPLICATION_JSON));
             mapper.writeValue(response.getWriter(), errorDetails);
             return;
         } catch (Exception e){
-            errorDetails.setReturnCodeAndReturnMessage(HttpStatus.UNAUTHORIZED.value(), e.getMessage());
             response.setStatus(HttpStatus.OK.value());
             response.setContentType(String.valueOf(MediaType.APPLICATION_JSON));
-            mapper.writeValue(response.getWriter(), errorDetails);
+            mapper.writeValue(response.getWriter(), new OperationReturnObject(HttpStatus.UNAUTHORIZED.value(), e.getMessage(), null));
             return;
         }
 

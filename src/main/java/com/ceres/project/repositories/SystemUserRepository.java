@@ -8,7 +8,10 @@ import java.util.Optional;
 
 @Repository
 public interface SystemUserRepository extends JetRepository<SystemUserModel, Long> {
-    SystemUserModel findFirstByUsername(String username);
-    Optional<SystemUserModel> findFirstByUsernameOrEmail(String username, String email);
+    Optional<SystemUserModel> findByUsername(String username);
+
+    Optional<SystemUserModel> findByEmail(String email);
+
+    Optional<SystemUserModel> findByUsernameOrEmail(String username, String email);
 }
 

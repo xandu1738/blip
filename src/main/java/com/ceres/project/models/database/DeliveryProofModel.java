@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.sql.Timestamp;
 import java.time.Instant;
 
 @Getter
@@ -31,7 +32,7 @@ public class DeliveryProofModel {
 
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "delivered_at", nullable = false)
-    private Instant deliveredAt;
+    private Timestamp deliveredAt;
 
     @Column(name = "delivered_by", nullable = false)
     private Long deliveredBy;

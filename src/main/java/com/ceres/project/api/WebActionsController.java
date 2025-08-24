@@ -28,9 +28,7 @@ public class WebActionsController {
      */
     @GetMapping
     public OperationReturnObject pingMe(){
-        OperationReturnObject returnObject = new OperationReturnObject();
-        returnObject.setCodeAndMessageAndReturnObject(0, "pong", appVersion);
-        return returnObject;
+        return new OperationReturnObject(0, "pong", appVersion);
     }
 
     /**
@@ -64,9 +62,7 @@ public class WebActionsController {
                 return webActionsService.processAction(service, action, jsonObject);
             }
         } catch (Exception e){
-            OperationReturnObject responseWithError = new OperationReturnObject();
-            responseWithError.setReturnCodeAndReturnMessage(400, e.getMessage());
-            return responseWithError;
+            return new OperationReturnObject(400, e.getMessage(),null);
         }
     }
 

@@ -1,11 +1,12 @@
 package com.ceres.project.models.database;
 
+import com.ceres.project.models.jpa_helpers.enums.VehicleTypes;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
-import java.time.Instant;
+import java.sql.Timestamp;
 
 @Getter
 @Setter
@@ -23,19 +24,25 @@ public class VehicleModel {
     @Column(name = "capacity", nullable = false)
     private Integer capacity;
 
-    @Column(name = "category", nullable = false, length = 50)
-    private String category;
+//    @Enumerated(EnumType.STRING)
+//    @Column(name = "category", nullable = false, length = 50)
+//    private VehicleTypes category;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false, length = 20)
-    private String type;
+    private VehicleTypes type;
 
     @ColumnDefault("'ACTIVE'")
     @Column(name = "status", nullable = false, length = 20)
     private String status;
 
+    @Basic
+    @Column(name = "partner_code")
+    private String partnerCode;
+
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "created_at", nullable = false)
-    private Instant createdAt;
+    private Timestamp createdAt;
 
     @Column(name = "created_by", nullable = false)
     private Long createdBy;

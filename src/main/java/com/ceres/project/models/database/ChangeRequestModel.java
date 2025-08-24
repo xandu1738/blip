@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.sql.Timestamp;
 import java.time.Instant;
 
 @Getter
@@ -39,6 +40,6 @@ public class ChangeRequestModel {
 
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "\"timestamp\"", nullable = false)
-    private Instant timestamp;
+    private Timestamp timestamp;
 
 }

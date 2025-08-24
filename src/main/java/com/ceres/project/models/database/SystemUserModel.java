@@ -2,7 +2,6 @@ package com.ceres.project.models.database;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -16,7 +15,7 @@ import java.util.Collection;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "system_user", schema = "public", catalog = "project_db")
+@Table(name = "system_user", schema = "public")
 public class SystemUserModel implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -40,6 +39,9 @@ public class SystemUserModel implements UserDetails {
     @Basic
     @Column(name = "role_code")
     private String roleCode;
+    @Basic
+    @Column(name = "partner_code")
+    private String partnerCode;
     @Basic
     @Column(name = "created_at")
     private Timestamp createdAt;

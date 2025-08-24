@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.sql.Timestamp;
 import java.time.Instant;
 
 @Getter
@@ -28,7 +29,7 @@ public class StopModel {
 
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "crated_at", nullable = false)
-    private Instant cratedAt;
+    private Timestamp cratedAt;
 
     @Column(name = "created_by", nullable = false)
     private Long createdBy;

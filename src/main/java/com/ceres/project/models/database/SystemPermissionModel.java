@@ -10,7 +10,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "system_permission", schema = "public", catalog = "project_db")
+@Table(name = "system_permission", schema = "public")
 public class SystemPermissionModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id

@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.sql.Timestamp;
 import java.time.Instant;
 
 @Getter
@@ -28,7 +29,7 @@ public class ConsignmentParcelModel {
 
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "added_at", nullable = false)
-    private Instant addedAt;
+    private Timestamp addedAt;
 
     @Column(name = "added_by", nullable = false)
     private Long addedBy;
