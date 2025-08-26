@@ -2,7 +2,6 @@ package com.ceres.project.services;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import com.ceres.project.exceptions.AuthorizationRequiredException;
 import com.ceres.project.models.database.PartnerModel;
 import com.ceres.project.models.database.SystemUserModel;
 import com.ceres.project.models.database.VehicleModel;
@@ -15,6 +14,15 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class VehicleService extends BaseWebActionsService {
+    private static final String PARTNER_CODE = "partner_code";
+    private static final String REGISTRATION_NUMBER = "registration_number";
+    private static final String TYPE = "type";
+    private static final String CAPACITY = "capacity";
+    private static final String DATA = "data";
+    private static final String VEHICLES = "vehicles";
+    private static final String VEHICLE_ID = "vehicle_id";
+    private static final String STATUS = "status";
+
     private final VehicleRepository vehicleRepository;
 
     public VehicleService(VehicleRepository vehicleRepository) {
@@ -22,18 +30,18 @@ public class VehicleService extends BaseWebActionsService {
         this.vehicleRepository = vehicleRepository;
     }
 
-    //Add new vehicle for partner
-    private OperationReturnObject addNewVehicle(JSONObject object) throws AuthorizationRequiredException {
+    //Add a new vehicle for partner
+    private OperationReturnObject addNewVehicle(JSONObject object) {
         try {
             SystemUserModel authenticatedUser = authenticatedUser();
 
-            requires(object, "data");
-            JSONObject data = object.getJSONObject("data");
-            requires(data, "registration_number", "type", "partner_code", "capacity");
-            String registrationNumber = data.getString("registration_number");
-            String partnerCode = data.getString("partner_code");
-            String type = data.getString("type");
-            Integer capacity = data.getInteger("capacity");
+            requires(object, DATA);
+            JSONObject data = object.getJSONObject(DATA);
+            requires(data, REGISTRATION_NUMBER, TYPE, PARTNER_CODE, CAPACITY);
+            String registrationNumber = data.getString(REGISTRATION_NUMBER);
+            String partnerCode = data.getString(PARTNER_CODE);
+            String type = data.getString(TYPE);
+            Integer capacity = data.getInteger(CAPACITY);
 
             if (!EnumUtils.isValidEnum(VehicleTypes.class, type)) {
                 throw new IllegalArgumentException("Invalid vehicle type");
@@ -54,26 +62,26 @@ public class VehicleService extends BaseWebActionsService {
         }
     }
 
-    //Vehicle Bulk Registration: Receives a list of vehicles to be registered for a partner as a json array
-    private OperationReturnObject bulkVehicleRegistration(JSONObject object) throws AuthorizationRequiredException {
+    //Vehicle Bulk Registration: Receives a list of vehicles to be registered for a partner as a JSON array
+    private OperationReturnObject bulkVehicleRegistration(JSONObject object) {
         try {
             SystemUserModel authenticatedUser = authenticatedUser();
 
-            requires(object, "data");
-            JSONObject data = object.getJSONObject("data");
-            requires(data, "vehicles");
-            JSONArray vehiclesArray = data.getJSONArray("vehicles");
+            requires(object, DATA);
+            JSONObject data = object.getJSONObject(DATA);
+            requires(data, VEHICLES);
+            JSONArray vehiclesArray = data.getJSONArray(VEHICLES);
 
-            String partnerCode = data.getString("partner_code");
+            String partnerCode = data.getString(PARTNER_CODE);
             PartnerModel partner = validatePartner(partnerCode);
 
             // Process each vehicle in the array
             vehiclesArray.forEach(vehicle -> {
                 JSONObject vehicleData = (JSONObject) vehicle;
-                requires(vehicleData, "registration_number", "type", "partner_code", "capacity");
-                String registrationNumber = vehicleData.getString("registration_number");
-                String type = vehicleData.getString("type");
-                Integer capacity = vehicleData.getInteger("capacity");
+                requires(vehicleData, REGISTRATION_NUMBER, TYPE, PARTNER_CODE, CAPACITY);
+                String registrationNumber = vehicleData.getString(REGISTRATION_NUMBER);
+                String type = vehicleData.getString(TYPE);
+                Integer capacity = vehicleData.getInteger(CAPACITY);
 
                 if (!EnumUtils.isValidEnum(VehicleTypes.class, type)) {
                     throw new IllegalArgumentException("Invalid vehicle type for registration number: " + registrationNumber);
@@ -97,34 +105,34 @@ public class VehicleService extends BaseWebActionsService {
     }
 
     //Edit Vehicle information
-    private OperationReturnObject editVehicleInformation(JSONObject object) throws AuthorizationRequiredException {
+    private OperationReturnObject editVehicleInformation(JSONObject object) {
         try {
-            SystemUserModel authenticatedUser = authenticatedUser();
+            authenticatedUser();
 
-            requires(object, "data");
-            JSONObject data = object.getJSONObject("data");
-            requires(data, "vehicle_id");
-            Long vehicleId = data.getLong("vehicle_id");
+            requires(object, DATA);
+            JSONObject data = object.getJSONObject(DATA);
+            requires(data, VEHICLE_ID);
+            Long vehicleId = data.getLong(VEHICLE_ID);
 
             VehicleModel vehicleModel = vehicleRepository.findById(vehicleId)
                     .orElseThrow(() -> new IllegalArgumentException("Vehicle not found"));
 
             // Update fields if present
-            if (data.containsKey("registration_number")) {
-                vehicleModel.setRegistrationNumber(data.getString("registration_number"));
+            if (data.containsKey(REGISTRATION_NUMBER)) {
+                vehicleModel.setRegistrationNumber(data.getString(REGISTRATION_NUMBER));
             }
-            if (data.containsKey("type")) {
-                String type = data.getString("type");
+            if (data.containsKey(TYPE)) {
+                String type = data.getString(TYPE);
                 if (!EnumUtils.isValidEnum(VehicleTypes.class, type)) {
                     throw new IllegalArgumentException("Invalid vehicle type");
                 }
                 vehicleModel.setType(VehicleTypes.valueOf(type));
             }
-            if (data.containsKey("capacity")) {
-                vehicleModel.setCapacity(data.getInteger("capacity"));
+            if (data.containsKey(CAPACITY)) {
+                vehicleModel.setCapacity(data.getInteger(CAPACITY));
             }
-            if (data.containsKey("status")) {
-                vehicleModel.setStatus(data.getString("status"));
+            if (data.containsKey(STATUS)) {
+                vehicleModel.setStatus(data.getString(STATUS));
             }
 
             VehicleModel updatedVehicle = vehicleRepository.save(vehicleModel);
@@ -135,15 +143,15 @@ public class VehicleService extends BaseWebActionsService {
     }
 
     //Assign Vehicle to partner
-    private OperationReturnObject assignVehicleToPartner(JSONObject object) throws AuthorizationRequiredException {
+    private OperationReturnObject assignVehicleToPartner(JSONObject object) {
         try {
-            SystemUserModel authenticatedUser = authenticatedUser();
+            authenticatedUser();
 
-            requires(object, "data");
-            JSONObject data = object.getJSONObject("data");
-            requires(data, "vehicle_id", "partner_code");
-            Long vehicleId = data.getLong("vehicle_id");
-            String partnerCode = data.getString("partner_code");
+            requires(object, DATA);
+            JSONObject data = object.getJSONObject(DATA);
+            requires(data, VEHICLE_ID, PARTNER_CODE);
+            Long vehicleId = data.getLong(VEHICLE_ID);
+            String partnerCode = data.getString(PARTNER_CODE);
 
             PartnerModel partner = validatePartner(partnerCode);
 
@@ -161,7 +169,7 @@ public class VehicleService extends BaseWebActionsService {
     //TODO: Assign Vehicle to driver
 
     @Override
-    public OperationReturnObject switchActions(String action, JSONObject request) throws AuthorizationRequiredException {
+    public OperationReturnObject switchActions(String action, JSONObject request) {
         return switch (action){
             case "AddNewVehicle" -> addNewVehicle(request);
             case "VehicleBulkRegistration" -> bulkVehicleRegistration(request);

@@ -7,3 +7,6 @@ spring:
 
 server:
   port: 7071
+
+application:
+  url: http://localhost:7071/api/v1/

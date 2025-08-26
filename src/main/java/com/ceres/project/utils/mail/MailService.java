@@ -38,7 +38,7 @@ public class MailService {
         MimeMessage mimeMessage = emailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage);
         helper.setSubject(subject);
-        helper.setFrom("servspace@servicecops.com", "Servspace Support");
+        helper.setFrom("ceres1738@gmail.com", "Blip Support");
         helper.setText(process, true);
         helper.setTo(receiver.getEmail());
         emailSender.send(mimeMessage);
@@ -54,7 +54,7 @@ public class MailService {
         MimeMessage mimeMessage = emailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage);
         helper.setSubject(subject);
-        helper.setFrom("servspace@servicecops.com", "Servspace Support");
+        helper.setFrom("openssl s_client -connect smtp.gmail.com:587 -starttls smtp", "Blip Support");
         helper.setText(process, true);
         helper.setTo(receiverEmail);
         emailSender.send(mimeMessage);

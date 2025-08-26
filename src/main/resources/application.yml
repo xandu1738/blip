@@ -24,8 +24,9 @@ spring:
       mail:
         smtp:
           auth: true
-        starttls:
-          enable: true
+          starttls:
+            enable: true
+            required: true
     host: smtp.gmail.com
     port: 587
 
@@ -93,3 +94,6 @@ server:
 gcp:
   bucket:
     name: ${gcpBucketName}
+
+application:
+  url: https://blip.sakisofts.com/api/v1/

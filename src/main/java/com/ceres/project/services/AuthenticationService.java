@@ -14,9 +14,13 @@ import com.ceres.project.repositories.SystemRolePermissionRepository;
 import com.ceres.project.repositories.SystemUserRepository;
 import com.ceres.project.services.base.BaseWebActionsService;
 import com.ceres.project.utils.OperationReturnObject;
+import com.ceres.project.utils.events.UserRegistrationEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
@@ -29,6 +33,14 @@ import java.util.*;
 @Slf4j
 @Service
 public class AuthenticationService extends BaseWebActionsService {
+    private static final String ACCESS_TOKEN = "accessToken";
+    private static final String REFRESH_TOKEN = "refreshToken";
+    private static final String USER_EMAIL = "email";
+    private static final String USER_PASSWORD = "password";
+
+    @Value("${application.url}")
+    private String applicationUrl;
+
     private final AuthenticationManager authenticationManager;
     private final ApplicationConf userDetailService;
     private final JwtUtility jwtUtility;
@@ -36,16 +48,17 @@ public class AuthenticationService extends BaseWebActionsService {
     private final SystemRolePermissionRepository systemRolePermissionRepository;
     private final SystemUserRepository systemUserRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ApplicationEventPublisher publisher;
 
 
     private OperationReturnObject login(JSONObject request) {
         requires(request, "data");
         JSONObject data = request.getJSONObject("data");
 
-        requires(data, "email", "password");
+        requires(data, USER_EMAIL, USER_PASSWORD);
 
-        String email = data.getString("email");
-        String password = data.getString("password");
+        String email = data.getString(USER_EMAIL);
+        String password = data.getString(USER_PASSWORD);
 
         try {
             authenticationManager.authenticate(
@@ -68,8 +81,8 @@ public class AuthenticationService extends BaseWebActionsService {
                 .toList();
 
         Map<String, Object> response = new HashMap<>();
-        response.put("accessToken", accessToken); // this is the jwt token the user can user from now on.
-        response.put("refreshToken", refreshToken); // this is the jwt token the user can user from now on.
+        response.put(ACCESS_TOKEN, accessToken); // this is the jwt token the user can user from now on.
+        response.put(REFRESH_TOKEN, refreshToken); // this is the jwt token the user can user from now on.
         response.put("user", profile);
         response.put("permissions", permission);
         return new OperationReturnObject(200, "Welcome back " + userDetails.getUsername(), response);
@@ -80,10 +93,10 @@ public class AuthenticationService extends BaseWebActionsService {
         requires(request, "data");
 
         JSONObject data = request.getJSONObject("data");
-        requires(data, "refreshToken");
+        requires(data, REFRESH_TOKEN);
 
         try {
-            String refreshToken = data.getString("refreshToken");
+            String refreshToken = data.getString(REFRESH_TOKEN);
             String tokenType = jwtUtility.extractTokenType(refreshToken);
             log.info(tokenType);
             if (!Objects.equals(tokenType, "REFRESH"))
@@ -104,12 +117,12 @@ public class AuthenticationService extends BaseWebActionsService {
         SystemUserModel authenticatedUser = authenticatedUser();
         requires(request, "data");
         JSONObject data = request.getJSONObject("data");
-        requires(data, "role", "first_name", "last_name", "email", "password");
+        requires(data, "role", "first_name", "last_name", USER_EMAIL, USER_PASSWORD);
         String role = data.getString("role");
         String firstName = data.getString("first_name");
         String lastName = data.getString("last_name");
-        String email = data.getString("email");
-        String password = data.getString("password");
+        String email = data.getString(USER_EMAIL);
+        String password = data.getString(USER_PASSWORD);
 
         SystemUserModel user = new SystemUserModel();
         if (!Objects.equals(role, DefaultRoles.SUPER_ADMIN.name()) || !Objects.equals(authenticatedUser.getRoleCode(), DefaultRoles.SUPER_ADMIN.name())) {
@@ -141,6 +154,11 @@ public class AuthenticationService extends BaseWebActionsService {
 
         systemUserRepository.save(user);
 
+        executeAsync(() -> {
+            log.info("Sending user registration event for user {}", user.getEmail());
+            publisher.publishEvent(new UserRegistrationEvent(user, applicationUrl, password));
+        });
+
         return new OperationReturnObject(200, "User created successfully", null);
     }
 
@@ -151,8 +169,13 @@ public class AuthenticationService extends BaseWebActionsService {
         if (search == null) {
             search = new JSONObject();
         }
+        Integer pageNumber = search.getInteger("pageNumber");
+        Integer pageSize = search.getInteger("pageSize");
 
-        List<UserDto> users = systemUserRepository.findAll().stream().map(userDtoMapper).toList();
+        List<UserDto> users = systemUserRepository.findAll(PageRequest.of(pageNumber, pageSize))
+                .stream()
+                .map(userDtoMapper)
+                .toList();
 
         return new OperationReturnObject(200, "Users list successfully", users);
     }
@@ -185,7 +208,7 @@ public class AuthenticationService extends BaseWebActionsService {
     public OperationReturnObject switchActions(String action, JSONObject request) throws AuthorizationRequiredException {
         return switch (action) {
             case "login" -> login(request);
-            case "refreshToken" -> refreshToken(request);
+            case REFRESH_TOKEN -> refreshToken(request);
             case "signUp" -> signUp(request);
             case "usersList" -> usersList(request);
             case "usersProfile" -> usersProfile(request);

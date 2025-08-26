@@ -1,5 +1,6 @@
 package com.ceres.project.models.database;
 
+import com.ceres.project.models.jpa_helpers.enums.RouteStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,6 +20,9 @@ public class RouteModel {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @Column(name = "partner_code", nullable = false, length = 100)
+    private String partnerCode;
+
     @Column(name = "origin", nullable = false, length = 100)
     private String origin;
 
@@ -28,9 +32,12 @@ public class RouteModel {
     @Column(name = "estimated_distance", nullable = false, precision = 10, scale = 2)
     private BigDecimal estimatedDistance;
 
-    @ColumnDefault("'ACTIVE'")
+    @Column(name = "estimated_duration_hrs", nullable = false, precision = 10, scale = 2)
+    private Double estimatedDuration;
+
+    @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 20)
-    private String status;
+    private RouteStatus status = RouteStatus.ACTIVE;
 
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "created_at", nullable = false)

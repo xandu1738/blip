@@ -296,4 +296,9 @@ public abstract class BaseWebActionsService implements BaseWebActionsImpl {
         );
 
     }
+
+    protected void executeAsync(Runnable runnable) {
+        Thread thread = new Thread(runnable);
+        thread.start();
+    }
 }
