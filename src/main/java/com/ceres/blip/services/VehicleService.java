@@ -2,16 +2,23 @@ package com.ceres.blip.services;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
+import com.ceres.blip.exceptions.AuthorizationRequiredException;
 import com.ceres.blip.models.database.PartnerModel;
 import com.ceres.blip.models.database.SystemUserModel;
 import com.ceres.blip.models.database.VehicleModel;
+import com.ceres.blip.models.jpa_helpers.enums.AppDomains;
 import com.ceres.blip.models.jpa_helpers.enums.VehicleTypes;
 import com.ceres.blip.repositories.VehicleRepository;
 import com.ceres.blip.utils.LocalUtilsService;
 import com.ceres.blip.utils.OperationReturnObject;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.EnumUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+
+import java.util.Collections;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +36,7 @@ public class VehicleService {
     private final LocalUtilsService localUtilsService;
 
     //Add a new vehicle for partner
-    private OperationReturnObject addNewVehicle(JSONObject object) {
+    public OperationReturnObject addNewVehicle(JSONObject object) {
         try {
             SystemUserModel authenticatedUser = localUtilsService.authenticatedUser();
 
@@ -61,7 +68,7 @@ public class VehicleService {
     }
 
     //Vehicle Bulk Registration: Receives a list of vehicles to be registered for a partner as a JSON array
-    private OperationReturnObject bulkVehicleRegistration(JSONObject object) {
+    public OperationReturnObject bulkVehicleRegistration(JSONObject object) {
         try {
             SystemUserModel authenticatedUser = localUtilsService.authenticatedUser();
 
@@ -104,7 +111,7 @@ public class VehicleService {
     }
 
     //Edit Vehicle information
-    private OperationReturnObject editVehicleInformation(JSONObject object) {
+    public OperationReturnObject editVehicleInformation(JSONObject object) {
         try {
             localUtilsService.authenticatedUser();
 
@@ -142,15 +149,9 @@ public class VehicleService {
     }
 
     //Assign Vehicle to partner
-    private OperationReturnObject assignVehicleToPartner(JSONObject object) {
+    public OperationReturnObject assignVehicleToPartner(String partnerCode, Long vehicleId) {
         try {
             localUtilsService.authenticatedUser();
-
-            localUtilsService.requires(object, DATA);
-            JSONObject data = object.getJSONObject(DATA);
-            localUtilsService.requires(data, VEHICLE_ID, PARTNER_CODE);
-            Long vehicleId = data.getLong(VEHICLE_ID);
-            String partnerCode = data.getString(PARTNER_CODE);
 
             PartnerModel partner = localUtilsService.validatePartner(partnerCode);
 
@@ -163,6 +164,27 @@ public class VehicleService {
         } catch (IllegalArgumentException e) {
             return new OperationReturnObject(400, e.getMessage(), null);
         }
+    }
+
+    public OperationReturnObject vehiclesList(int pageNumber, int pageSize) throws AuthorizationRequiredException {
+        localUtilsService.requiresAuth();
+        SystemUserModel authenticatedUser = localUtilsService.authenticatedUser();
+        Page<VehicleModel> vehicles = null;
+
+        if (localUtilsService.getUserDomain().equals(AppDomains.BACK_OFFICE)){
+            vehicles = vehicleRepository.findAll(PageRequest.of(pageNumber, pageSize));
+            return new OperationReturnObject(200, "Vehicles list successfully fetched.", vehicles);
+        }
+
+        vehicles = vehicleRepository.findAllByPartnerCode(authenticatedUser.getPartnerCode(), PageRequest.of(pageNumber, pageSize));
+        return new OperationReturnObject(200, "Vehicles list successfully fetched.", vehicles);
+    }
+
+    public OperationReturnObject fetchVehicleDetails(Long vehicleId) throws AuthorizationRequiredException {
+        localUtilsService.requiresAuth();
+        VehicleModel vehicleModel = vehicleRepository.findById(vehicleId)
+                .orElseThrow(() -> new IllegalArgumentException("Vehicle not found"));
+        return new OperationReturnObject(200, "Vehicle details successfully fetched.", vehicleModel);
     }
 
     //TODO: Assign Vehicle to driver

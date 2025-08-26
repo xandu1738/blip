@@ -27,7 +27,7 @@ public class PartnersService {
     private final LocalUtilsService localUtilsService;
 
 
-    private OperationReturnObject addNewPartner(JSONObject request) {
+    public OperationReturnObject addNewPartner(JSONObject request) {
         localUtilsService.belongsTo(AppDomains.BACK_OFFICE);
         localUtilsService.requires(request, "data");
 
@@ -78,7 +78,7 @@ public class PartnersService {
 
     }
 
-    private OperationReturnObject editPartnerInfo(JSONObject request) {
+    public OperationReturnObject editPartnerInfo(JSONObject request) {
         localUtilsService.belongsTo(AppDomains.BACK_OFFICE);
         localUtilsService.requires(request, "data");
 
@@ -138,28 +138,15 @@ public class PartnersService {
         return new OperationReturnObject(200, "Partner info successfully updated.", saved);
     }
 
-    private OperationReturnObject fetchPartnersList(JSONObject request) throws AuthorizationRequiredException {
+    public OperationReturnObject fetchPartnersList(int pageNumber, int pageSize) throws AuthorizationRequiredException {
         localUtilsService.belongsTo(AppDomains.BACK_OFFICE);
         localUtilsService.requiresAuth();
-        localUtilsService.requires(request, "search");
-        JSONObject search = request.getJSONObject("search");
-        if (search == null) {
-            search = new JSONObject();
-        }
-        Integer pageNumber = search.getInteger("page");
-        if (pageNumber == null || pageNumber < 1) {
-            pageNumber = 1;
-        }
-        Integer pageSize = search.getInteger("page_size");
-        if (pageSize == null || pageSize < 1) {
-            pageSize = 10;
-        }
 
         List<PartnerModel> partners = partnersRepository.findAll(PageRequest.of(pageNumber,pageSize)).toList();
         return new OperationReturnObject(200, "Partners list successfully fetched.", partners);
     }
 
-    private OperationReturnObject updatePartnerStatus(JSONObject request) throws AuthorizationRequiredException {
+    public OperationReturnObject updatePartnerStatus(JSONObject request) throws AuthorizationRequiredException {
         localUtilsService.belongsTo(AppDomains.BACK_OFFICE);
         localUtilsService.requiresAuth();
         localUtilsService.requires(request, "data");
@@ -177,5 +164,17 @@ public class PartnersService {
 
         String status = active ? "activated" : "deactivated";
         return new OperationReturnObject(200, "Partner successfully " + status + ".", saved);
+    }
+
+    public OperationReturnObject partnerProfile(String partnerCode) throws AuthorizationRequiredException {
+        localUtilsService.requiresAuth();
+
+        if (StringUtils.isBlank(partnerCode)) {
+            throw new IllegalArgumentException("Partner code cannot be empty");
+        }
+
+        PartnerModel partnerModel = partnersRepository.findByPartnerCode(partnerCode)
+                .orElseThrow(() -> new IllegalArgumentException("Partner with code " + partnerCode + " not found."));
+        return new OperationReturnObject(200, "Partner profile successfully fetched.", partnerModel);
     }
 }

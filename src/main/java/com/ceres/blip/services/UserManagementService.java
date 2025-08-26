@@ -52,7 +52,7 @@ public class UserManagementService {
     private final LocalUtilsService localUtilsService;
 
 
-    private OperationReturnObject login(JSONObject request) {
+    public OperationReturnObject login(JSONObject request) {
         localUtilsService.requires(request, "data");
         JSONObject data = request.getJSONObject("data");
 
@@ -89,7 +89,7 @@ public class UserManagementService {
         return new OperationReturnObject(200, "Welcome back " + userDetails.getUsername(), response);
     }
 
-    private OperationReturnObject refreshToken(JSONObject request) throws AuthorizationRequiredException {
+    public OperationReturnObject refreshToken(JSONObject request) throws AuthorizationRequiredException {
         localUtilsService.requiresAuth();
         localUtilsService.requires(request, "data");
 
@@ -114,7 +114,7 @@ public class UserManagementService {
         }
     }
 
-    private OperationReturnObject signUp(JSONObject request) {
+    public OperationReturnObject signUp(JSONObject request) {
         SystemUserModel authenticatedUser = localUtilsService.authenticatedUser();
         localUtilsService.requires(request, "data");
         JSONObject data = request.getJSONObject("data");
@@ -163,15 +163,8 @@ public class UserManagementService {
         return new OperationReturnObject(200, "User created successfully", null);
     }
 
-    private OperationReturnObject usersList(JSONObject request) throws AuthorizationRequiredException {
+    public OperationReturnObject usersList(int pageNumber, int pageSize) throws AuthorizationRequiredException {
         localUtilsService.requiresAuth();
-        JSONObject search = request.getJSONObject("search");
-
-        if (search == null) {
-            search = new JSONObject();
-        }
-        Integer pageNumber = search.getInteger("pageNumber");
-        Integer pageSize = search.getInteger("pageSize");
 
         List<UserDto> users = systemUserRepository.findAll(PageRequest.of(pageNumber, pageSize))
                 .stream()
@@ -181,15 +174,8 @@ public class UserManagementService {
         return new OperationReturnObject(200, "Users list successfully", users);
     }
 
-    private OperationReturnObject usersProfile(JSONObject request) throws AuthorizationRequiredException {
+    public OperationReturnObject usersProfile(Long id) throws AuthorizationRequiredException {
         localUtilsService.requiresAuth();
-        JSONObject search = request.getJSONObject("search");
-
-        if (search == null) {
-            search = new JSONObject();
-        }
-
-        Long id = search.getLong("id");
         if (id == null) {
             throw new IllegalStateException("Please specify user's ID");
         }

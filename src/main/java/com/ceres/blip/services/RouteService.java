@@ -4,12 +4,15 @@ import com.alibaba.fastjson2.JSONObject;
 import com.ceres.blip.models.database.PartnerModel;
 import com.ceres.blip.models.database.RouteModel;
 import com.ceres.blip.models.database.SystemUserModel;
+import com.ceres.blip.models.jpa_helpers.enums.AppDomains;
 import com.ceres.blip.models.jpa_helpers.enums.RouteStatus;
 import com.ceres.blip.repositories.RouteRepository;
 import com.ceres.blip.utils.LocalUtilsService;
 import com.ceres.blip.utils.OperationReturnObject;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.EnumUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -26,10 +29,11 @@ public class RouteService{
     private static final String STATUS = "status";
     private static final String PARTNER_CODE = "partner_code";
     private static final String INTERNAL_SERVER_ERROR = "Internal Server Error: ";
+    private static final String ROUTES_FETCHED_SUCCESSFULLY = "Routes fetched successfully";
     private final RouteRepository routeRepository;
     private final LocalUtilsService localUtilsService;
     //create a new route for a partner
-    private OperationReturnObject createNewRoute(JSONObject object) {
+    public OperationReturnObject createNewRoute(JSONObject object) {
         try {
             SystemUserModel authenticatedUser = localUtilsService.authenticatedUser();
             localUtilsService.requires(object, DATA);
@@ -63,7 +67,7 @@ public class RouteService{
     }
 
     //Edit route details
-    private OperationReturnObject editRouteDetails(JSONObject object) {
+    public OperationReturnObject editRouteDetails(JSONObject object) {
         try {
             localUtilsService.requiresAuth();
             localUtilsService.requires(object, DATA);
@@ -104,16 +108,20 @@ public class RouteService{
     }
 
     //List all routes for a partner
-    private OperationReturnObject listRoutes(JSONObject object) {
+    public OperationReturnObject listRoutes(String partnerCode,int pageNumber, int pageSize) {
         try {
-            localUtilsService.authenticatedUser();
-            JSONObject search = object.getJSONObject("search");
-            String partnerCode = null;
-            if (search != null && search.containsKey(PARTNER_CODE)) {
-                partnerCode = search.getString(PARTNER_CODE);
+            SystemUserModel authenticatedUser = localUtilsService.authenticatedUser();
+            if (StringUtils.isNotBlank(authenticatedUser.getPartnerCode())) {
                 localUtilsService.validatePartner(partnerCode);
+                return new OperationReturnObject(200, ROUTES_FETCHED_SUCCESSFULLY, routeRepository.findAllByPartnerCode(partnerCode, PageRequest.of(pageNumber, pageSize)));
             }
-            return new OperationReturnObject(200, "Routes fetched successfully", routeRepository.findAllByPartnerCode(partnerCode));
+
+            localUtilsService.belongsTo(AppDomains.BACK_OFFICE);
+            if (localUtilsService.getUserDomain().equals(AppDomains.BACK_OFFICE) && StringUtils.isNotBlank(partnerCode)){
+                localUtilsService.validatePartner(partnerCode);
+                return new OperationReturnObject(200, ROUTES_FETCHED_SUCCESSFULLY, routeRepository.findAllByPartnerCode(partnerCode, PageRequest.of(pageNumber, pageSize)));
+            }
+            return new OperationReturnObject(200, ROUTES_FETCHED_SUCCESSFULLY, routeRepository.findAll(PageRequest.of(pageNumber, pageSize)));
         } catch (IllegalArgumentException e) {
             return new OperationReturnObject(400, e.getMessage(), null);
         } catch (Exception e) {
@@ -122,13 +130,9 @@ public class RouteService{
     }
 
     //Get Single route details
-    private OperationReturnObject getRouteDetails(JSONObject object) {
+    public OperationReturnObject getRouteDetails(long routeId) {
         try {
             localUtilsService.authenticatedUser();
-            localUtilsService.requires(object, DATA);
-            JSONObject data = object.getJSONObject(DATA);
-            localUtilsService.requires(data, ROUTE_ID);
-            Long routeId = data.getLong(ROUTE_ID);
 
             RouteModel existingRoute = routeRepository.findById(routeId)
                     .orElseThrow(() -> new IllegalArgumentException("Route with ID " + routeId + " not found"));

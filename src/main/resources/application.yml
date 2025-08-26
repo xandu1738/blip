@@ -38,6 +38,8 @@ spring:
 
   cloud:
     gcp:
+      credentials:
+        location: ${gcpCredentialsFile}
       config:
         project-id: ${gcpProjectId}
   data:

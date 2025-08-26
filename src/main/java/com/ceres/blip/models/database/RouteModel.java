@@ -31,7 +31,7 @@ public class RouteModel {
     @Column(name = "estimated_distance", nullable = false, precision = 10, scale = 2)
     private BigDecimal estimatedDistance;
 
-    @Column(name = "estimated_duration_hrs", nullable = false, precision = 10, scale = 2)
+    @Column(name = "estimated_duration_hrs", nullable = false, precision = 10)
     private Double estimatedDuration;
 
     @Enumerated(EnumType.STRING)
