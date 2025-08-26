@@ -1,0 +1,17 @@
+package com.ceres.blip.repositories;
+
+import com.ceres.blip.models.database.SystemUserModel;
+import com.ceres.blip.models.jpa_helpers.repository.JetRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
+
+@Repository
+public interface SystemUserRepository extends JetRepository<SystemUserModel, Long> {
+    Optional<SystemUserModel> findByUsername(String username);
+
+    Optional<SystemUserModel> findByEmail(String email);
+
+    Optional<SystemUserModel> findByUsernameOrEmail(String username, String email);
+}
+

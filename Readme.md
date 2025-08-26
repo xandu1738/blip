@@ -159,7 +159,7 @@ the database level through say `triggers` or something like that.
 Usage:
 
 ```java
-import repository.jpa_helpers.models.com.ceres.project.JetRepository;
+import repository.jpa_helpers.models.com.ceres.blip.JetRepository;
 
 //        declaration.
 

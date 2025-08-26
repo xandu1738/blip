@@ -5,8 +5,16 @@ spring:
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
 
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
 server:
   port: 7071
 
 application:
-  url: http://localhost:7071/api/v1/
+  url: http://localhost:7071
+
+logging:
+  level:
+    org.springframework.web: DEBUG
