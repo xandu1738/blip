@@ -4,12 +4,14 @@ import com.alibaba.fastjson2.JSONObject;
 import com.ceres.blip.exceptions.AuthorizationRequiredException;
 import com.ceres.blip.services.PartnersService;
 import com.ceres.blip.utils.OperationReturnObject;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/partners")
 @RequiredArgsConstructor
+@Tag(name = "Partners", description = "Partners API")
 public class PartnersController {
     private final PartnersService partnersService;
 
