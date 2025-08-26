@@ -3,12 +3,14 @@ package com.ceres.blip.api;
 import com.alibaba.fastjson2.JSONObject;
 import com.ceres.blip.services.RouteService;
 import com.ceres.blip.utils.OperationReturnObject;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/routes")
 @RequiredArgsConstructor
+@Tag(name = "Routes", description = "Routes API")
 public class RoutesController {
     private final RouteService routeService;
 

@@ -4,12 +4,14 @@ import com.alibaba.fastjson2.JSONObject;
 import com.ceres.blip.exceptions.AuthorizationRequiredException;
 import com.ceres.blip.services.UserManagementService;
 import com.ceres.blip.utils.OperationReturnObject;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/user-management")
+@Tag(name = "User Management", description = "User Management API")
 public class UserManagementController {
     private final UserManagementService userManagementService;
 
