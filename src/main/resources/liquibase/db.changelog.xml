@@ -7,5 +7,6 @@
     <include file="/changes/project_init.sql" relativeToChangelogFile="true"/>
     <include file="/changes/bootstrapping_entities.sql" relativeToChangelogFile="true"/>
     <include file="/changes/clients_table.sql" relativeToChangelogFile="true"/>
+    <include file="/changes/more_partner_customization.sql" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

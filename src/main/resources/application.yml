@@ -34,7 +34,7 @@ spring:
     password: ${smtpPassword}
 
   profiles:
-    active: uat
+    active: dev
 
   cloud:
     gcp:
@@ -61,8 +61,6 @@ file.upload-dir: ceres_files
 
 
 USE_DOMAINS: true
-ADMIN_ROLE_DOMAIN: BACK_OFFICE
-ADMIN_ROLE_NAME: ADMINISTRATOR
 
 logging:
   level:
@@ -78,11 +76,6 @@ management:
   endpoint:
     health:
       show-details: always
-    status:
-      http-mapping:
-        up: 200
-        down: 503
-        unknown: 503
 
   tracing:
     sampling:
@@ -96,4 +89,4 @@ gcp:
     name: ${gcpBucketName}
 
 application:
-  url: https://blip.sakisofts.com/api/v1/
+  url: https://blip.sakisofts.com
