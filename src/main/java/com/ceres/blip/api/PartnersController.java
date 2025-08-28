@@ -6,6 +6,7 @@ import com.ceres.blip.services.PartnersService;
 import com.ceres.blip.utils.OperationReturnObject;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,27 +17,27 @@ public class PartnersController {
     private final PartnersService partnersService;
 
     @PostMapping("/add-partner")
-    public OperationReturnObject addNewPartner(@RequestBody JSONObject request) {
-        return partnersService.addNewPartner(request);
+    public ResponseEntity<OperationReturnObject> addNewPartner(@RequestBody JSONObject request) {
+        return ResponseEntity.ok(partnersService.addNewPartner(request));
     }
 
     @PostMapping("/edit-partner-info")
-    public OperationReturnObject editPartnerInfo(@RequestBody JSONObject request) {
-        return partnersService.editPartnerInfo(request);
+    public ResponseEntity<OperationReturnObject> editPartnerInfo(@RequestBody JSONObject request) {
+        return ResponseEntity.ok(partnersService.editPartnerInfo(request));
     }
 
     @PostMapping("/update-partner-status")
-    public OperationReturnObject updatePartnerStatus(@RequestBody JSONObject request) throws AuthorizationRequiredException {
-        return partnersService.updatePartnerStatus(request);
+    public ResponseEntity<OperationReturnObject> updatePartnerStatus(@RequestBody JSONObject request) throws AuthorizationRequiredException {
+        return ResponseEntity.ok(partnersService.updatePartnerStatus(request));
     }
 
     @GetMapping("/list/{pageNumber}/{pageSize}")
-    public OperationReturnObject fetchPartnersList(@PathVariable int pageNumber, @PathVariable int pageSize) throws AuthorizationRequiredException {
-        return partnersService.fetchPartnersList(pageNumber, pageSize);
+    public ResponseEntity<OperationReturnObject> fetchPartnersList(@PathVariable int pageNumber, @PathVariable int pageSize) throws AuthorizationRequiredException {
+        return ResponseEntity.ok(partnersService.fetchPartnersList(pageNumber, pageSize));
     }
 
     @GetMapping("/profile/{partnerCode}")
-    public OperationReturnObject partnerProfile(@PathVariable String partnerCode) throws AuthorizationRequiredException {
-        return partnersService.partnerProfile(partnerCode);
+    public ResponseEntity<OperationReturnObject> partnerProfile(@PathVariable String partnerCode) throws AuthorizationRequiredException {
+        return ResponseEntity.ok(partnersService.partnerProfile(partnerCode));
     }
 }

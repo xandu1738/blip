@@ -6,6 +6,7 @@ import com.ceres.blip.services.VehicleService;
 import com.ceres.blip.utils.OperationReturnObject;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,27 +17,27 @@ public class VehicleController {
     private final VehicleService vehicleService;
 
     @PostMapping("/add-vehicle")
-    public OperationReturnObject addNewVehicle(@RequestBody JSONObject request) {
-        return vehicleService.addNewVehicle(request);
+    public ResponseEntity<OperationReturnObject> addNewVehicle(@RequestBody JSONObject request) {
+        return ResponseEntity.ok(vehicleService.addNewVehicle(request));
     }
 
     @PostMapping("/edit-vehicle-info")
-    public OperationReturnObject editVehicleInformation(@RequestBody JSONObject request) {
-        return vehicleService.editVehicleInformation(request);
+    public ResponseEntity<OperationReturnObject> editVehicleInformation(@RequestBody JSONObject request) {
+        return ResponseEntity.ok(vehicleService.editVehicleInformation(request));
     }
 
     @GetMapping("/list/{pageNumber}/{pageSize}")
-    public OperationReturnObject vehiclesList(@PathVariable int pageSize, @PathVariable int pageNumber) throws AuthorizationRequiredException {
-        return vehicleService.vehiclesList(pageNumber, pageSize);
+    public ResponseEntity<OperationReturnObject> vehiclesList(@PathVariable int pageSize, @PathVariable int pageNumber) throws AuthorizationRequiredException {
+        return ResponseEntity.ok(vehicleService.vehiclesList(pageNumber, pageSize));
     }
 
     @GetMapping("/{vehicleId}")
-    public OperationReturnObject vehicleProfile(@PathVariable long vehicleId) throws AuthorizationRequiredException {
-        return vehicleService.fetchVehicleDetails(vehicleId);
+    public ResponseEntity<OperationReturnObject> vehicleProfile(@PathVariable long vehicleId) throws AuthorizationRequiredException {
+        return ResponseEntity.ok(vehicleService.fetchVehicleDetails(vehicleId));
     }
 
     @GetMapping("/partner/{partnerCode}/{vehicleId}")
-    public OperationReturnObject assignVehicleToPartner(@PathVariable String partnerCode, @PathVariable Long vehicleId) {
-        return vehicleService.assignVehicleToPartner(partnerCode, vehicleId);
+    public ResponseEntity<OperationReturnObject> assignVehicleToPartner(@PathVariable String partnerCode, @PathVariable Long vehicleId) {
+        return ResponseEntity.ok(vehicleService.assignVehicleToPartner(partnerCode, vehicleId));
     }
 }
