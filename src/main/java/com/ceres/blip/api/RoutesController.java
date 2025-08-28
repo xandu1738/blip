@@ -5,6 +5,7 @@ import com.ceres.blip.services.RouteService;
 import com.ceres.blip.utils.OperationReturnObject;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,22 +16,22 @@ public class RoutesController {
     private final RouteService routeService;
 
     @PostMapping("/add-route")
-    public OperationReturnObject addNewRoute(@RequestBody JSONObject request) {
-        return routeService.createNewRoute(request);
+    public ResponseEntity<OperationReturnObject> addNewRoute(@RequestBody JSONObject request) {
+        return ResponseEntity.ok(routeService.createNewRoute(request));
     }
 
     @PostMapping("/edit-route-details")
-    public OperationReturnObject editRouteDetails(@RequestBody JSONObject request) {
-        return routeService.editRouteDetails(request);
+    public ResponseEntity<OperationReturnObject> editRouteDetails(@RequestBody JSONObject request) {
+        return ResponseEntity.ok(routeService.editRouteDetails(request));
     }
 
     @GetMapping("/{routeId}")
-    public OperationReturnObject getRouteDetails(@PathVariable long routeId) {
-        return routeService.getRouteDetails(routeId);
+    public ResponseEntity<OperationReturnObject> getRouteDetails(@PathVariable long routeId) {
+        return ResponseEntity.ok(routeService.getRouteDetails(routeId));
     }
 
     @GetMapping("/list/{partnerCode}/{pageNumber}/{pageSize}")
-    public OperationReturnObject routesList(@PathVariable String partnerCode, @PathVariable int pageSize, @PathVariable int pageNumber) {
-        return routeService.listRoutes(partnerCode, pageNumber, pageSize);
+    public ResponseEntity<OperationReturnObject> routesList(@PathVariable String partnerCode, @PathVariable int pageSize, @PathVariable int pageNumber) {
+        return ResponseEntity.ok(routeService.listRoutes(partnerCode, pageNumber, pageSize));
     }
 }

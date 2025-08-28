@@ -6,6 +6,7 @@ import com.ceres.blip.services.UserManagementService;
 import com.ceres.blip.utils.OperationReturnObject;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,27 +17,27 @@ public class UserManagementController {
     private final UserManagementService userManagementService;
 
     @PostMapping("/create-user")
-    public OperationReturnObject createUserProfile(@RequestBody JSONObject request) {
-        return userManagementService.signUp(request);
+    public ResponseEntity<OperationReturnObject> createUserProfile(@RequestBody JSONObject request) {
+        return ResponseEntity.ok(userManagementService.signUp(request));
     }
 
     @PostMapping("/login")
-    public OperationReturnObject login(@RequestBody JSONObject request) {
-        return userManagementService.login(request);
+    public ResponseEntity<OperationReturnObject> login(@RequestBody JSONObject request) {
+        return ResponseEntity.ok(userManagementService.login(request));
     }
 
     @PostMapping("/refresh-token")
-    public OperationReturnObject refreshToken(@RequestBody JSONObject request) throws AuthorizationRequiredException {
-        return userManagementService.refreshToken(request);
+    public ResponseEntity<OperationReturnObject> refreshToken(@RequestBody JSONObject request) throws AuthorizationRequiredException {
+        return ResponseEntity.ok(userManagementService.refreshToken(request));
     }
 
     @GetMapping("/users-list/{pageNumber}/{pageSize}")
-    public OperationReturnObject usersList(@PathVariable int pageNumber, @PathVariable int pageSize) throws AuthorizationRequiredException {
-        return userManagementService.usersList(pageNumber, pageSize);
+    public ResponseEntity<OperationReturnObject> usersList(@PathVariable int pageNumber, @PathVariable int pageSize) throws AuthorizationRequiredException {
+        return ResponseEntity.ok(userManagementService.usersList(pageNumber, pageSize));
     }
 
     @GetMapping("/users-profile/{id}")
-    public OperationReturnObject usersProfile(@PathVariable long id) throws AuthorizationRequiredException {
-        return userManagementService.usersProfile(id);
+    public ResponseEntity<OperationReturnObject> usersProfile(@PathVariable long id) throws AuthorizationRequiredException {
+        return ResponseEntity.ok(userManagementService.usersProfile(id));
     }
 }
