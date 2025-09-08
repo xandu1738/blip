@@ -3,10 +3,12 @@ package com.ceres.blip.utils;
 import com.alibaba.fastjson2.JSONObject;
 import com.ceres.blip.config.ApplicationConf;
 import com.ceres.blip.exceptions.AuthorizationRequiredException;
+import com.ceres.blip.models.database.ModuleModel;
 import com.ceres.blip.models.database.PartnerModel;
 import com.ceres.blip.models.database.SystemRoleModel;
 import com.ceres.blip.models.database.SystemUserModel;
 import com.ceres.blip.models.jpa_helpers.enums.AppDomains;
+import com.ceres.blip.repositories.ModuleRepository;
 import com.ceres.blip.repositories.PartnersRepository;
 import com.ceres.blip.repositories.SystemRoleRepository;
 import com.ceres.blip.repositories.SystemUserRepository;
@@ -14,6 +16,7 @@ import jakarta.annotation.Nullable;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -28,13 +31,18 @@ import java.util.*;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
-public class LocalUtilsService {
+public abstract class LocalUtilsService {
     private static final String AUTHENTICATION_REQUIRED = "AUTHENTICATION REQUIRED";
-    private final SystemUserRepository userRepository;
-    private final SystemRoleRepository roleRepository;
-    private final ApplicationConf userDetailService;
-    private final PartnersRepository partnersRepository;
+    @Autowired
+    private SystemUserRepository userRepository;
+    @Autowired
+    private SystemRoleRepository roleRepository;
+    @Autowired
+    private ApplicationConf userDetailService;
+    @Autowired
+    private PartnersRepository partnersRepository;
+    @Autowired
+    private ModuleRepository moduleRepository;
 
     /**
      * Works as ```requires()``` above, but will check for only one field
@@ -279,7 +287,12 @@ public class LocalUtilsService {
         return partnersRepository.findByPartnerCode(partnerCode).orElseThrow(
                 ()-> new IllegalStateException(String.format("Partner with code %s not found. Please contact admin to set up.", partnerCode))
         );
+    }
 
+    public ModuleModel getModule(String moduleCode) {
+        return moduleRepository.findByCode(moduleCode).orElseThrow(
+                ()-> new IllegalStateException(String.format("Module with code %s not found. Please contact admin.", moduleCode))
+        );
     }
 
     public void executeAsync(Runnable runnable) {

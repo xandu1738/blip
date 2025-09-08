@@ -22,7 +22,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class VehicleService {
+public class VehicleService extends LocalUtilsService{
     private static final String PARTNER_CODE = "partner_code";
     private static final String REGISTRATION_NUMBER = "registration_number";
     private static final String TYPE = "type";
@@ -33,16 +33,15 @@ public class VehicleService {
     private static final String STATUS = "status";
 
     private final VehicleRepository vehicleRepository;
-    private final LocalUtilsService localUtilsService;
 
     //Add a new vehicle for partner
     public OperationReturnObject addNewVehicle(JSONObject object) {
         try {
-            SystemUserModel authenticatedUser = localUtilsService.authenticatedUser();
+            SystemUserModel authenticatedUser = authenticatedUser();
 
-            localUtilsService.requires(object, DATA);
+            requires(object, DATA);
             JSONObject data = object.getJSONObject(DATA);
-            localUtilsService.requires(data, REGISTRATION_NUMBER, TYPE, PARTNER_CODE, CAPACITY);
+            requires(data, REGISTRATION_NUMBER, TYPE, PARTNER_CODE, CAPACITY);
             String registrationNumber = data.getString(REGISTRATION_NUMBER);
             String partnerCode = data.getString(PARTNER_CODE);
             String type = data.getString(TYPE);
@@ -56,7 +55,7 @@ public class VehicleService {
             vehicleModel.setRegistrationNumber(registrationNumber);
             vehicleModel.setPartnerCode(partnerCode);
             vehicleModel.setType(VehicleTypes.valueOf(type));
-            vehicleModel.setCreatedAt(localUtilsService.getCurrentTimestamp());
+            vehicleModel.setCreatedAt(getCurrentTimestamp());
             vehicleModel.setCreatedBy(authenticatedUser.getId());
             vehicleModel.setCapacity(capacity);
 
@@ -70,21 +69,21 @@ public class VehicleService {
     //Vehicle Bulk Registration: Receives a list of vehicles to be registered for a partner as a JSON array
     public OperationReturnObject bulkVehicleRegistration(JSONObject object) {
         try {
-            SystemUserModel authenticatedUser = localUtilsService.authenticatedUser();
+            SystemUserModel authenticatedUser = authenticatedUser();
 
-            localUtilsService.requires(object, DATA);
+            requires(object, DATA);
             JSONObject data = object.getJSONObject(DATA);
-            localUtilsService.requires(data, VEHICLES);
+            requires(data, VEHICLES);
 
             JSONArray vehiclesArray = data.getJSONArray(VEHICLES);
 
             String partnerCode = data.getString(PARTNER_CODE);
-            PartnerModel partner = localUtilsService.validatePartner(partnerCode);
+            PartnerModel partner = validatePartner(partnerCode);
 
             // Process each vehicle in the array
             vehiclesArray.forEach(vehicle -> {
                 JSONObject vehicleData = (JSONObject) vehicle;
-                localUtilsService.requires(vehicleData, REGISTRATION_NUMBER, TYPE, PARTNER_CODE, CAPACITY);
+                requires(vehicleData, REGISTRATION_NUMBER, TYPE, PARTNER_CODE, CAPACITY);
                 String registrationNumber = vehicleData.getString(REGISTRATION_NUMBER);
                 String type = vehicleData.getString(TYPE);
                 Integer capacity = vehicleData.getInteger(CAPACITY);
@@ -97,7 +96,7 @@ public class VehicleService {
                 vehicleModel.setRegistrationNumber(registrationNumber);
                 vehicleModel.setPartnerCode(partner.getPartnerCode());
                 vehicleModel.setType(VehicleTypes.valueOf(type));
-                vehicleModel.setCreatedAt(localUtilsService.getCurrentTimestamp());
+                vehicleModel.setCreatedAt(getCurrentTimestamp());
                 vehicleModel.setCreatedBy(authenticatedUser.getId());
                 vehicleModel.setCapacity(capacity);
 
@@ -113,11 +112,11 @@ public class VehicleService {
     //Edit Vehicle information
     public OperationReturnObject editVehicleInformation(JSONObject object) {
         try {
-            localUtilsService.authenticatedUser();
+            authenticatedUser();
 
-            localUtilsService.requires(object, DATA);
+            requires(object, DATA);
             JSONObject data = object.getJSONObject(DATA);
-            localUtilsService.requires(data, VEHICLE_ID);
+            requires(data, VEHICLE_ID);
             Long vehicleId = data.getLong(VEHICLE_ID);
 
             VehicleModel vehicleModel = vehicleRepository.findById(vehicleId)
@@ -151,9 +150,9 @@ public class VehicleService {
     //Assign Vehicle to partner
     public OperationReturnObject assignVehicleToPartner(String partnerCode, Long vehicleId) {
         try {
-            localUtilsService.authenticatedUser();
+            authenticatedUser();
 
-            PartnerModel partner = localUtilsService.validatePartner(partnerCode);
+            PartnerModel partner = validatePartner(partnerCode);
 
             VehicleModel vehicleModel = vehicleRepository.findById(vehicleId)
                     .orElseThrow(() -> new IllegalArgumentException("Vehicle not found"));
@@ -167,11 +166,11 @@ public class VehicleService {
     }
 
     public OperationReturnObject vehiclesList(int pageNumber, int pageSize) throws AuthorizationRequiredException {
-        localUtilsService.requiresAuth();
-        SystemUserModel authenticatedUser = localUtilsService.authenticatedUser();
+        requiresAuth();
+        SystemUserModel authenticatedUser = authenticatedUser();
         Page<VehicleModel> vehicles = null;
 
-        if (localUtilsService.getUserDomain().equals(AppDomains.BACK_OFFICE)){
+        if (getUserDomain().equals(AppDomains.BACK_OFFICE)){
             vehicles = vehicleRepository.findAll(PageRequest.of(pageNumber, pageSize));
             return new OperationReturnObject(200, "Vehicles list successfully fetched.", vehicles);
         }
@@ -181,7 +180,7 @@ public class VehicleService {
     }
 
     public OperationReturnObject fetchVehicleDetails(Long vehicleId) throws AuthorizationRequiredException {
-        localUtilsService.requiresAuth();
+        requiresAuth();
         VehicleModel vehicleModel = vehicleRepository.findById(vehicleId)
                 .orElseThrow(() -> new IllegalArgumentException("Vehicle not found"));
         return new OperationReturnObject(200, "Vehicle details successfully fetched.", vehicleModel);

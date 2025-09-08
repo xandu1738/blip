@@ -32,7 +32,7 @@ import java.util.*;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class UserManagementService {
+public class UserManagementService extends LocalUtilsService {
     private static final String ACCESS_TOKEN = "accessToken";
     private static final String REFRESH_TOKEN = "refreshToken";
     private static final String USER_EMAIL = "email";
@@ -49,14 +49,13 @@ public class UserManagementService {
     private final SystemUserRepository systemUserRepository;
     private final PasswordEncoder passwordEncoder;
     private final ApplicationEventPublisher publisher;
-    private final LocalUtilsService localUtilsService;
 
 
     public OperationReturnObject login(JSONObject request) {
-        localUtilsService.requires(request, "data");
+        requires(request, "data");
         JSONObject data = request.getJSONObject("data");
 
-        localUtilsService.requires(data, USER_EMAIL, USER_PASSWORD);
+        requires(data, USER_EMAIL, USER_PASSWORD);
 
         String email = data.getString(USER_EMAIL);
         String password = data.getString(USER_PASSWORD);
@@ -90,11 +89,11 @@ public class UserManagementService {
     }
 
     public OperationReturnObject refreshToken(JSONObject request) throws AuthorizationRequiredException {
-        localUtilsService.requiresAuth();
-        localUtilsService.requires(request, "data");
+        requiresAuth();
+        requires(request, "data");
 
         JSONObject data = request.getJSONObject("data");
-        localUtilsService.requires(data, REFRESH_TOKEN);
+        requires(data, REFRESH_TOKEN);
 
         try {
             String refreshToken = data.getString(REFRESH_TOKEN);
@@ -103,8 +102,8 @@ public class UserManagementService {
             if (!Objects.equals(tokenType, "REFRESH"))
                 throw new IllegalArgumentException("Refresh Token Required. You have provided an access token.");
 
-            if (jwtUtility.isTokenValid(refreshToken, localUtilsService.getContextUserDetails())) {
-                String token = jwtUtility.generateAccessToken(localUtilsService.getContextUserDetails(), "ACCESS");
+            if (jwtUtility.isTokenValid(refreshToken, getContextUserDetails())) {
+                String token = jwtUtility.generateAccessToken(getContextUserDetails(), "ACCESS");
                 return new OperationReturnObject(200, "Token successfully Refreshed.", token);
             }
             return new OperationReturnObject(401, "Invalid Refresh Token", null);
@@ -115,10 +114,10 @@ public class UserManagementService {
     }
 
     public OperationReturnObject signUp(JSONObject request) {
-        SystemUserModel authenticatedUser = localUtilsService.authenticatedUser();
-        localUtilsService.requires(request, "data");
+        SystemUserModel authenticatedUser = authenticatedUser();
+        requires(request, "data");
         JSONObject data = request.getJSONObject("data");
-        localUtilsService.requires(data, "role", "first_name", "last_name", USER_EMAIL, USER_PASSWORD);
+        requires(data, "role", "first_name", "last_name", USER_EMAIL, USER_PASSWORD);
         String role = data.getString("role");
         String firstName = data.getString("first_name");
         String lastName = data.getString("last_name");
@@ -127,9 +126,9 @@ public class UserManagementService {
 
         SystemUserModel user = new SystemUserModel();
         if (!Objects.equals(role, DefaultRoles.SUPER_ADMIN.name()) || !Objects.equals(authenticatedUser.getRoleCode(), DefaultRoles.SUPER_ADMIN.name())) {
-            localUtilsService.requires(data, "partner");
+            requires(data, "partner");
             String partner = data.getString("partner");
-            PartnerModel partnerProfile = localUtilsService.validatePartner(partner);
+            PartnerModel partnerProfile = validatePartner(partner);
             user.setPartnerCode(partnerProfile.getPartnerCode());
         }
 
@@ -150,12 +149,12 @@ public class UserManagementService {
         user.setEmail(email);
         user.setRoleCode(role);
         user.setPassword(passwordEncoder.encode(password));
-        user.setCreatedAt(localUtilsService.getCurrentTimestamp());
+        user.setCreatedAt(getCurrentTimestamp());
         user.setIsActive(true);
 
         systemUserRepository.save(user);
 
-        localUtilsService.executeAsync(() -> {
+        executeAsync(() -> {
             log.info("Sending user registration event for user {}", user.getEmail());
             publisher.publishEvent(new UserRegistrationEvent(user, applicationUrl, password));
         });
@@ -164,7 +163,7 @@ public class UserManagementService {
     }
 
     public OperationReturnObject usersList(int pageNumber, int pageSize) throws AuthorizationRequiredException {
-        localUtilsService.requiresAuth();
+        requiresAuth();
 
         List<UserDto> users = systemUserRepository.findAll(PageRequest.of(pageNumber, pageSize))
                 .stream()
@@ -175,7 +174,7 @@ public class UserManagementService {
     }
 
     public OperationReturnObject usersProfile(Long id) throws AuthorizationRequiredException {
-        localUtilsService.requiresAuth();
+        requiresAuth();
         if (id == null) {
             throw new IllegalStateException("Please specify user's ID");
         }
