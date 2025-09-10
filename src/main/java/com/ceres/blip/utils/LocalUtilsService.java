@@ -14,7 +14,6 @@ import com.ceres.blip.repositories.SystemRoleRepository;
 import com.ceres.blip.repositories.SystemUserRepository;
 import jakarta.annotation.Nullable;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -28,6 +27,7 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @Service
@@ -296,8 +296,7 @@ public abstract class LocalUtilsService {
     }
 
     public void executeAsync(Runnable runnable) {
-        Thread thread = new Thread(runnable);
-        thread.start();
+        CompletableFuture.runAsync(runnable);
     }
 }
 

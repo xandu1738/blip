@@ -49,8 +49,7 @@ public class TicketModel {
     @Column(name = "checked_in_by")
     private Long checkedInBy;
 
-    @Size(max = 30)
-    @Column(name = "qr_code", length = 30)
+    @Column(name = "qr_code")
     private String qrCode;
 
     @ColumnDefault("now()")
