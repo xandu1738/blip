@@ -1,10 +1,17 @@
-import {ApplicationConfig, provideBrowserGlobalErrorListeners, provideZoneChangeDetection} from '@angular/core';
+import {
+  ApplicationConfig,
+  importProvidersFrom,
+  provideBrowserGlobalErrorListeners,
+  provideZoneChangeDetection
+} from '@angular/core';
 import {provideRouter} from '@angular/router';
 
 import {routes} from './app.routes';
 import Nora from '@primeuix/themes/nora';
 import {providePrimeNG} from 'primeng/config';
 import {definePreset} from '@primeuix/themes';
+import {DialogService} from 'primeng/dynamicdialog';
+import {ConfirmationService, MessageService} from 'primeng/api';
 
 
 const CustomPreset = definePreset(Nora, {
@@ -68,6 +75,9 @@ export const appConfig: ApplicationConfig = {
       },
       ripple: true
     }),
-    provideRouter(routes)
+    provideRouter(routes),
+    DialogService,
+    ConfirmationService,
+    MessageService
   ]
 };

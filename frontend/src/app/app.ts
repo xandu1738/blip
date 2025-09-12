@@ -1,6 +1,7 @@
-import {Component, signal, WritableSignal} from '@angular/core';
+import {Component, OnInit, signal, WritableSignal} from '@angular/core';
 import {Button} from 'primeng/button';
 import {RouterOutlet} from '@angular/router';
+import {CommonService} from './services/commonService';
 
 @Component({
   selector: 'app-root',
@@ -8,8 +9,16 @@ import {RouterOutlet} from '@angular/router';
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
-export class App {
-  protected currentTheme:WritableSignal<string> = signal('light');
+export class App implements OnInit {
+  constructor(protected commonService: CommonService) {
+  }
+
+  ngOnInit() {
+    this.showLoader = this.commonService.showLoader;
+  }
+
+  protected currentTheme: WritableSignal<string> = signal('light');
+  showLoader: any;
 
   toggleDarkMode() {
     const element = document.querySelector('html')!;
