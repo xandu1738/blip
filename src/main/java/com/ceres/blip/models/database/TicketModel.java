@@ -8,7 +8,6 @@ import org.hibernate.annotations.ColumnDefault;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.time.Instant;
 
 @Getter
 @Setter
@@ -45,13 +44,12 @@ public class TicketModel {
     private String status;
 
     @Column(name = "check_in_time")
-    private Instant checkInTime;
+    private Timestamp checkInTime;
 
     @Column(name = "checked_in_by")
     private Long checkedInBy;
 
-    @Size(max = 30)
-    @Column(name = "qr_code", length = 30)
+    @Column(name = "qr_code")
     private String qrCode;
 
     @ColumnDefault("now()")

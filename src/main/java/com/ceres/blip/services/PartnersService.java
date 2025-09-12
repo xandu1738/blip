@@ -13,6 +13,7 @@ import com.ceres.blip.utils.OperationReturnObject;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -21,18 +22,17 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class PartnersService {
+public class PartnersService extends LocalUtilsService{
     private final LocalFileManager localFileManager;
     private final PartnersRepository partnersRepository;
-    private final LocalUtilsService localUtilsService;
 
 
     public OperationReturnObject addNewPartner(JSONObject request) {
-        localUtilsService.belongsTo(AppDomains.BACK_OFFICE);
-        localUtilsService.requires(request, "data");
+        belongsTo(AppDomains.BACK_OFFICE);
+        requires(request, "data");
 
         JSONObject data = request.getJSONObject("data");
-        localUtilsService.requires(data, "partner_name", "account_number", "contact_person", "contact_phone", "account_id", "business_reference", "active", "logo", "package");
+        requires(data, "partner_name", "account_number", "contact_person", "contact_phone", "account_id", "business_reference", "active", "logo", "package");
         String partnerName = data.getString("partner_name");
 
         if(StringUtils.isBlank(partnerName)){
@@ -56,13 +56,13 @@ public class PartnersService {
                 throw new IllegalArgumentException("Logo must be a base64 encoded image string.");
             }
             try {
-                String logoFilePath = localFileManager.storeBase64File(logo, localUtilsService.generateRandomString(20L), FileCategories.PARTNER_LOGO);
+                String logoFilePath = localFileManager.storeBase64File(logo, generateRandomString(20L), FileCategories.PARTNER_LOGO);
                 partnerModel.setLogo(logoFilePath);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new IllegalStateException(e.getMessage());
             }
         }
-        partnerModel.setDateCreated(localUtilsService.getCurrentTimestamp());
+        partnerModel.setDateCreated(getCurrentTimestamp());
         String pkg = data.getString("package");
         if(StringUtils.isBlank(pkg)){
             pkg = "FULL";
@@ -79,8 +79,8 @@ public class PartnersService {
     }
 
     public OperationReturnObject editPartnerInfo(JSONObject request) {
-        localUtilsService.belongsTo(AppDomains.BACK_OFFICE);
-        localUtilsService.requires(request, "data");
+        belongsTo(AppDomains.BACK_OFFICE);
+        requires(request, "data");
 
         JSONObject data = request.getJSONObject("data");
         Long id = data.getLong("id");
@@ -117,10 +117,10 @@ public class PartnersService {
                 throw new IllegalArgumentException("Logo must be a base64 encoded image string.");
             }
             try {
-                String logoFilePath = localFileManager.storeBase64File(logo, localUtilsService.generateRandomString(20L), FileCategories.PARTNER_LOGO);
+                String logoFilePath = localFileManager.storeBase64File(logo, generateRandomString(20L), FileCategories.PARTNER_LOGO);
                 partnerModel.setLogo(logoFilePath);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new IllegalStateException(e.getMessage());
             }
         }
 
@@ -139,19 +139,19 @@ public class PartnersService {
     }
 
     public OperationReturnObject fetchPartnersList(int pageNumber, int pageSize) throws AuthorizationRequiredException {
-        localUtilsService.belongsTo(AppDomains.BACK_OFFICE);
-        localUtilsService.requiresAuth();
+        belongsTo(AppDomains.BACK_OFFICE);
+        requiresAuth();
 
         List<PartnerModel> partners = partnersRepository.findAll(PageRequest.of(pageNumber,pageSize)).toList();
         return new OperationReturnObject(200, "Partners list successfully fetched.", partners);
     }
 
     public OperationReturnObject updatePartnerStatus(JSONObject request) throws AuthorizationRequiredException {
-        localUtilsService.belongsTo(AppDomains.BACK_OFFICE);
-        localUtilsService.requiresAuth();
-        localUtilsService.requires(request, "data");
+        belongsTo(AppDomains.BACK_OFFICE);
+        requiresAuth();
+        requires(request, "data");
         JSONObject data = request.getJSONObject("data");
-        localUtilsService.requires(data, "id", "active");
+        requires(data, "id", "active");
 
         Long id = data.getLong("id");
         Boolean active = data.getBoolean("active");
@@ -162,12 +162,12 @@ public class PartnersService {
         partnerModel.setActive(active);
         PartnerModel saved = partnersRepository.save(partnerModel);
 
-        String status = active ? "activated" : "deactivated";
+        String status = Boolean.TRUE.equals(active) ? "activated" : "deactivated";
         return new OperationReturnObject(200, "Partner successfully " + status + ".", saved);
     }
 
     public OperationReturnObject partnerProfile(String partnerCode) throws AuthorizationRequiredException {
-        localUtilsService.requiresAuth();
+        requiresAuth();
 
         if (StringUtils.isBlank(partnerCode)) {
             throw new IllegalArgumentException("Partner code cannot be empty");

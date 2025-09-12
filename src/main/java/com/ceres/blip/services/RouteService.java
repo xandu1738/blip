@@ -19,7 +19,7 @@ import java.math.BigDecimal;
 
 @Service
 @RequiredArgsConstructor
-public class RouteService{
+public class RouteService extends LocalUtilsService{
     private static final String DATA = "data";
     private static final String ROUTE_ID = "route_id";
     private static final String ORIGIN = "origin";
@@ -31,21 +31,20 @@ public class RouteService{
     private static final String INTERNAL_SERVER_ERROR = "Internal Server Error: ";
     private static final String ROUTES_FETCHED_SUCCESSFULLY = "Routes fetched successfully";
     private final RouteRepository routeRepository;
-    private final LocalUtilsService localUtilsService;
     //create a new route for a partner
     public OperationReturnObject createNewRoute(JSONObject object) {
         try {
-            SystemUserModel authenticatedUser = localUtilsService.authenticatedUser();
-            localUtilsService.requires(object, DATA);
+            SystemUserModel authenticatedUser = authenticatedUser();
+            requires(object, DATA);
             JSONObject data = object.getJSONObject(DATA);
-            localUtilsService.requires(data, ORIGIN, DESTINATION, PARTNER_CODE, ESTIMATED_DISTANCE, ESTIMATED_DURATION);
+            requires(data, ORIGIN, DESTINATION, PARTNER_CODE, ESTIMATED_DISTANCE, ESTIMATED_DURATION);
             String origin = data.getString(ORIGIN);
             String destination = data.getString(DESTINATION);
             String partnerCode = data.getString(PARTNER_CODE);
             Double estimatedDistance = data.getDouble(ESTIMATED_DISTANCE);
             Double estimatedDuration = data.getDouble(ESTIMATED_DURATION);
 
-            PartnerModel partner = localUtilsService.validatePartner(partnerCode);
+            PartnerModel partner = validatePartner(partnerCode);
 
             RouteModel routeModel = new RouteModel();
             routeModel.setOrigin(origin);
@@ -53,7 +52,7 @@ public class RouteService{
             routeModel.setPartnerCode(partner.getPartnerCode());
             routeModel.setEstimatedDistance(BigDecimal.valueOf(estimatedDistance));
             routeModel.setEstimatedDuration(estimatedDuration);
-            routeModel.setCreatedAt(localUtilsService.getCurrentTimestamp());
+            routeModel.setCreatedAt(getCurrentTimestamp());
             routeModel.setCreatedBy(authenticatedUser.getId());
             routeModel.setStatus(RouteStatus.ACTIVE);
 
@@ -69,10 +68,10 @@ public class RouteService{
     //Edit route details
     public OperationReturnObject editRouteDetails(JSONObject object) {
         try {
-            localUtilsService.requiresAuth();
-            localUtilsService.requires(object, DATA);
+            requiresAuth();
+            requires(object, DATA);
             JSONObject data = object.getJSONObject(DATA);
-            localUtilsService.requires(data, ROUTE_ID);
+            requires(data, ROUTE_ID);
             Long routeId = data.getLong(ROUTE_ID);
 
             RouteModel existingRoute = routeRepository.findById(routeId)
@@ -110,15 +109,15 @@ public class RouteService{
     //List all routes for a partner
     public OperationReturnObject listRoutes(String partnerCode,int pageNumber, int pageSize) {
         try {
-            SystemUserModel authenticatedUser = localUtilsService.authenticatedUser();
+            SystemUserModel authenticatedUser = authenticatedUser();
             if (StringUtils.isNotBlank(authenticatedUser.getPartnerCode())) {
-                localUtilsService.validatePartner(partnerCode);
+                validatePartner(partnerCode);
                 return new OperationReturnObject(200, ROUTES_FETCHED_SUCCESSFULLY, routeRepository.findAllByPartnerCode(partnerCode, PageRequest.of(pageNumber, pageSize)));
             }
 
-            localUtilsService.belongsTo(AppDomains.BACK_OFFICE);
-            if (localUtilsService.getUserDomain().equals(AppDomains.BACK_OFFICE) && StringUtils.isNotBlank(partnerCode)){
-                localUtilsService.validatePartner(partnerCode);
+            belongsTo(AppDomains.BACK_OFFICE);
+            if (getUserDomain().equals(AppDomains.BACK_OFFICE) && StringUtils.isNotBlank(partnerCode)){
+                validatePartner(partnerCode);
                 return new OperationReturnObject(200, ROUTES_FETCHED_SUCCESSFULLY, routeRepository.findAllByPartnerCode(partnerCode, PageRequest.of(pageNumber, pageSize)));
             }
             return new OperationReturnObject(200, ROUTES_FETCHED_SUCCESSFULLY, routeRepository.findAll(PageRequest.of(pageNumber, pageSize)));
@@ -132,7 +131,7 @@ public class RouteService{
     //Get Single route details
     public OperationReturnObject getRouteDetails(long routeId) {
         try {
-            localUtilsService.authenticatedUser();
+            authenticatedUser();
 
             RouteModel existingRoute = routeRepository.findById(routeId)
                     .orElseThrow(() -> new IllegalArgumentException("Route with ID " + routeId + " not found"));

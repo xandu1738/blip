@@ -1,0 +1,17 @@
+@if (showLoader) {
+  <div class="spinner-overlay">
+    <div class="css-spinner"></div>
+  </div>
+}
+
+<div class="flex align-center justify-between gap-2 p-3 navigation">
+  <h3 class="text-xl font-bold">Blip!</h3>
+  @if (currentTheme() == 'dark') {
+    <p-button icon="pi pi-sun" severity="secondary" [rounded]="true" (onClick)="toggleDarkMode()"></p-button>
+  } @else {
+    <p-button icon="pi pi-moon" severity="secondary" [rounded]="true" (onClick)="toggleDarkMode()"></p-button>
+  }
+</div>
+<div>
+  <router-outlet></router-outlet>
+</div>
