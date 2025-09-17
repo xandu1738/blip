@@ -28,4 +28,4 @@ A comprehensive platform that streamlines passenger transport and logistics oper
 - Use provided endpoints for booking, tracking, and management
 
 ## Contact
-For support or inquiries, contact [xandu1738@gmail.com](mailto:xandu1738@duck.com)
+For support or inquiries, contact [xandu1738@gmail.com](mailto:xandu1738@duck.com), [romanreynolds240@gmail.com](mailto:romanreynolds240@gmail.com) or [anthonykweya90@gmail.com](mailto:anthonykweya90@gmail.com)
