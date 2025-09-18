@@ -36,11 +36,13 @@ services:
       SPRING_DATASOURCE_PASSWORD: '@Test1234'
       gcpBucketName: ceres-bucket
       gcpProjectId: banded-plateau-321516
-      gcpCredentialsFile: classpath:banded-plateau-321516-006939d9d275.json
+      gcpCredentialsFile: file:/app/gcp-credentials.json
       SPRING_REDIS_HOST: redis
       SPRING_REDIS_PORT: 6379
     ports:
-      - "7107:8080"   # Host 7107 -> Container 8080
+      - "7107:7071"
+    volumes:
+      - ./src/main/resources/banded-plateau-321516-006939d9d275.json:/app/gcp-credentials.json
     depends_on:
       - db
       - redis
