@@ -5,6 +5,7 @@ import com.ceres.blip.exceptions.AuthorizationRequiredException;
 import com.ceres.blip.services.ModulesService;
 import com.ceres.blip.utils.OperationReturnObject;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -14,32 +15,32 @@ public class ModuleController {
     private final ModulesService modulesService;
 
     @GetMapping("/list/{pageNumber}/{pageSize}")
-    public OperationReturnObject modulesList(@PathVariable int pageSize, @PathVariable int pageNumber) {
-        return modulesService.modulesList(pageNumber, pageSize);
+    public ResponseEntity<OperationReturnObject> modulesList(@PathVariable int pageSize, @PathVariable int pageNumber) {
+        return ResponseEntity.ok(modulesService.modulesList(pageNumber, pageSize));
     }
 
     @GetMapping("/{id}")
-    public OperationReturnObject moduleDetail(@PathVariable Long id) {
-        return modulesService.moduleDetail(id);
+    public ResponseEntity<OperationReturnObject> moduleDetail(@PathVariable Long id) {
+        return ResponseEntity.ok(modulesService.moduleDetail(id));
     }
 
     @PostMapping("/add-module")
-    public OperationReturnObject addModule(@RequestBody JSONObject request){
-        return modulesService.addModule(request);
+    public ResponseEntity<OperationReturnObject> addModule(@RequestBody JSONObject request) {
+        return ResponseEntity.ok(modulesService.addModule(request));
     }
 
     @PostMapping("/edit-module")
-    public OperationReturnObject editModule(@RequestBody JSONObject request) throws AuthorizationRequiredException {
-        return modulesService.editModule(request);
+    public ResponseEntity<OperationReturnObject> editModule(@RequestBody JSONObject request) throws AuthorizationRequiredException {
+        return ResponseEntity.ok(modulesService.editModule(request));
     }
 
     @PostMapping("/subscribe")
-    public OperationReturnObject subscribeModule(@RequestBody JSONObject request) {
-        return modulesService.subscribeToModule(request);
+    public ResponseEntity<OperationReturnObject> subscribeModule(@RequestBody JSONObject request) {
+        return ResponseEntity.ok(modulesService.subscribeToModule(request));
     }
 
     @DeleteMapping("/{id}")
-    public OperationReturnObject deleteModule(@PathVariable Long id){
-        return modulesService.moduleDetail(id);
+    public ResponseEntity<OperationReturnObject> deleteModule(@PathVariable Long id) {
+        return ResponseEntity.ok(modulesService.moduleDetail(id));
     }
 }

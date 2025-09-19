@@ -13,6 +13,9 @@ import com.ceres.blip.utils.LocalUtilsService;
 import com.ceres.blip.utils.OperationReturnObject;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -59,6 +62,7 @@ public class TripService extends LocalUtilsService {
         return new OperationReturnObject(200, "Trip successfully added.", tripModel);
     }
 
+    @CachePut(value = "trip", key = "#object.data.id")
     public OperationReturnObject editTrip(JSONObject object) {
         requires(object, "data");
         JSONObject data = object.getJSONObject("data");
@@ -85,15 +89,18 @@ public class TripService extends LocalUtilsService {
         return new OperationReturnObject(200, "Trip successfully edited.", tripModel);
     }
 
+    @Cacheable(value = "trips", key = "#pageNumber + '-' + #pageSize")
     public OperationReturnObject tripList(int pageNumber, int pageSize) {
         Page<TripModel> trips = repository.findAll(PageRequest.of(pageNumber, pageSize));
         return new OperationReturnObject(200, "Trips list successfully fetched.", trips);
     }
 
+    @Cacheable(value = "trip", key = "#tripId")
     public OperationReturnObject tripDetails(long tripId) {
         return new OperationReturnObject(200, "Trip details successfully fetched.", repository.findById(tripId).orElse(null));
     }
 
+    @CacheEvict(value = "trips", key = "#tripId")
     public OperationReturnObject removeTrip(long tripId) {
         if (tripId == 0) {
             throw new IllegalArgumentException("Trip ID cannot be null");

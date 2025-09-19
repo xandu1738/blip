@@ -13,6 +13,7 @@ import com.ceres.blip.utils.LocalUtilsService;
 import com.ceres.blip.utils.OperationReturnObject;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.EnumUtils;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -165,6 +166,7 @@ public class VehicleService extends LocalUtilsService{
         }
     }
 
+    @Cacheable(value = "vehicles", key = "#pageNumber + '-' + #pageSize")
     public OperationReturnObject vehiclesList(int pageNumber, int pageSize) throws AuthorizationRequiredException {
         requiresAuth();
         SystemUserModel authenticatedUser = authenticatedUser();
@@ -179,6 +181,7 @@ public class VehicleService extends LocalUtilsService{
         return new OperationReturnObject(200, "Vehicles list successfully fetched.", vehicles);
     }
 
+    @Cacheable(value = "vehicle", key = "#vehicleId")
     public OperationReturnObject fetchVehicleDetails(Long vehicleId) throws AuthorizationRequiredException {
         requiresAuth();
         VehicleModel vehicleModel = vehicleRepository.findById(vehicleId)

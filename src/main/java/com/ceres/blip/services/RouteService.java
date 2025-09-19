@@ -12,6 +12,8 @@ import com.ceres.blip.utils.OperationReturnObject;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -66,6 +68,7 @@ public class RouteService extends LocalUtilsService{
     }
 
     //Edit route details
+    @CachePut(value = "routes", key = "#object.data.id")
     public OperationReturnObject editRouteDetails(JSONObject object) {
         try {
             requiresAuth();
@@ -107,6 +110,7 @@ public class RouteService extends LocalUtilsService{
     }
 
     //List all routes for a partner
+    @Cacheable(value = "routes", key = "#pageNumber + '-' + #pageSize")
     public OperationReturnObject listRoutes(String partnerCode,int pageNumber, int pageSize) {
         try {
             SystemUserModel authenticatedUser = authenticatedUser();
@@ -129,6 +133,7 @@ public class RouteService extends LocalUtilsService{
     }
 
     //Get Single route details
+    @Cacheable(value = "route", key = "#routeId")
     public OperationReturnObject getRouteDetails(long routeId) {
         try {
             authenticatedUser();

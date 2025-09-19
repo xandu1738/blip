@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -162,6 +163,7 @@ public class UserManagementService extends LocalUtilsService {
         return new OperationReturnObject(200, "User created successfully", null);
     }
 
+    @Cacheable(value = "users", key = "#pageNumber + '-' + #pageSize")
     public OperationReturnObject usersList(int pageNumber, int pageSize) throws AuthorizationRequiredException {
         requiresAuth();
 
@@ -173,6 +175,7 @@ public class UserManagementService extends LocalUtilsService {
         return new OperationReturnObject(200, "Users list successfully", users);
     }
 
+    @Cacheable(value = "user", key = "#id")
     public OperationReturnObject usersProfile(Long id) throws AuthorizationRequiredException {
         requiresAuth();
         if (id == null) {

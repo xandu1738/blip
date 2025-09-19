@@ -14,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +24,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class PartnersService extends LocalUtilsService{
+public class PartnersService extends LocalUtilsService {
     private final LocalFileManager localFileManager;
     private final PartnersRepository partnersRepository;
 
@@ -35,7 +37,7 @@ public class PartnersService extends LocalUtilsService{
         requires(data, "partner_name", "account_number", "contact_person", "contact_phone", "account_id", "business_reference", "active", "logo", "package");
         String partnerName = data.getString("partner_name");
 
-        if(StringUtils.isBlank(partnerName)){
+        if (StringUtils.isBlank(partnerName)) {
             throw new IllegalArgumentException("Partner name cannot be empty");
         }
         String logo = data.getString("logo");
@@ -51,7 +53,7 @@ public class PartnersService extends LocalUtilsService{
         partnerModel.setBusinessReference(data.getString("business_reference"));
         partnerModel.setActive(data.getBoolean("active"));
 
-        if (StringUtils.isNotBlank(logo)){
+        if (StringUtils.isNotBlank(logo)) {
             if (!logo.startsWith("data:image/")) {
                 throw new IllegalArgumentException("Logo must be a base64 encoded image string.");
             }
@@ -64,7 +66,7 @@ public class PartnersService extends LocalUtilsService{
         }
         partnerModel.setDateCreated(getCurrentTimestamp());
         String pkg = data.getString("package");
-        if(StringUtils.isBlank(pkg)){
+        if (StringUtils.isBlank(pkg)) {
             pkg = "FULL";
         }
 
@@ -74,10 +76,11 @@ public class PartnersService extends LocalUtilsService{
         partnerModel.setPackageField(pkg);
         PartnerModel saved = partnersRepository.save(partnerModel);
 
-        return new OperationReturnObject(200, "Partner successfully added.",saved);
+        return new OperationReturnObject(200, "Partner successfully added.", saved);
 
     }
 
+    @CachePut(value = "partners", key = "#request.data.id")
     public OperationReturnObject editPartnerInfo(JSONObject request) {
         belongsTo(AppDomains.BACK_OFFICE);
         requires(request, "data");
@@ -138,14 +141,16 @@ public class PartnersService extends LocalUtilsService{
         return new OperationReturnObject(200, "Partner info successfully updated.", saved);
     }
 
+    @Cacheable(value = "partners", key = "#pageNumber + '-' + #pageSize")
     public OperationReturnObject fetchPartnersList(int pageNumber, int pageSize) throws AuthorizationRequiredException {
         belongsTo(AppDomains.BACK_OFFICE);
         requiresAuth();
 
-        List<PartnerModel> partners = partnersRepository.findAll(PageRequest.of(pageNumber,pageSize)).toList();
+        List<PartnerModel> partners = partnersRepository.findAll(PageRequest.of(pageNumber, pageSize)).toList();
         return new OperationReturnObject(200, "Partners list successfully fetched.", partners);
     }
 
+    @CachePut(value = "partners", key = "#request.data.id")
     public OperationReturnObject updatePartnerStatus(JSONObject request) throws AuthorizationRequiredException {
         belongsTo(AppDomains.BACK_OFFICE);
         requiresAuth();
@@ -166,6 +171,7 @@ public class PartnersService extends LocalUtilsService{
         return new OperationReturnObject(200, "Partner successfully " + status + ".", saved);
     }
 
+    @Cacheable(value = "partner", key = "#partnerCode")
     public OperationReturnObject partnerProfile(String partnerCode) throws AuthorizationRequiredException {
         requiresAuth();
 
