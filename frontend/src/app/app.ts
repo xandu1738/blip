@@ -7,7 +7,7 @@ import {CommonService} from './services/commonService';
   selector: 'app-root',
   imports: [Button, RouterOutlet],
   templateUrl: './app.html',
-  styleUrl: './app.scss'
+  styleUrl: './app.css'
 })
 export class App implements OnInit {
   constructor(protected commonService: CommonService) {
