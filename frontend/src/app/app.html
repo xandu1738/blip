@@ -1,17 +1,42 @@
-@if (showLoader) {
-  <div class="spinner-overlay">
-    <div class="css-spinner"></div>
-  </div>
-}
-
-<div class="flex align-center justify-between gap-2 p-3 navigation">
-  <h3 class="text-xl font-bold">Blip!</h3>
-  @if (currentTheme() == 'dark') {
-    <p-button icon="pi pi-sun" severity="secondary" [rounded]="true" (onClick)="toggleDarkMode()"></p-button>
+<div class="flex h-screen overflow-hidden">
+  @if (!isLoggedIn) {
+    <router-outlet></router-outlet>
   } @else {
-    <p-button icon="pi pi-moon" severity="secondary" [rounded]="true" (onClick)="toggleDarkMode()"></p-button>
+    <div id="main-app" class="flex flex-col flex-1">
+      <!-- Header -->
+      <header class="bg-gray-800 text-white flex items-center justify-between p-4 shadow-lg z-10 relative">
+        <div class="flex items-center space-x-4">
+          <span class="text-xl font-bold">Blip!</span>
+          <p-megaMenu [model]="items" orientation="horizontal" class="sm:hidden md:flex">
+          </p-megaMenu>
+        </div>
+
+        <div class="flex items-center space-x-4">
+
+          <div class="md:hidden">
+            <button id="mobile-menu-button" class="text-white focus:outline-none" (click)="toggleMobileMenu()">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+              </svg>
+            </button>
+
+            @if (isMobileMenuOpen) {
+              <div class="absolute top-full right-0 mt-2 bg-gray-800 border border-gray-700 rounded-md shadow-lg">
+                <p-megaMenu [model]="items" orientation="vertical"></p-megaMenu>
+              </div>
+            }
+          </div>
+
+
+          <button id="logout-button" class="bg-gray-700 hover:bg-gray-600 rounded-full py-2 px-4 text-sm focus:outline-none transition duration-200" (click)="handleLogout()">
+            Log Out
+          </button>
+        </div>
+      </header>
+      <!-- Main Content Area -->
+      <main id="content-area" class="flex-1 overflow-y-auto p-8">
+        <router-outlet></router-outlet>
+      </main>
+    </div>
   }
-</div>
-<div>
-  <router-outlet></router-outlet>
 </div>

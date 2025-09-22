@@ -1,0 +1,21 @@
+/* Basic styling for the dashboard container */
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* Full viewport height */
+}
+
+/* Styling for the MegaMenu */
+.dashboard-megamenu {
+  background-color: #f8f9fa; /* Light background for the menu */
+  border-bottom: 1px solid #dee2e6; /* Separator line */
+  padding: 10px 20px;
+}
+
+/* Styling for the content area */
+.dashboard-content {
+  flex-grow: 1; /* Takes up remaining space */
+  padding: 20px;
+  overflow-y: auto; /* Enable scrolling if content overflows */
+  background-color: #e9ecef; /* Slightly darker background for content */
+}
