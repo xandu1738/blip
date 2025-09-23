@@ -1,23 +1,24 @@
 import {Component, OnInit, signal, WritableSignal} from '@angular/core';
-import {Router, RouterOutlet} from '@angular/router'; // Import Router
+import {Router, RouterOutlet} from '@angular/router';
 import {CommonService} from './services/commonService';
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { LoginComponent } from './login/login.component'; // Import LoginComponent
-import { AuthService } from './services/auth.service'; // Import AuthService
-import { MegaMenuModule } from 'primeng/megamenu'; // Import MegaMenuModule
-import { MegaMenuItem } from 'primeng/api'; // Import MegaMenuItem
+import {AuthService} from './services/auth.service';
+import {MegaMenuModule} from 'primeng/megamenu';
+import {MenuItem} from 'primeng/api';
+import {Menubar} from 'primeng/menubar';
+import {LoginComponent} from './login/login.component';
+import {ButtonDirective} from 'primeng/button';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, MegaMenuModule],
+  imports: [RouterOutlet, MegaMenuModule, Menubar, LoginComponent, ButtonDirective],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
 export class App implements OnInit {
   isLoggedIn: boolean = false; // Add login state
-  items: MegaMenuItem[] | undefined;
+  items: MenuItem[] | undefined;
 
-  constructor(protected commonService: CommonService, private router: Router, private authService: AuthService) { // Inject Router and AuthService
+  constructor(protected commonService: CommonService, private router: Router, private authService: AuthService) {
   }
 
   ngOnInit() {
@@ -30,37 +31,106 @@ export class App implements OnInit {
       {
         label: 'Dashboard',
         icon: 'pi pi-home',
-        routerLink: ['/dashboard']
+        command: () =>{this.router.navigate(['/dashboard'])}
       },
       {
-        label: 'Bus Booking',
-        icon: 'pi pi-ticket',
-        routerLink: ['/bus_booking']
+        label: 'Configuration',
+        icon: 'pi pi-spinner',
+        items:[
+          {
+            label: 'Partners',
+            icon: 'pi pi-ticket',
+            command: () =>{this.router.navigate(['/bus-booking'])}
+          },
+          {
+            label: 'Modules & Subscriptions',
+            icon: 'pi pi-verified',
+            command: () =>{this.router.navigate(['/bus-booking'])}
+          }
+        ]
       },
       {
-        label: 'Parcels',
+        label: 'Management',
         icon: 'pi pi-box',
-        routerLink: ['/parcels']
+        items:[
+          {
+            label: 'Bus Booking',
+            icon: 'pi pi-ticket',
+            command: () =>{this.router.navigate(['/bus-booking'])}
+          },
+          {
+            label: 'Drivers',
+            icon: 'pi pi-user',
+            command: () =>{this.router.navigate([''])}
+          },
+          {
+            label:'Vehicles',
+            icon: 'pi pi-car',
+            command: () =>{this.router.navigate([''])}
+          },
+          {
+            label:'Routes & Trips',
+            icon: 'pi pi-map',
+            command: () =>{this.router.navigate([''])}
+          },
+          {
+            label:'Fares and Charges',
+            icon: 'pi pi-megaphone',
+            command: () =>{this.router.navigate([''])}
+          },
+        ]
       },
       {
-        label: 'Tracking',
-        icon: 'pi pi-map-marker',
-        routerLink: ['/tracking']
+        label: 'Logistics',
+        icon: 'pi pi-box',
+        items:[
+          {
+            label: 'Tracking',
+            icon: 'pi pi-map-marker',
+            command: () =>{this.router.navigate(['/tracking'])}
+          },
+          {
+            label:'Parcels',
+            icon: 'pi pi-gift',
+            command: () =>{this.router.navigate(['/parcels'])}
+          },
+          {
+            label:'Fleets & Consignments',
+            icon: 'pi pi-warehouse',
+            command: () =>{this.router.navigate(['/parcels'])}
+          },
+        ]
       },
       {
         label: 'Payments',
         icon: 'pi pi-wallet',
-        routerLink: ['/payments']
+        command: () =>{this.router.navigate(['/payments'])}
       },
       {
-        label: 'Reports',
+        label: 'Analytics',
         icon: 'pi pi-chart-bar',
-        routerLink: ['/reports']
+        items:[
+          {
+            label:'General Reports',
+            icon: 'pi pi-receipt',
+            command: () =>{this.router.navigate(['/reports'])}
+          },
+          {
+            label:'Travel Reports',
+            icon: 'pi pi-car',
+            command: () =>{this.router.navigate(['/reports'])}
+          },
+          {
+            label:'Logistics Reports',
+            icon: 'pi pi-shopping-bag',
+            command: () =>{this.router.navigate(['/reports'])}
+          }
+        ]
       },
       {
         label: 'Settings',
         icon: 'pi pi-cog',
-        routerLink: ['/settings']
+        command: () =>{this.router.navigate(['/settings'])}
       }
     ];
   }

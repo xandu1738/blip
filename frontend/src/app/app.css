@@ -5,6 +5,17 @@
   }
 }
 
+.logo-avatar{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: rgba(48, 79, 103, 0.51);
+  color: white;
+  font-weight: bold;
+}
 
 .spinner-overlay {
   position: fixed;
