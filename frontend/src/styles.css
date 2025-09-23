@@ -1,21 +1,43 @@
 @import "primeicons/primeicons.css";
 @import "tailwindcss";
 
+:root{
+  --blue-one: #03045E;
+  --blue-two: #023E8A;
+  --blue-three: #0077B6;
+  --blue-four: #0096C7;
+  --blue-five: #00D4D8;
+  --blue-six: #48CAE4;
+  --blue-seven: #90E0EF;
+  --blue-eight: #ADE8F4;
+  --blue-nine: #CAF0F8;
+}
+
+body{
+  background-color: rgba(175, 175, 175, 0.21);
+}
+
+.p-menubar{
+  padding: 20px !important;
+  border: 1px solid rgba(128, 128, 128, 0.34) !important;
+}
+
 .p-button {
-  --p-button-bg: var(--p-primary-color);
-  --p-button-text-color: var(--p-primary-contrast-color);
+  background: #0096C7 !important;
+  color: white !important;
+  border: none !important;
 
-  &:hover {
-    --p-button-bg: var(--p-primary-hover-color);
-  }
+  /*&:hover {*/
+  /*  --p-button-bg: var(--p-primary-hover-color);*/
+  /*}*/
 
-  &:active {
-    --p-button-bg: var(--p-primary-active-color);
-  }
+  /*&:active {*/
+  /*  --p-button-bg: var(--p-primary-active-color);*/
+  /*}*/
 
-  &:focus-visible {
-    box-shadow: 0 0 0 2px var(--p-primary-focus-ring-color);
-  }
+  /*&:focus-visible {*/
+  /*  box-shadow: 0 0 0 2px var(--p-primary-focus-ring-color);*/
+  /*}*/
 }
 
 .dark-mode {
@@ -29,10 +51,4 @@
   --on-secondary-color: #000000;
   --on-surface-color: #ffffff;
   --on-error-color: #000000;
-}
-
-.p-button {
-  color: var(--p-button-primary-color);
-  background: var(--p-button-primary-background);
-  border: 1px solid var(--p-button-primary-border-color);
 }
