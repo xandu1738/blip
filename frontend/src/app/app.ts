@@ -1,28 +1,43 @@
 import {Component, OnInit, signal, WritableSignal} from '@angular/core';
 import {Router, RouterOutlet} from '@angular/router'; // Import Router
+import {CommonModule} from '@angular/common';
 import {CommonService} from './services/commonService';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { LoginComponent } from './login/login.component'; // Import LoginComponent
 import { AuthService } from './services/auth.service'; // Import AuthService
+import { LoaderService } from './services/loader.service';
 import { MegaMenuModule } from 'primeng/megamenu'; // Import MegaMenuModule
+import { ToastModule } from 'primeng/toast'; // Import ToastModule
 import { MegaMenuItem } from 'primeng/api'; // Import MegaMenuItem
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, MegaMenuModule],
+  imports: [RouterOutlet, MegaMenuModule, ToastModule, CommonModule],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
 export class App implements OnInit {
   isLoggedIn: boolean = false; // Add login state
   items: MegaMenuItem[] | undefined;
+  showLoader: boolean = false;
 
-  constructor(protected commonService: CommonService, private router: Router, private authService: AuthService) { // Inject Router and AuthService
+  constructor(
+    protected commonService: CommonService, 
+    private router: Router, 
+    private authService: AuthService,
+    private loaderService: LoaderService
+  ) { // Inject Router and AuthService
   }
 
   ngOnInit() {
-    this.showLoader = this.commonService.showLoader;
+    // Subscribe to loader service
+    this.loaderService.status.subscribe((isLoading: boolean) => {
+      this.showLoader = isLoading;
+    });
+    
+    // Subscribe to authentication state
     this.authService.isLoggedIn.subscribe((loggedIn: boolean) => {
+      console.log('App component: Login state changed to:', loggedIn); // Debug log
       this.isLoggedIn = loggedIn;
     });
 
@@ -66,7 +81,6 @@ export class App implements OnInit {
   }
 
   protected currentTheme: WritableSignal<string> = signal('light');
-  showLoader: any;
 
   toggleDarkMode() {
     const element = document.querySelector('html')!;

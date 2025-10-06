@@ -1,21 +1,75 @@
-<div class="bg-[radial-gradient(50%_50%_at_50%_50%,transparent_0%,transparent_75%,#B6CC66_76%,#B6CC66_85%,#EDFFDB_86%,#EDFFDB_94%,#FFFFFF_95%,#FFFFFF_103%,#D9E6A7_104%,#D9E6A7_112%,#798B3C_113%,#798B3C_121%,#FFFFFF_122%,#FFFFFF_130%,#E0EAD7_131%,#E0EAD7_140%),radial-gradient(50%_50%_at_50%_50%,#FFFFFFFF_0%,#FFFFFFFF_75%,#B6CC66_76%,#B6CC66_85%,#EDFFDB_86%,#EDFFDB_94%,#FFFFFF_95%,#FFFFFF_103%,#D9E6A7_104%,#D9E6A7_112%,#798B3C_113%,#798B3C_121%,#FFFFFF_122%,#FFFFFF_130%,#E0EAD7_131%,#E0EAD7_140%)] bg-[length:110px_110px] bg-[position:0px_0px,55px_55px] flex items-center justify-center w-screen h-screen">
-    <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
-        <div class="flex flex-col items-center mb-6">
-            <span class="text-3xl font-bold text-gray-800 mb-2">Blip!</span>
-            <h1 class="text-xl text-gray-700">Login to your account</h1>
-        </div>
-        <form id="login-form" class="space-y-4" (ngSubmit)="onLogin()">
-            <div>
-                <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
-                <input type="text" id="username" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2" required [(ngModel)]="username" name="username">
-            </div>
-            <div>
-                <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
-                <input type="password" id="password" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2" required [(ngModel)]="password" name="password">
-            </div>
-            <button type="submit" class="w-full bg-gray-800 text-white py-2 px-4 rounded-md hover:bg-gray-700 transition duration-200">
-                Log In
-            </button>
-        </form>
+<div class="min-h-screen w-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-700 flex items-center justify-center p-6">
+  <div class="w-full max-w-md space-y-8 bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 p-8">
+
+    <!-- Logo & Header -->
+    <div class="text-center">
+      <div class="mx-auto h-16 w-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mb-4">
+        <svg class="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+        </svg>
+      </div>
+      <h2 class="text-3xl font-extrabold text-white mb-1">Blip!</h2>
+      <p class="text-gray-300 text-sm">Transport Management System</p>
     </div>
+
+    <!-- Login Form -->
+    <form class="space-y-6" (ngSubmit)="onLogin()">
+      <div>
+        <label for="username" class="sr-only">Username</label>
+        <div class="relative">
+          <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"></path>
+            </svg>
+          </span>
+          <input
+            id="username"
+            name="username"
+            type="email"
+            [(ngModel)]="username"
+            [disabled]="isLoading"
+            class="block w-full pl-10 pr-3 py-3 border border-gray-300/30 rounded-lg leading-5 bg-white/10 placeholder-gray-400 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
+            placeholder="Username" />
+        </div>
+      </div>
+
+      <div>
+        <label for="password" class="sr-only">Password</label>
+        <div class="relative">
+          <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+            </svg>
+          </span>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            [(ngModel)]="password"
+            [disabled]="isLoading"
+            class="block w-full pl-10 pr-3 py-3 border border-gray-300/30 rounded-lg leading-5 bg-white/10 placeholder-gray-400 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
+            placeholder="Password" />
+        </div>
+      </div>
+
+      <!-- Submit -->
+      <button
+        type="submit"
+        [disabled]="isLoading"
+        class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 transition transform hover:scale-105">
+        <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+          <svg *ngIf="!isLoading" class="h-5 w-5 text-blue-300 group-hover:text-blue-200" fill="currentColor"
+               viewBox="0 0 20 20">
+            <path fill-rule="evenodd"
+                  d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+                  clip-rule="evenodd"></path>
+          </svg>
+        </span>
+        {{ isLoading ? 'Signing in...' : 'Sign in' }}
+      </button>
+    </form>
+  </div>
 </div>

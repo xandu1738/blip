@@ -1,0 +1,134 @@
+<div class="bg-[radial-gradient(50%_50%_at_50%_50%,transparent_0%,transparent_75%,#B6CC66_76%,#B6CC66_85%,#EDFFDB_86%,#EDFFDB_94%,#FFFFFF_95%,#FFFFFF_103%,#D9E6A7_104%,#D9E6A7_112%,#798B3C_113%,#798B3C_121%,#FFFFFF_122%,#FFFFFF_130%,#E0EAD7_131%,#E0EAD7_140%),radial-gradient(50%_50%_at_50%_50%,#FFFFFFFF_0%,#FFFFFFFF_75%,#B6CC66_76%,#B6CC66_85%,#EDFFDB_86%,#EDFFDB_94%,#FFFFFF_95%,#FFFFFF_103%,#D9E6A7_104%,#D9E6A7_112%,#798B3C_113%,#798B3C_121%,#FFFFFF_122%,#FFFFFF_130%,#E0EAD7_131%,#E0EAD7_140%)] bg-[length:110px_110px] bg-[position:0px_0px,55px_55px] flex items-center justify-center w-screen h-screen py-8">
+    <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-md max-h-[90vh] overflow-y-auto">
+        <div class="flex flex-col items-center mb-6">
+            <span class="text-3xl font-bold text-gray-800 mb-2">Blip!</span>
+            <h1 class="text-xl text-gray-700">Create your account</h1>
+        </div>
+        
+        <form id="register-form" class="space-y-4" (ngSubmit)="onRegister()">
+            <!-- First Name -->
+            <div>
+                <label for="firstName" class="block text-sm font-medium text-gray-700">First Name</label>
+                <input 
+                    type="text" 
+                    id="firstName" 
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2" 
+                    required 
+                    [(ngModel)]="firstName" 
+                    name="firstName"
+                    [disabled]="isLoading"
+                    placeholder="Enter your first name">
+            </div>
+
+            <!-- Last Name -->
+            <div>
+                <label for="lastName" class="block text-sm font-medium text-gray-700">Last Name</label>
+                <input 
+                    type="text" 
+                    id="lastName" 
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2" 
+                    required 
+                    [(ngModel)]="lastName" 
+                    name="lastName"
+                    [disabled]="isLoading"
+                    placeholder="Enter your last name">
+            </div>
+
+            <!-- Email -->
+            <div>
+                <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                <input 
+                    type="email" 
+                    id="email" 
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2" 
+                    required 
+                    [(ngModel)]="email" 
+                    name="email"
+                    [disabled]="isLoading"
+                    placeholder="Enter your email">
+            </div>
+
+            <!-- Role -->
+            <div>
+                <label for="role" class="block text-sm font-medium text-gray-700">Role</label>
+                <select 
+                    id="role" 
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2" 
+                    required 
+                    [(ngModel)]="role" 
+                    name="role"
+                    [disabled]="isLoading">
+                    <option *ngFor="let roleOption of roles" [value]="roleOption.value">
+                        {{ roleOption.label }}
+                    </option>
+                </select>
+            </div>
+
+            <!-- Partner (conditional) -->
+            <div *ngIf="role !== 'SUPER_ADMIN'">
+                <label for="partner" class="block text-sm font-medium text-gray-700">Partner Code (Optional)</label>
+                <input 
+                    type="text" 
+                    id="partner" 
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2" 
+                    [(ngModel)]="partner" 
+                    name="partner"
+                    [disabled]="isLoading"
+                    placeholder="Enter partner code">
+            </div>
+
+            <!-- Password -->
+            <div>
+                <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                <input 
+                    type="password" 
+                    id="password" 
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2" 
+                    required 
+                    [(ngModel)]="password" 
+                    name="password"
+                    [disabled]="isLoading"
+                    placeholder="Create a password">
+                <p class="mt-1 text-xs text-gray-500">Password must be at least 6 characters long</p>
+            </div>
+
+            <!-- Confirm Password -->
+            <div>
+                <label for="confirmPassword" class="block text-sm font-medium text-gray-700">Confirm Password</label>
+                <input 
+                    type="password" 
+                    id="confirmPassword" 
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2" 
+                    required 
+                    [(ngModel)]="confirmPassword" 
+                    name="confirmPassword"
+                    [disabled]="isLoading"
+                    placeholder="Confirm your password">
+            </div>
+
+            <!-- Submit Button -->
+            <button 
+                type="submit" 
+                class="w-full bg-gray-800 text-white py-2 px-4 rounded-md hover:bg-gray-700 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                [disabled]="isLoading">
+                <span *ngIf="isLoading" class="mr-2">
+                    <svg class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                </span>
+                {{ isLoading ? 'Creating Account...' : 'Create Account' }}
+            </button>
+        </form>
+        
+        <!-- Login Link -->
+        <div class="mt-6 text-center">
+            <p class="text-sm text-gray-600">
+                Already have an account? 
+                <a routerLink="/login" class="text-blue-600 hover:text-blue-500 font-medium transition duration-200">
+                    Sign In
+                </a>
+            </p>
+        </div>
+    </div>
+</div>

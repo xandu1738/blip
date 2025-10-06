@@ -5,6 +5,8 @@ import {
   provideZoneChangeDetection
 } from '@angular/core';
 import {provideRouter} from '@angular/router';
+import {provideHttpClient, withInterceptors} from '@angular/common/http';
+import {provideAnimationsAsync} from '@angular/platform-browser/animations/async';
 
 import {routes} from './app.routes';
 import Nora from '@primeuix/themes/nora';
@@ -12,6 +14,7 @@ import {providePrimeNG} from 'primeng/config';
 import {definePreset} from '@primeuix/themes';
 import {DialogService} from 'primeng/dynamicdialog';
 import {ConfirmationService, MessageService} from 'primeng/api';
+import {authInterceptor} from './interceptors/auth.interceptor';
 
 
 const CustomPreset = definePreset(Nora, {
@@ -66,6 +69,8 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({
       eventCoalescing: true
     }),
+    provideHttpClient(withInterceptors([authInterceptor])),
+    provideAnimationsAsync(),
     providePrimeNG({
       theme: {
         preset: CustomPreset,

@@ -7,6 +7,8 @@ import { PaymentsComponent } from './payments/payments.component';
 import { ReportsComponent } from './reports/reports.component';
 import { SettingsComponent } from './settings/settings.component';
 import { LoginComponent } from './login/login.component';
+import { RegisterComponent } from './register/register.component';
+import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -19,31 +21,46 @@ export const routes: Routes = [
     component: LoginComponent
   },
   {
+    path: 'register',
+    component: RegisterComponent
+  },
+  {
     path: 'dashboard',
-    component: DashboardComponent
+    component: DashboardComponent,
+    canActivate: [authGuard]
   },
   {
     path: 'bus_booking',
-    component: BusBookingComponent
+    component: BusBookingComponent,
+    canActivate: [authGuard]
   },
   {
     path: 'parcels',
-    component: ParcelsComponent
+    component: ParcelsComponent,
+    canActivate: [authGuard]
   },
   {
     path: 'tracking',
-    component: TrackingComponent
+    component: TrackingComponent,
+    canActivate: [authGuard]
   },
   {
     path: 'payments',
-    component: PaymentsComponent
+    component: PaymentsComponent,
+    canActivate: [authGuard]
   },
   {
     path: 'reports',
-    component: ReportsComponent
+    component: ReportsComponent,
+    canActivate: [authGuard]
   },
   {
     path: 'settings',
-    component: SettingsComponent
+    component: SettingsComponent,
+    canActivate: [authGuard]
+  },
+  {
+    path: '**',
+    redirectTo: 'login'
   }
 ];
