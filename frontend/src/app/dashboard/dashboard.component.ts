@@ -6,6 +6,7 @@ interface Stat {
   value: string;
   icon: string;
   color: string;
+  text: string;
 }
 
 interface Activity {
@@ -46,13 +47,12 @@ interface Expense {
 })
 export class DashboardComponent {
   stats: Stat[] = [
-    { label: 'Total Bookings', value: '1,200', icon: '🚌', color: 'bg-blue-500' },
-    { label: 'Parcels Sent', value: '850', icon: '📦', color: 'bg-green-500' },
-    { label: 'Active Consignments', value: '150', icon: '📊', color: 'bg-purple-500' },
-    { label: 'Revenue', value: 'UGX 12,500', icon: '💰', color: 'bg-amber-500' },
-    { label: 'Revenue', value: 'UGX 12,500', icon: '💰', color: 'bg-amber-500' },
-    { label: 'Revenue', value: 'UGX 12,500', icon: '💰', color: 'bg-amber-500' },
-    { label: 'Revenue', value: 'UGX 12,500', icon: '💰', color: 'bg-amber-500' }
+    { label: 'Total Bookings', value: '1,200', icon: '🚌', color: 'bg-blue-500',text:'Bookings' },
+    { label: 'Parcels Sent', value: '850', icon: '📦', color: 'bg-green-500',text:'Parcels' },
+    { label: 'Active Consignments', value: '150', icon: '📊', color: 'bg-purple-500',text:'Consignments' },
+    { label: 'Revenue', value: 'UGX 12,000,500', icon: '💰', color: 'bg-amber-500',text:'Revenue' },
+    { label: 'Fleet Utilization', value: '82%', icon: '🚚', color: 'bg-indigo-500',text:'Fleet Usage' },
+    { label: 'Active Clients', value: '430', icon: '👥', color: 'bg-pink-500',text:'Active Client' },
 
   ];
 
