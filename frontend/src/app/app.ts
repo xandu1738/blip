@@ -7,12 +7,13 @@ import { LoginComponent } from './login/login.component'; // Import LoginCompone
 import { AuthService } from './services/auth.service'; // Import AuthService
 import { LoaderService } from './services/loader.service';
 import { MegaMenuModule } from 'primeng/megamenu'; // Import MegaMenuModule
+import {Menubar} from 'primeng/menubar';
 import { ToastModule } from 'primeng/toast'; // Import ToastModule
 import { MegaMenuItem } from 'primeng/api'; // Import MegaMenuItem
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, MegaMenuModule, ToastModule, CommonModule],
+  imports: [RouterOutlet, MegaMenuModule, ToastModule,Menubar, CommonModule],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
@@ -22,8 +23,8 @@ export class App implements OnInit {
   showLoader: boolean = false;
 
   constructor(
-    protected commonService: CommonService, 
-    private router: Router, 
+    protected commonService: CommonService,
+    private router: Router,
     private authService: AuthService,
     private loaderService: LoaderService
   ) { // Inject Router and AuthService
@@ -34,7 +35,7 @@ export class App implements OnInit {
     this.loaderService.status.subscribe((isLoading: boolean) => {
       this.showLoader = isLoading;
     });
-    
+
     // Subscribe to authentication state
     this.authService.isLoggedIn.subscribe((loggedIn: boolean) => {
       console.log('App component: Login state changed to:', loggedIn); // Debug log
@@ -45,37 +46,44 @@ export class App implements OnInit {
       {
         label: 'Dashboard',
         icon: 'pi pi-home',
-        routerLink: ['/dashboard']
+        routerLink: ['/dashboard'],
+        styleClass: 'custom-menu-item'
       },
       {
         label: 'Bus Booking',
         icon: 'pi pi-ticket',
-        routerLink: ['/bus_booking']
+        routerLink: ['/bus_booking'],
+        styleClass: 'custom-menu-item'
       },
       {
         label: 'Parcels',
         icon: 'pi pi-box',
-        routerLink: ['/parcels']
+        routerLink: ['/parcels'],
+        styleClass: 'custom-menu-item'
       },
       {
         label: 'Tracking',
         icon: 'pi pi-map-marker',
-        routerLink: ['/tracking']
+        routerLink: ['/tracking'],
+        styleClass: 'custom-menu-item'
       },
       {
         label: 'Payments',
         icon: 'pi pi-wallet',
-        routerLink: ['/payments']
+        routerLink: ['/payments'],
+        styleClass: 'custom-menu-item'
       },
       {
         label: 'Reports',
         icon: 'pi pi-chart-bar',
-        routerLink: ['/reports']
+        routerLink: ['/reports'],
+        styleClass: 'custom-menu-item'
       },
       {
         label: 'Settings',
         icon: 'pi pi-cog',
-        routerLink: ['/settings']
+        routerLink: ['/settings'],
+        styleClass: 'custom-menu-item'
       }
     ];
   }

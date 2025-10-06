@@ -1,27 +1,28 @@
 <h1 class="text-3xl font-bold font-sans text-gray-800 mb-6">Dashboard Overview</h1>
 
-<div class="flex flex-row gap-6 p-4 h-full w-full">
+<div class="flex flex-row flex-wrap gap-6 p-4 h-full w-full">
   <!-- Main Content Area (Left Side) -->
   <div class="flex-[3] flex flex-col gap-6">
 
     <!-- Stats Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       @for (stat of stats; track stat.label) {
-        <div class="bg-white p-6 rounded-lg shadow-md flex items-center justify-between hover:shadow-lg transition-shadow">
+        <div class="bg-white p-6 rounded-lg border border-gray-400 shadow-3xl flex items-center justify-between hover:shadow-lg transition-shadow">
           <div>
             <p class="text-sm text-gray-500">{{ stat.label }}</p>
             <p class="text-3xl font-bold text-gray-800">{{ stat.value }}</p>
           </div>
-          <div [class]="stat.color + ' p-4 rounded-full text-3xl'">
-            {{ stat.icon }}
-          </div>
+          <img src="https://placehold.co/80x80/E5E7EB/6B7280?text=Bookings" alt="Bus Bookings" class="rounded-full">
+<!--          <div [class]="stat.color + ' p-4 rounded-full text-3xl'">-->
+<!--            {{ stat.icon }}-->
+<!--          </div>-->
         </div>
       }
     </div>
 
     <!-- Overview Section with Chart -->
     <div class="bg-white rounded-lg shadow-md p-6">
-      <h2 class="text-2xl font-semibold text-gray-800 mb-6">Overview</h2>
+      <h2 class="text-2xl font-semibold text-gray-800 mb-6">Summary</h2>
 
       <!-- Chart Placeholder -->
       <div class="bg-gradient-to-br from-blue-50 to-purple-50 rounded-lg p-8 mb-6 h-64 flex items-center justify-center border border-gray-200">
@@ -72,10 +73,11 @@
   <div class="flex-[1] bg-white rounded-lg shadow-md p-6 flex flex-col h-fit sticky top-6">
     <div class="flex items-center justify-between mb-4">
       <h2 class="text-xl font-semibold text-gray-800">Notifications</h2>
-      <span class="text-2xl">🔔</span>
+    <!-- <span class="text-2xl">🔔</span>-->
     </div>
 
-    <div class="flex flex-col gap-3 max-h-[calc(100vh-200px)] overflow-y-auto">
+    <div class="flex flex-col gap-3 max-h-[calc(100vh-200px)] overflow-y-auto mb-2">
+      <!-- compose details -->
       @for (notification of notifications; track notification.id) {
         <div class="p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer border border-gray-200">
           <div class="flex gap-3">
@@ -99,8 +101,45 @@
       }
     </div>
 
-    <button class="mt-4 w-full py-2 text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors border-t pt-4">
+
+    <button class="mt-4 w-full py-2 text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors border-t border-gray-400 pt-4">
       View All Notifications
+    </button>
+
+
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-xl font-semibold text-gray-800">Expenses</h2>
+    <!-- <span class="text-2xl">🔔</span>-->
+    </div>
+
+
+    <div class="flex flex-col gap-3 max-h-[calc(100vh-200px)] overflow-y-auto">
+      <!-- compose details -->
+      @for (notification of notifications; track notification.id) {
+        <div class="p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer border border-gray-200">
+          <div class="flex gap-3">
+            <div class="flex-shrink-0">
+              <span [class]="'text-xl ' + notification.color">
+                @if (notification.type === 'success') { ✓ }
+                @else if (notification.type === 'warning') { ⚠ }
+                @else { ℹ }
+              </span>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-semibold text-gray-900 mb-1">{{ notification.title }}</p>
+              <p class="text-xs text-gray-600 mb-2">{{ notification.message }}</p>
+              <div class="flex items-center text-xs text-gray-400">
+                <span class="mr-1">🕐</span>
+                {{ notification.time }}
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+
+    <button class="mt-4 w-full py-2 text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors border-t border-gray-400 pt-4">
+      View All Expenses
     </button>
   </div>
 </div>

@@ -26,6 +26,17 @@ interface Notification {
   color: string;
 }
 
+interface Expense {
+  id: number;
+  type: string;
+  unit_cost: number;
+  quantity: number;
+  total: number;
+  code: string;
+}
+
+
+
 @Component({
   selector: 'app-dashboard',
   standalone: true,
@@ -38,7 +49,11 @@ export class DashboardComponent {
     { label: 'Total Bookings', value: '1,200', icon: '🚌', color: 'bg-blue-500' },
     { label: 'Parcels Sent', value: '850', icon: '📦', color: 'bg-green-500' },
     { label: 'Active Consignments', value: '150', icon: '📊', color: 'bg-purple-500' },
-    { label: 'Revenue', value: '$12,500', icon: '💰', color: 'bg-amber-500' }
+    { label: 'Revenue', value: 'UGX 12,500', icon: '💰', color: 'bg-amber-500' },
+    { label: 'Revenue', value: 'UGX 12,500', icon: '💰', color: 'bg-amber-500' },
+    { label: 'Revenue', value: 'UGX 12,500', icon: '💰', color: 'bg-amber-500' },
+    { label: 'Revenue', value: 'UGX 12,500', icon: '💰', color: 'bg-amber-500' }
+
   ];
 
   recentActivity: Activity[] = [
@@ -90,4 +105,16 @@ export class DashboardComponent {
       color: 'text-purple-500'
     }
   ];
+
+  expenses: Expense[] = [
+    {
+      id: 1,
+      type: "appliance",
+      unit_cost: 3000,
+      quantity: 30,
+      total: 30000,
+      code: "code",
+    }
+  ]
+
 }
