@@ -1,4 +1,470 @@
-<h1 class="text-3xl font-bold text-gray-800 mb-6">User Settings & Access Control</h1>
-<div class="bg-white p-6 rounded-lg shadow-md">
-    <p class="text-gray-500">Manage user roles, permissions, and system configurations.</p>
+<div class="flex flex-row flex-wrap gap-6 p-4 h-full w-full">
+  <!-- Main Content Area -->
+  <div class="flex-[3] flex flex-col gap-6">
+
+    <!-- Header -->
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="text-3xl font-bold font-sans text-gray-800 mb-2">Partner Configuration</h1>
+        <p class="text-gray-600">Manage partner access, packages, and operational settings</p>
+      </div>
+      <div class="flex gap-3">
+        <button
+          pButton
+          label="Export Partners"
+          icon="pi pi-download"
+          class="p-button-outlined px-4 py-2 rounded-lg border-2 border-gray-300 hover:border-blue-500 transition-colors"
+          (click)="exportConfiguration()">
+        </button>
+        <button
+          pButton
+          label="Add Partner"
+          icon="pi pi-plus"
+          class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow-md transition-colors"
+          (click)="openAddDialog()">
+        </button>
+      </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+      <div class="bg-white p-4 rounded-lg border border-gray-400 shadow-3xl">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm text-gray-500">Active Partners</p>
+            <p class="text-2xl font-bold text-blue-600">{{ getActiveModulesCount() }}</p>
+          </div>
+          <div class="bg-blue-100 p-3 rounded-full">
+            <span class="text-blue-600 text-xl">🚚</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white p-4 rounded-lg border border-gray-400 shadow-3xl">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm text-gray-500">Partner Status</p>
+            <p class="text-2xl font-bold text-green-600">Active</p>
+          </div>
+          <div class="bg-green-100 p-3 rounded-full">
+            <span class="text-green-600 text-xl">✓</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white p-4 rounded-lg border border-gray-400 shadow-3xl">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm text-gray-500">Last Sync</p>
+            <p class="text-2xl font-bold text-gray-700">Today</p>
+          </div>
+          <div class="bg-gray-100 p-3 rounded-full">
+            <span class="text-gray-600 text-xl">🕐</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white p-4 rounded-lg border border-gray-400 shadow-3xl">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm text-gray-500">Pending Requests</p>
+            <p class="text-2xl font-bold text-orange-600">{{ getPendingActionsCount() }}</p>
+          </div>
+          <div class="bg-orange-100 p-3 rounded-full">
+            <span class="text-orange-600 text-xl">⚠️</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Configuration Sections -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+      <!-- Service Packages -->
+      <div class="bg-white rounded-lg border border-gray-400 p-6">
+        <div class="flex items-center justify-between mb-6">
+          <div>
+            <h2 class="text-xl font-semibold text-gray-800">Service Packages</h2>
+            <p class="text-sm text-gray-600">Available logistics and transport modules</p>
+          </div>
+          <button
+            pButton
+            icon="pi pi-refresh"
+            class="p-button-outlined p-button-sm rounded-md"
+            (click)="refreshModules()">
+          </button>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="relative mb-4">
+          <span class="pi pi-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></span>
+          <input
+            type="text"
+            pInputText
+            [(ngModel)]="searchQuery"
+            placeholder="Search packages..."
+            class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent" />
+        </div>
+
+        <!-- Packages List -->
+        <div class="space-y-3 max-h-80 overflow-y-auto">
+          @for (module of filteredModules; track module.name) {
+            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors">
+              <div class="flex items-center gap-3">
+                <div class="bg-white p-2 rounded-full shadow-sm">
+                  @if (module.name === 'Transport') {
+                    <span class="text-lg">🚌</span>
+                  } @else if (module.name === 'Logistics') {
+                    <span class="text-lg">📦</span>
+                  } @else {
+                    <span class="text-lg">⚙️</span>
+                  }
+                </div>
+                <div>
+                  <h4 class="font-semibold text-gray-800">{{ module.name }}</h4>
+                  <p class="text-sm text-gray-600">{{ module.description }}</p>
+                  <div class="flex items-center gap-2 mt-1">
+                    <span class="px-2 py-1 text-xs bg-green-100 text-green-700 rounded-full">Subscribed</span>
+                    <span class="text-xs text-gray-500">v2.1.0</span>
+                  </div>
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <button
+                  pButton
+                  icon="pi pi-cog"
+                  class="p-button-text p-button-sm text-gray-600 hover:text-blue-600"
+                  (click)="configureModule(module)">
+                </button>
+                <button
+                  pButton
+                  icon="pi pi-ellipsis-v"
+                  class="p-button-text p-button-sm text-gray-600"
+                  (click)="showModuleOptions(module)">
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Partner Settings -->
+      <div class="bg-white rounded-lg border border-gray-400 p-6">
+        <div class="flex items-center justify-between mb-6">
+          <div>
+            <h2 class="text-xl font-semibold text-gray-800">Partner Settings</h2>
+            <p class="text-sm text-gray-600">Account preferences and access controls</p>
+          </div>
+          <button
+            pButton
+            icon="pi pi-save"
+            class="p-button-outlined p-button-sm rounded-md"
+            (click)="saveSettings()">
+          </button>
+        </div>
+
+        <div class="space-y-4">
+
+          <!-- Account Settings -->
+          <div class="border-b border-gray-200 pb-4">
+            <h4 class="font-medium text-gray-800 mb-3 flex items-center gap-2">
+              <span>👤</span> Account Information
+            </h4>
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <div>
+                  <label class="text-sm font-medium text-gray-700">Partner Status</label>
+                  <p class="text-xs text-gray-500">Current account status</p>
+                </div>
+                <select class="px-3 py-1 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-400">
+                  <option value="active">Active</option>
+                  <option value="suspended">Suspended</option>
+                  <option value="inactive">Inactive</option>
+                </select>
+              </div>
+
+              <div class="flex items-center justify-between">
+                <div>
+                  <label class="text-sm font-medium text-gray-700">API Access</label>
+                  <p class="text-xs text-gray-500">Enable API integration</p>
+                </div>
+                <label class="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" class="sr-only peer" [(ngModel)]="settings.debugMode">
+                  <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Fleet Settings -->
+          <div class="border-b border-gray-200 pb-4">
+            <h4 class="font-medium text-gray-800 mb-3 flex items-center gap-2">
+              <span>🚛</span> Fleet Management
+            </h4>
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <div>
+                  <label class="text-sm font-medium text-gray-700">Vehicle Limit</label>
+                  <p class="text-xs text-gray-500">Maximum number of vehicles</p>
+                </div>
+                <input
+                  type="number"
+                  [(ngModel)]="settings.sessionTimeout"
+                  class="w-20 px-2 py-1 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-400"
+                  min="5"
+                  max="480">
+              </div>
+
+              <div class="flex items-center justify-between">
+                <div>
+                  <label class="text-sm font-medium text-gray-700">Real-time Tracking</label>
+                  <p class="text-xs text-gray-500">Enable GPS tracking for fleet</p>
+                </div>
+                <label class="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" class="sr-only peer" [(ngModel)]="settings.twoFactorAuth">
+                  <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Notification Settings -->
+          <div class="pb-4">
+            <h4 class="font-medium text-gray-800 mb-3 flex items-center gap-2">
+              <span>🔔</span> Notifications
+            </h4>
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <div>
+                  <label class="text-sm font-medium text-gray-700">Booking Alerts</label>
+                  <p class="text-xs text-gray-500">Notify on new bookings</p>
+                </div>
+                <label class="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" class="sr-only peer" [(ngModel)]="settings.emailNotifications">
+                  <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                </label>
+              </div>
+
+              <div class="flex items-center justify-between">
+                <div>
+                  <label class="text-sm font-medium text-gray-700">Delivery Updates</label>
+                  <p class="text-xs text-gray-500">Status change notifications</p>
+                </div>
+                <label class="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" class="sr-only peer" [(ngModel)]="settings.pushNotifications">
+                  <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                </label>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Payment & Billing -->
+    <div class="bg-white rounded-lg border border-gray-400 p-6">
+      <div class="flex items-center justify-between mb-6">
+        <div>
+          <h2 class="text-xl font-semibold text-gray-800">Payment & Billing</h2>
+          <p class="text-sm text-gray-600">Manage payment methods and billing preferences</p>
+        </div>
+        <button
+          pButton
+          label="Add Payment Method"
+          icon="pi pi-credit-card"
+          class="p-button-outlined rounded-md"
+          (click)="addIntegration()">
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        @for (integration of integrations; track integration.name) {
+          <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 hover:shadow-md transition-shadow">
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center gap-3">
+                <div class="bg-white p-2 rounded-full shadow-sm">
+                  <span class="text-lg">{{ integration.icon }}</span>
+                </div>
+                <div>
+                  <h4 class="font-semibold text-gray-800">{{ integration.name }}</h4>
+                  <p class="text-xs text-gray-500">{{ integration.type }}</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-1">
+                <span [class]="'w-2 h-2 rounded-full ' + (integration.status === 'active' ? 'bg-green-400' : integration.status === 'error' ? 'bg-red-400' : 'bg-gray-400')"></span>
+                <span class="text-xs text-gray-600 capitalize">{{ integration.status }}</span>
+              </div>
+            </div>
+            <p class="text-sm text-gray-600 mb-3">{{ integration.description }}</p>
+            <div class="flex items-center justify-between">
+              <span class="text-xs text-gray-500">Last transaction: {{ integration.lastSync }}</span>
+              <div class="flex gap-1">
+                <button
+                  pButton
+                  icon="pi pi-cog"
+                  class="p-button-text p-button-sm text-gray-600 hover:text-blue-600"
+                  (click)="configureIntegration(integration)">
+                </button>
+                <button
+                  pButton
+                  icon="pi pi-refresh"
+                  class="p-button-text p-button-sm text-gray-600 hover:text-green-600"
+                  (click)="testIntegration(integration)">
+                </button>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Sidebar - Account Status -->
+  <div class="flex-[1] flex flex-col gap-4 h-fit sticky top-6">
+
+    <!-- Account Overview -->
+    <div class="bg-white rounded-lg border border-gray-400 p-4">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-semibold text-gray-800">Account Overview</h3>
+        <div class="flex items-center gap-1">
+          <span class="w-2 h-2 bg-green-400 rounded-full"></span>
+          <span class="text-sm text-green-600">Active</span>
+        </div>
+      </div>
+
+      <div class="space-y-3">
+        @for (status of systemStatus; track status.service) {
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span [class]="'w-2 h-2 rounded-full ' + (status.status === 'healthy' ? 'bg-green-400' : status.status === 'warning' ? 'bg-yellow-400' : 'bg-red-400')"></span>
+              <span class="text-sm text-gray-700">{{ status.service }}</span>
+            </div>
+            <span class="text-xs text-gray-500">{{ status.uptime }}</span>
+          </div>
+        }
+      </div>
+
+      <button class="mt-4 w-full py-2 text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors border-t border-gray-200 pt-4">
+        View Full Report
+      </button>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="bg-white rounded-lg border border-gray-400 p-4">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-semibold text-gray-800">Recent Activity</h3>
+        <span class="text-xs text-gray-500">Last 24h</span>
+      </div>
+
+      <div class="space-y-3 max-h-60 overflow-y-auto">
+        @for (change of recentChanges; track change.id) {
+          <div class="flex gap-3">
+            <div class="flex-shrink-0 mt-1">
+              <span [class]="'w-2 h-2 rounded-full ' + (change.type === 'added' ? 'bg-green-400' : change.type === 'modified' ? 'bg-blue-400' : 'bg-red-400')"></span>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm text-gray-800">{{ change.description }}</p>
+              <div class="flex items-center gap-2 mt-1">
+                <span class="text-xs text-gray-500">{{ change.user }}</span>
+                <span class="text-xs text-gray-400">•</span>
+                <span class="text-xs text-gray-400">{{ change.time }}</span>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+
+      <button class="mt-4 w-full py-2 text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors border-t border-gray-200 pt-4">
+        View All Activity
+      </button>
+    </div>
+
+  </div>
 </div>
+
+<!-- Add Partner Dialog -->
+<p-dialog
+  header="Add New Partner"
+  [(visible)]="showAddDialog"
+  [modal]="true"
+  [style]="{ width: '500px' }"
+  [closable]="true">
+
+  <div class="space-y-4">
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <label class="block text-gray-700 font-medium mb-2">Partner Name</label>
+        <input
+          type="text"
+          pInputText
+          [(ngModel)]="newModule.name"
+          placeholder="Enter partner name"
+          class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent" />
+      </div>
+
+      <div>
+        <label class="block text-gray-700 font-medium mb-2">Service Package</label>
+        <select class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400">
+          <option value="transport">Transport</option>
+          <option value="logistics">Logistics</option>
+          <option value="full">Full Package</option>
+        </select>
+      </div>
+    </div>
+
+    <div>
+      <label class="block text-gray-700 font-medium mb-2">Business Description</label>
+      <textarea
+        [(ngModel)]="newModule.description"
+        rows="3"
+        placeholder="Brief description of partner's business..."
+        class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent"></textarea>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <label class="block text-gray-700 font-medium mb-2">Contact Person</label>
+        <input
+          type="text"
+          pInputText
+          [(ngModel)]="newModule.version"
+          placeholder="Full name"
+          class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent" />
+      </div>
+
+      <div>
+        <label class="block text-gray-700 font-medium mb-2">Contact Phone</label>
+        <input
+          type="tel"
+          pInputText
+          placeholder="+256 XXX XXXXXX"
+          class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent" />
+      </div>
+    </div>
+
+    <div class="flex items-center gap-3 pt-4 border-t border-gray-200">
+      <input type="checkbox" id="autoStart" class="rounded">
+      <label for="autoStart" class="text-sm text-gray-700">Activate partner account immediately</label>
+    </div>
+
+    <div class="flex justify-end gap-3 mt-6">
+      <button
+        pButton
+        label="Cancel"
+        icon="pi pi-times"
+        class="p-button-outlined px-6 py-2 rounded-lg"
+        (click)="showAddDialog = false">
+      </button>
+
+      <button
+        pButton
+        label="Create Partner"
+        icon="pi pi-check"
+        class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg"
+        (click)="addModule()">
+      </button>
+    </div>
+  </div>
+
+</p-dialog>

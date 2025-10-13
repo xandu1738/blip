@@ -1,4 +1,12 @@
+
+
+
+
+
+
+
 <div class="flex h-screen overflow-hidden">
+
   @if (!isLoggedIn) {
     <app-login></app-login>
   } @else {
@@ -10,6 +18,7 @@
         </div>
         <div>Powered by QA</div>
       </div>
+
       <p-menubar [model]="items" class="sm:hidden md:flex m-3">
         <ng-template #end>
           <button id="logout-button" pButton size="small"
@@ -19,13 +28,13 @@
           </button>
         </ng-template>
       </p-menubar>
+
       <!-- Main Content Area -->
-      <main id="content-area" class="flex-1 overflow-y-auto p-8">
+      <main id="content-area" class="flex-1 overflow-y-auto p-2">
         <router-outlet></router-outlet>
       </main>
     </div>
   }
-
 
   <!-- Toast Notifications -->
   <p-toast position="top-right" [life]="5000"></p-toast>

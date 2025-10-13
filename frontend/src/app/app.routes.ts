@@ -9,12 +9,23 @@ import { SettingsComponent } from './settings/settings.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { authGuard } from './guards/auth.guard';
+import {Configuration} from './configuration/configuration';
 
 export const routes: Routes = [
   {
     path: '',
     redirectTo: 'login',
     pathMatch: 'full'
+  },
+  {
+    path: 'bus_booking',
+    component: BusBookingComponent,
+    canActivate: [authGuard]
+  },
+  {
+    path: 'dashboard',
+    component: DashboardComponent,
+    canActivate: [authGuard]
   },
   {
     path: 'login',
@@ -25,23 +36,18 @@ export const routes: Routes = [
     component: RegisterComponent
   },
   {
-    path: 'dashboard',
-    component: DashboardComponent,
+    path: 'partners',
+    component: ParcelsComponent,
     canActivate: [authGuard]
   },
   {
-    path: 'bus_booking',
-    component: BusBookingComponent,
+    path: 'modules',
+    component: ParcelsComponent,
     canActivate: [authGuard]
   },
   {
     path: 'parcels',
     component: ParcelsComponent,
-    canActivate: [authGuard]
-  },
-  {
-    path: 'tracking',
-    component: TrackingComponent,
     canActivate: [authGuard]
   },
   {
@@ -55,8 +61,18 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
   {
+    path: 'tracking',
+    component: TrackingComponent,
+    canActivate: [authGuard]
+  },
+  {
     path: 'settings',
     component: SettingsComponent,
+    canActivate: [authGuard]
+  },
+  {
+    path: 'configuration',
+    component: Configuration,
     canActivate: [authGuard]
   },
   {

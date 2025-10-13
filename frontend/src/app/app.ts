@@ -9,10 +9,11 @@ import { MegaMenuModule } from 'primeng/megamenu';
 import {Menubar} from 'primeng/menubar';
 import { ToastModule } from 'primeng/toast';
 import {MenuItem} from 'primeng/api';
+import { TableModule } from 'primeng/table';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, MegaMenuModule, ToastModule, Menubar, CommonModule, LoginComponent],
+  imports: [RouterOutlet, MegaMenuModule, ToastModule, Menubar, TableModule, CommonModule, LoginComponent],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
@@ -50,17 +51,17 @@ export class App implements OnInit {
       },
       {
         label: 'Configuration',
-        icon: 'pi pi-spinner',
+        icon: 'pi pi-briefcase',
         items:[
           {
             label: 'Partners',
             icon: 'pi pi-ticket',
-            command: () =>{this.router.navigate(['/dashboard'])}
+            command: () =>{this.router.navigate(['/register'])}
           },
           {
             label: 'Modules & Subscriptions',
             icon: 'pi pi-verified',
-            command: () =>{this.router.navigate(['/dashboard'])}
+            command: () =>{this.router.navigate(['/configuration'])}
           }
         ]
       },

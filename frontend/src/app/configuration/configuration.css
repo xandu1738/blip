@@ -1,0 +1,162 @@
+/* Professional Configuration Styling */
+
+.p-dialog .p-dialog-header {
+  background: linear-gradient(135deg, #1f2937 0%, #374151 100%) !important;
+  color: white !important;
+  font-weight: 600 !important;
+  font-size: 1.1rem !important;
+  border-bottom: 1px solid #374151 !important;
+}
+
+.p-dialog .p-dialog-content {
+  background-color: #fefefe !important;
+  padding: 1.5rem !important;
+}
+
+.p-button {
+  border-radius: 0.5rem !important;
+  font-weight: 500 !important;
+  transition: all 0.2s ease !important;
+}
+
+.p-button:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+.p-button-outlined {
+  border: 2px solid !important;
+}
+
+.p-button-outlined:hover {
+  background-color: rgba(59, 130, 246, 0.05) !important;
+}
+
+.p-table {
+  border-radius: 0.5rem !important;
+  overflow: hidden !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+}
+
+.p-table .p-table-header-cell {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%) !important;
+  color: #374151 !important;
+  font-weight: 600 !important;
+  border-bottom: 2px solid #e5e7eb !important;
+}
+
+.p-table .p-table-tbody > tr {
+  transition: all 0.2s ease !important;
+}
+
+.p-table .p-table-tbody > tr:hover {
+  background-color: #f8fafc !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Toggle Switches */
+input[type="checkbox"]:checked + div {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%) !important;
+}
+
+/* Custom Focus Styles */
+input:focus, select:focus, textarea:focus {
+  outline: none !important;
+  ring: 2px !important;
+  ring-color: #3b82f6 !important;
+  border-color: transparent !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+}
+
+/* Status Indicators */
+.status-dot {
+  animation: pulse-subtle 2s ease-in-out infinite;
+}
+
+@keyframes pulse-subtle {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Card Hover Effects */
+.config-card {
+  transition: all 0.3s ease;
+}
+
+.config-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Integration Cards */
+.integration-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  transition: all 0.3s ease;
+  border: 1px solid #e5e7eb;
+}
+
+.integration-card:hover {
+  border-color: #3b82f6;
+  box-shadow: 0 4px 20px rgba(59, 130, 246, 0.1);
+}
+
+/* Scrollbar Styling */
+.max-h-80::-webkit-scrollbar,
+.max-h-60::-webkit-scrollbar {
+  width: 6px;
+}
+
+.max-h-80::-webkit-scrollbar-track,
+.max-h-60::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 3px;
+}
+
+.max-h-80::-webkit-scrollbar-thumb,
+.max-h-60::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.max-h-80::-webkit-scrollbar-thumb:hover,
+.max-h-60::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Responsive Improvements */
+@media (max-width: 768px) {
+  .flex-row {
+    flex-direction: column;
+  }
+  
+  .flex-\[3\] {
+    flex: 1;
+  }
+  
+  .flex-\[1\] {
+    flex: 1;
+    position: relative !important;
+    top: 0 !important;
+  }
+}
+
+/* Animation for new elements */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeInUp 0.5s ease-out;
+}
