@@ -200,20 +200,19 @@ export class RegisterComponent {
       return;
     }
 
-    this.filteredPartners = this.partners.filter(partner =>
+    this.filteredPartners = this.partners.filter(partner => {
       partner.partnerName.toLowerCase().includes(filter) ||
       partner.accountNumber.toLowerCase().includes(filter) ||
       partner.contactPerson.toLowerCase().includes(filter)
-    );
+    });
   }
 
   addPartner() {
-    // Implement your add partner logic here
     this.notificationService.showInfo('Add Partner functionality to be implemented');
 
   }
 
-  addModule() {
+  addModule(){
     if (!this.newModule.name.trim() || !this.newModule.description.trim()) {
       this.notificationService.showWarning('Please fill in all fields before saving');
       return;
