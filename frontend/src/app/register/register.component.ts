@@ -166,7 +166,6 @@ export class RegisterComponent {
     autoStart: false
   };
 
-
   modules = [
     {name:"transport",description:"transport module"},
     {name:"logistics",description:"logistics module"}
