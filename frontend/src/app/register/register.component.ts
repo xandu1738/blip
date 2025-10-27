@@ -21,7 +21,7 @@ interface Partner {
   businessReference: string;
   active: boolean;
   logo: string;
-  package: string;
+  packageField: string;
 }
 
 @Component({
