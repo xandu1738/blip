@@ -35,7 +35,7 @@ public class PartnersService extends LocalUtilsService {
         requires(request, "data");
 
         JSONObject data = request.getJSONObject("data");
-        requires(data, "partner_name", "account_number", "contact_person", "contact_phone", "account_id", "business_reference", "active", "logo", "package");
+        requires(data, "partner_name", "account_number", "contact_person", "contact_phone", "account_id", "business_reference", "active", "package");
         String partnerName = data.getString("partner_name");
 
         if (StringUtils.isBlank(partnerName)) {

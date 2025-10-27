@@ -40,7 +40,7 @@ export class LoginComponent {
 
     this.authService.login(this.username, this.password).subscribe({
       next: (response) => {
-        console.log("welcome back")
+        console.log("welcome back",response)
         this.notificationService.showSuccess(
           `Welcome back ${response?.user?.firstName || 'anthony'}!`,
           'Login Successful'

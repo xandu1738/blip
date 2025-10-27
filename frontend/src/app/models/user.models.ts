@@ -37,10 +37,11 @@ export interface CreateUserRequest {
 }
 
 export interface ApiResponse<T> {
-  code: number;
-  message: string;
-  data: T;
+  returnCode: number;
+  returnMessage: string;
+  returnObject: T;
 }
+
 
 export interface RefreshTokenRequest {
   data: {

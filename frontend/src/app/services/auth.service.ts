@@ -60,12 +60,15 @@ export class AuthService {
 
 
     return this.http.post<ApiResponse<any>>(`${this.apiUrl}/user-management/login`, loginData)
-      .pipe(map(response => response?.data?.returnObject),
-        tap(response => {
-          this.setTokens(response?.data?.returnObject.accessToken, response?.data?.returnObject?.refreshToken);
-          this.setUser(response?.data?.returnObject.user);
+      .pipe(
+        map(response => response?.returnObject),
+        tap(returnObject => {
+          console.log("data:", returnObject);
+
+          this.setTokens(returnObject?.accessToken, returnObject?.refreshToken);
+          this.setUser(returnObject?.user);
           this._isLoggedIn.next(true);
-          this._currentUser.next(response?.data?.returnObject?.user);
+          this._currentUser.next(returnObject?.user);
         }),
         catchError(this.handleError)
       );
@@ -74,7 +77,7 @@ export class AuthService {
   createUser(userData: CreateUserRequest): Observable<any> {
     return this.http.post<ApiResponse<any>>(`${this.apiUrl}/user-management/create-user`, userData)
       .pipe(
-        map(response => response.data),
+        map(response => response?.returnObject),
         catchError(this.handleError)
       );
   }
@@ -91,7 +94,7 @@ export class AuthService {
 
     return this.http.post<ApiResponse<string>>(`${this.apiUrl}/user-management/refresh-token`, refreshData)
       .pipe(
-        map(response => response.data),
+        map(response => response?.returnObject),
         tap(newToken => {
           localStorage.setItem(this.TOKEN_KEY, newToken);
         }),
