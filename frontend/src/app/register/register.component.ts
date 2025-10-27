@@ -30,7 +30,7 @@ interface Partner {
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [FormsModule, CommonModule, TableModule, ButtonDirective, Dialog, DialogModule, InputText],
+  imports: [FormsModule, CommonModule, TableModule, ButtonDirective, Dialog, DialogModule, InputText, NgOptimizedImage],
   templateUrl: './register.html',
   styleUrl: './register.css'
 })
