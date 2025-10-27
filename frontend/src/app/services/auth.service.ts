@@ -18,11 +18,11 @@ import {
 export class AuthService {
   private _isLoggedIn = new BehaviorSubject<boolean>(this.hasValidToken());
   private _currentUser = new BehaviorSubject<User | null>(this.getUserFromStorage());
-  
+
   isLoggedIn = this._isLoggedIn.asObservable();
   currentUser = this._currentUser.asObservable();
 
-  private readonly apiUrl = environment.apiUrl;
+  readonly apiUrl = environment.apiUrl;
   private readonly TOKEN_KEY = 'blip_access_token';
   private readonly REFRESH_TOKEN_KEY = 'blip_refresh_token';
   private readonly USER_KEY = 'blip_user';
@@ -31,7 +31,7 @@ export class AuthService {
     // Initialize with demo user for testing
     this.initializeDemoMode();
   }
-  
+
   private initializeDemoMode(): void {
     // Check if we should initialize demo mode
     const existingToken = this.getAccessToken();
@@ -58,14 +58,14 @@ export class AuthService {
       data: { email, password }
     };
 
-    return this.http.post<ApiResponse<LoginResponse>>(`${this.apiUrl}/user-management/login`, loginData)
-      .pipe(
-        map(response => response.data),
-        tap(loginResponse => {
-          this.setTokens(loginResponse.accessToken, loginResponse.refreshToken);
-          this.setUser(loginResponse.user);
+
+    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/user-management/login`, loginData)
+      .pipe(map(response => response?.data?.returnObject),
+        tap(response => {
+          this.setTokens(response?.data?.returnObject.accessToken, response?.data?.returnObject?.refreshToken);
+          this.setUser(response?.data?.returnObject.user);
           this._isLoggedIn.next(true);
-          this._currentUser.next(loginResponse.user);
+          this._currentUser.next(response?.data?.returnObject?.user);
         }),
         catchError(this.handleError)
       );
@@ -104,20 +104,20 @@ export class AuthService {
 
   simulateLogin(user: User): void {
     console.log('AuthService: simulateLogin called with user:', user); // Debug log
-    
+
     // Generate mock tokens for demo mode
     const mockAccessToken = 'demo-access-token-' + Date.now();
     const mockRefreshToken = 'demo-refresh-token-' + Date.now();
-    
+
     console.log('AuthService: Generated tokens:', { mockAccessToken, mockRefreshToken }); // Debug log
-    
+
     this.setTokens(mockAccessToken, mockRefreshToken);
     this.setUser(user);
-    
+
     console.log('AuthService: Setting login state to true'); // Debug log
     this._isLoggedIn.next(true);
     this._currentUser.next(user);
-    
+
     console.log('AuthService: Current login state:', this._isLoggedIn.value); // Debug log
   }
 
@@ -158,12 +158,12 @@ export class AuthService {
   private hasValidToken(): boolean {
     const token = this.getAccessToken();
     if (!token) return false;
-    
+
     // Handle demo tokens
     if (token.startsWith('demo-access-token')) {
       return true;
     }
-    
+
     try {
       // Basic JWT expiry check (you might want to use a JWT library for this)
       const payload = JSON.parse(atob(token.split('.')[1]));
@@ -175,7 +175,7 @@ export class AuthService {
 
   private handleError = (error: HttpErrorResponse) => {
     let errorMessage = 'An unexpected error occurred';
-    
+
     if (error.error instanceof ErrorEvent) {
       // Client-side error
       errorMessage = error.error.message;
@@ -189,7 +189,7 @@ export class AuthService {
         errorMessage = `Error ${error.status}: ${error.message}`;
       }
     }
-    
+
     return throwError(() => new Error(errorMessage));
   };
 }

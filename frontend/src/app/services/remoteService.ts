@@ -9,12 +9,14 @@ export class RemoteService {
   constructor(protected httpClient: HttpClient) {
   }
 
-  sendPostToServer(url: string, data: string): Observable<any> {
+  private serverurl = '127.0.0.1:7071/api/v1'
+
+  sendPostToServer(url: string, data: any): Observable<any> {
     console.log("Will use url " + url)
     this.logDevMode("Sending to server " + data)
     let options = {
       headers: new HttpHeaders({
-        'Content-Type': 'text/plain',
+        'Content-Type': 'application/json',
         'Request-Origin': 'BLIP-PORTAL'
       }),
     };
@@ -49,7 +51,7 @@ export class RemoteService {
     console.log("Will use url " + url);
     let options = {
       headers: new HttpHeaders({
-        'Content-Type': 'text/plain',
+        'Content-Type': 'application/json',
         'Request-Origin': 'BLIP-PORTAL'
       }),
     };

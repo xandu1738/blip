@@ -13,8 +13,8 @@ import {Configuration} from './configuration/configuration';
 
 export const routes: Routes = [
   {
-    path: '',
-    redirectTo: 'login',
+    path: 'dashboard',
+    redirectTo: 'dashboard',
     pathMatch: 'full'
   },
   {

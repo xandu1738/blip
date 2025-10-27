@@ -10,6 +10,8 @@ import {TableModule} from 'primeng/table';
 import {Dialog, DialogModule} from 'primeng/dialog';
 import {ButtonDirective} from 'primeng/button';
 import {InputText} from 'primeng/inputtext';
+import {RemoteService} from '../services/remoteService';
+import {Subscription} from 'rxjs';
 
 
 
@@ -28,11 +30,12 @@ interface Partner {
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [FormsModule, CommonModule, RouterLink, TableModule, NgOptimizedImage, ButtonDirective, Dialog, DialogModule, InputText],
+  imports: [FormsModule, CommonModule, TableModule, ButtonDirective, Dialog, DialogModule, InputText],
   templateUrl: './register.html',
   styleUrl: './register.css'
 })
 export class RegisterComponent {
+  userData:any = {}
   firstName = '';
   lastName = '';
   email = '';
@@ -43,7 +46,9 @@ export class RegisterComponent {
   isLoading = false;
 
 
+
   showAddDialog = false;
+
   partners: Partner[] = [
     {
       partnerName: "Swift Transit Ltd",
@@ -179,6 +184,7 @@ export class RegisterComponent {
 
   constructor(
     private authService: AuthService,
+    private remoteService: RemoteService,
     private router: Router,
     private notificationService: NotificationService,
     private loaderService: LoaderService
@@ -186,25 +192,54 @@ export class RegisterComponent {
 
 
   partnerFilter = '';
-  filteredPartners: Partner[] = [...this.partners];
+  filteredPartners: Partner[] = this.partners;
 
   ngOnInit() {
-    this.filteredPartners = [...this.partners];
+    // this.filteredPartners = [...this.partners];
   }
 
-  filterPartners() {
-    const filter = this.partnerFilter.toLowerCase().trim();
+  onChangeSearch(event: Event) {
+    const inputElement = event.target as HTMLInputElement;
+    const key = inputElement.id;
+    const value = inputElement.value;
 
-    if (!filter) {
-      this.filteredPartners = [...this.partners];
-      return;
+
+    this.userData = {
+      ...this.userData,
+      key:value
     }
 
-    this.filteredPartners = this.partners.filter(partner => {
-      partner.partnerName.toLowerCase().includes(filter) ||
-      partner.accountNumber.toLowerCase().includes(filter) ||
-      partner.contactPerson.toLowerCase().includes(filter)
-    });
+    let requestData = {
+        data:{
+          ...this.userData
+        }
+    }
+  }
+
+  filterPartners():void {
+    this.remoteService.sendGetToServer(`${this.authService.apiUrl}/partners/list/${0}/${20}`).subscribe({
+      next: (response) => {
+        console.log('response: ',response)
+        this.filteredPartners = response;
+        this.notificationService.showSuccess('',
+          'request Successful'
+        );
+
+      },
+      error: (error) => {
+        console.log("error found")
+        this.notificationService.showError(
+          error.message,
+          'request failed'
+        );
+        console.error('error:', error);
+      },
+      complete: () => {
+        this.isLoading = false;
+        this.loaderService.display(false);
+      }
+    })
+
   }
 
   addPartner() {
@@ -230,9 +265,6 @@ export class RegisterComponent {
     this.notificationService.showSuccess('New module added successfully');
     this.showAddDialog = false;
   }
-
-
-
 
   onRegister() {
     if (!this.validateForm()) {

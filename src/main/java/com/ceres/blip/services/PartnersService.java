@@ -16,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -57,8 +58,10 @@ public class PartnersService extends LocalUtilsService {
             if (!logo.startsWith("data:image/")) {
                 throw new IllegalArgumentException("Logo must be a base64 encoded image string.");
             }
+
+            String encodedString = logo.substring(logo.indexOf(',') + 1);
             try {
-                String logoFilePath = localFileManager.storeBase64File(logo, generateRandomString(20L), FileCategories.PARTNER_LOGO);
+                String logoFilePath = localFileManager.storeBase64File(encodedString, generateRandomString(20L), FileCategories.PARTNER_LOGO);
                 partnerModel.setLogo(logoFilePath);
             } catch (IOException e) {
                 throw new IllegalStateException(e.getMessage());
@@ -141,12 +144,13 @@ public class PartnersService extends LocalUtilsService {
         return new OperationReturnObject(200, "Partner info successfully updated.", saved);
     }
 
-    @Cacheable(value = "partners", key = "#pageNumber + '-' + #pageSize")
+//    @Cacheable(value = "partners", key = "#pageNumber + '-' + #pageSize")
     public OperationReturnObject fetchPartnersList(int pageNumber, int pageSize) throws AuthorizationRequiredException {
-        belongsTo(AppDomains.BACK_OFFICE);
-        requiresAuth();
+//        belongsTo(AppDomains.BACK_OFFICE);
+//        requiresAuth();
 
         List<PartnerModel> partners = partnersRepository.findAll(PageRequest.of(pageNumber, pageSize)).toList();
+
         return new OperationReturnObject(200, "Partners list successfully fetched.", partners);
     }
 

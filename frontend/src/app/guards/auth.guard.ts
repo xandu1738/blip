@@ -11,12 +11,13 @@ export const authGuard: CanActivateFn = (route, state) => {
   return authService.isLoggedIn.pipe(
     take(1),
     map(isLoggedIn => {
-      console.log('Auth guard checking login state:', isLoggedIn); // Debug log
+      console.log('Auth guard checking login state:', isLoggedIn);
       if (isLoggedIn) {
+        // router.navigate(['dashboard']);
         return true;
       } else {
-        console.log('Not logged in, redirecting to login'); // Debug log
-        router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
+        console.log('Not logged in, redirecting to login');
+        router.navigate(['login'], { queryParams: { returnUrl: state.url } });
         return false;
       }
     })

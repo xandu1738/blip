@@ -1,4 +1,3 @@
-
 <div class="p-4">
   <h1 class="text-3xl font-bold font-sans text-gray-800 mb-2">Partner Details</h1>
   <p class="text-gray-600 mx-4">Manage Partner Details and Information</p>
@@ -6,99 +5,104 @@
 
 <div class="p-4">
 
-  <div class="flex flex-wrap items-center mb-4 gap-4">
+  <div class="flex flex-wrap sm:flex-row items-center mb-4 gap-4">
     <!-- Filter Input -->
-    <div class="flex bg-white w-full py-2 px-2 gap-2 rounded-lg">
+    <div class="flex flex-col sm:flex-row bg-white w-full py-2 px-2 gap-2">
+
       <input
         type="text"
-        [(ngModel)]="partnerFilter"
-        (input)="filterPartners()"
+        id="partners_code"
+        [(ngModel)]="userData.partners_code"
+        (input)="onChangeSearch($event)"
         placeholder="Search partners code"
         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
       <input
         type="text"
-        [(ngModel)]="partnerFilter"
-        (input)="filterPartners()"
+        id="contact_person"
+        [(ngModel)]="userData.contact_person"
+        (input)="onChangeSearch($event)"
         placeholder="Search contact person..."
         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
       <input
         type="text"
-        [(ngModel)]="partnerFilter"
-        (input)="filterPartners()"
+        id="account_number"
+        [(ngModel)]="userData.account_number"
+        (input)="onChangeSearch($event)"
         placeholder="Search account number"
         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
       <input
         type="text"
-        [(ngModel)]="partnerFilter"
-        (input)="filterPartners()"
+        id="search_name"
+        [(ngModel)]="userData.search_name"
+        (input)="onChangeSearch($event)"
         placeholder="Search name"
         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
 
       <!-- Add Partner Button -->
-      <button (click)="showAddDialog = true" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2 whitespace-nowrap">
-        <span>+</span>
-        <span>Add Partner</span>
-      </button>
+      <div class="flex justify-end w-full">
+        <button (click)="filterPartners()" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2 whitespace-nowrap">
+          <span>+</span>
+          <span>Search Partner</span>
+        </button>
+      </div>
+
     </div>
-
-
 
   </div>
 
+   view partner
+    <p-table [value]="filteredPartners"
+             [tableStyle]="{ 'min-width': '70px' }"
+    >
 
-  <p-table [value]="filteredPartners" [tableStyle]="{ 'min-width': '70rem' }">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Partner Name</th>
+          <th>Account Number</th>
+          <th>Contact Person</th>
+          <th>Contact Phone</th>
+          <th>Account ID</th>
+          <th>Business Reference</th>
+          <th>Active</th>
+          <th>Package</th>
+          <th>Logo</th>
+        </tr>
+      </ng-template>
 
-    <ng-template pTemplate="header">
-      <tr>
-        <th>Partner Name</th>
-        <th>Account Number</th>
-        <th>Contact Person</th>
-        <th>Contact Phone</th>
-        <th>Account ID</th>
-        <th>Business Reference</th>
-        <th>Active</th>
-        <th>Package</th>
-        <th>Logo</th>
-      </tr>
-    </ng-template>
+      <ng-template pTemplate="body" let-partner>
+        <tr>
+          <td>{{ partner.partnerName }}</td>
+          <td>{{ partner.accountNumber }}</td>
+          <td>{{ partner.contactPerson }}</td>
+          <td>{{ partner.contactPhone }}</td>
+          <td>{{ partner.accountId }}</td>
+          <td>{{ partner.businessReference }}</td>
+          <td>
+            <span
+              [class.text-green-500]="partner.active"
+              [class.text-red-500]="!partner.active"
+            >
+              {{ partner.active ? 'Active' : 'Inactive' }}
+            </span>
+          </td>
+          <td>{{ partner.package }}</td>
+          <td>
+            <img
+              [ngSrc]="partner.logo"
+              alt="{{ partner.partnerName }}"
+              width="50"
+              height="50"
+              style="object-fit: cover; border-radius: 6px;"
+            />
+          </td>
+        </tr>
+      </ng-template>
 
-    <ng-template pTemplate="body" let-partner>
-      <tr>
-        <td>{{ partner.partnerName }}</td>
-        <td>{{ partner.accountNumber }}</td>
-        <td>{{ partner.contactPerson }}</td>
-        <td>{{ partner.contactPhone }}</td>
-        <td>{{ partner.accountId }}</td>
-        <td>{{ partner.businessReference }}</td>
-        <td>
-          <span
-            [class.text-green-500]="partner.active"
-            [class.text-red-500]="!partner.active"
-          >
-            {{ partner.active ? 'Active' : 'Inactive' }}
-          </span>
-        </td>
-        <td>{{ partner.package }}</td>
-        <td>
-          <img
-            [ngSrc]="partner.logo"
-            alt="{{ partner.partnerName }}"
-            width="50"
-            height="50"
-            style="object-fit: cover; border-radius: 6px;"
-          />
-        </td>
-      </tr>
-    </ng-template>
-
-  </p-table>
-
-
-
+    </p-table>
 
 
   <!-- Add Partner Dialog -->
@@ -106,8 +110,9 @@
     header="Add New Partner"
     [(visible)]="showAddDialog"
     [modal]="true"
-    [style]="{ width: '500px' }"
+    styleClass="sm:min-w[50%]"
     [closable]="true">
+    <!--    [style]="{width: '50%','min-width':'90%'}"-->
 
     <div class="space-y-4">
       <div class="grid grid-cols-2 gap-4">
@@ -118,7 +123,7 @@
             pInputText
             [(ngModel)]="newModule.name"
             placeholder="Enter partner name"
-            class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent" />
+            class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent"/>
         </div>
 
         <div>
@@ -148,7 +153,7 @@
             pInputText
             [(ngModel)]="newModule.version"
             placeholder="Full name"
-            class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent" />
+            class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent"/>
         </div>
 
         <div>
@@ -157,7 +162,7 @@
             type="tel"
             pInputText
             placeholder="+256 XXX XXXXXX"
-            class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent" />
+            class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent"/>
         </div>
       </div>
 
@@ -186,9 +191,6 @@
     </div>
 
   </p-dialog>
-
-
-
 
 
 </div>
