@@ -11,10 +11,11 @@
   </button>
 </div>
 
-<div class="p-4">
+<div class="p-4 w-full">
 
   <!-- Search Filters Card -->
   <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
+
     <div class="flex items-center justify-between mb-4">
       <h2 class="text-lg font-semibold text-gray-800">Filter Partners</h2>
       <button
@@ -104,6 +105,7 @@
           />
         </div>
       </div>
+
     </div>
 
     <!-- Search Button -->
@@ -118,45 +120,43 @@
   </div>
 
   <!-- Partners Table -->
-  <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-    <div style="overflow-x: auto; width: 100%;">
-      <p-table [value]="filteredPartners" [tableStyle]="{ 'min-width': '900px', 'width': '100%' }">
-        <ng-template pTemplate="header">
-          <tr>
-            <th>Partner Name</th>
-            <th>Account Number</th>
-            <th>Contact Person</th>
-            <th>Contact Phone</th>
-            <th>Account ID</th>
-            <th>Business Reference</th>
-            <th>Active</th>
-            <th>Package</th>
-            <th>Logo</th>
-          </tr>
-        </ng-template>
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200 w-full overflow-x-auto">
+    <p-table [value]="filteredPartners" [tableStyle]="{ 'max-width': '50px' }">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Partner Name</th>
+          <th>Account Number</th>
+          <th>Contact Person</th>
+          <th>Contact Phone</th>
+          <th>Account ID</th>
+          <th>Business Reference</th>
+          <th>Active</th>
+          <th>Package</th>
+          <th>Logo</th>
+        </tr>
+      </ng-template>
 
-        <ng-template pTemplate="body" let-partner>
-          <tr>
-            <td class="truncate">{{ partner.partnerName }}</td>
-            <td class="truncate">{{ partner.accountNumber }}</td>
-            <td class="truncate">{{ partner.contactPerson }}</td>
-            <td class="truncate">{{ partner.contactPhone }}</td>
-            <td class="truncate">{{ partner.accountId }}</td>
-            <td class="truncate">{{ partner.businessReference }}</td>
-            <td>
-              <span [class.text-green-500]="partner.active" [class.text-red-500]="!partner.active">
-                {{ partner.active ? 'Active' : 'Inactive' }}
-              </span>
-            </td>
-            <td class="truncate">{{ partner.packageField }}</td>
-            <td>
-              <img [ngSrc]="partner?.logo" alt="{{ partner.partnerName }}" width="50" height="50"
-                   style="object-fit: cover; border-radius: 6px;" />
-            </td>
-          </tr>
-        </ng-template>
-      </p-table>
-    </div>
+      <ng-template pTemplate="body" let-partner>
+        <tr>
+          <td class="truncate">{{ partner.partnerName }}</td>
+          <td class="truncate">{{ partner.accountNumber }}</td>
+          <td class="truncate">{{ partner.contactPerson }}</td>
+          <td class="truncate">{{ partner.contactPhone }}</td>
+          <td class="truncate">{{ partner.accountId }}</td>
+          <td class="truncate">{{ partner.businessReference }}</td>
+          <td>
+            <span [class.text-green-500]="partner.active" [class.text-red-500]="!partner.active">
+              {{ partner.active ? 'Active' : 'Inactive' }}
+            </span>
+          </td>
+          <td class="truncate">{{ partner.packageField }}</td>
+          <td>
+            <img [ngSrc]="partner?.logo" alt="{{ partner.partnerName }}" width="50" height="50"
+                 style="object-fit: cover; border-radius: 6px;" />
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
   </div>
 
   <!-- Add Partner Dialog -->

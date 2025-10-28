@@ -1,7 +1,7 @@
 <h1 class="text-3xl font-bold font-sans text-gray-800 mb-6">Partner Dashboard</h1>
 
-<div class="flex flex-wrap md:flex-col lg:flex-row gap-2 p-2">
-  <!-- Main Content Area (Left Side) -->
+<div class="flex flex-col md:flex-col lg:flex-row gap-2 p-2">
+  <!-- Main Content -->
   <div class="flex-[4] flex flex-col gap-6">
 
     <!-- Stats Grid -->
@@ -9,7 +9,7 @@
       @for (stat of stats; track stat.label) {
         <div class="bg-white p-6 rounded-lg border border-gray-200 shadow-sm flex items-center justify-between hover:shadow-md transition-shadow">
           <div>
-            <p class="text-sm text-gray-500 mb-1">{{ stat.label }}</p>
+            <p class="text-sm  [text-shadow:0_0_5px_#FFF,0_0_10px_#FFF,0_0_15px_#FFF,0_0_20px_#49ff18,0_0_30px_#49FF18,0_0_40px_#49FF18,0_0_55px_#49FF18,0_0_75px_#49ff18] mb-1 ">{{ stat.label }}</p>
             <p class="text-3xl font-bold text-gray-800">{{ stat.value }}</p>
           </div>
           <div [class]="stat.bgColor + ' p-4 rounded-full'">
@@ -97,7 +97,7 @@
 
   </div>
 
-  <!-- Notifications Panel (Right Side - Lateral) -->
+  <!-- Notifications Panel -->
   <div class="flex-[2] flex flex-col gap-4 h-fit sticky top-6">
 
     <!-- Alerts & Updates -->

@@ -80,3 +80,63 @@ body{
   --on-surface-color: #ffffff;
   --on-error-color: #000000;
 }
+
+/* PrimeNG Menu Overrides */
+.p-menubar {
+  background-color: white !important;
+  border: none !important;
+}
+
+.p-menuitem-link:hover .p-menuitem-text {
+  color: red !important;
+}
+
+.p-menuitem-text {
+  color: #4b5563 !important; /* Dark gray text */
+}
+
+.p-menuitem-icon {
+  color: #4b5563 !important; /* Dark gray icon */
+}
+
+
+.p-menubar-item-link {
+  background-color: #b2bfcf;
+  border-radius: 50px;
+}
+
+.p-menubar {
+  border-radius: 20px !important;
+}
+
+
+.p-menubar-item-icon {
+  color: red !important;
+  /*background-color: red;*/
+}
+
+
+.p-menubar-item-content:hover {
+  background-color: transparent !important;
+}
+
+
+.p-menubar-item-content {
+  background-color: transparent !important;
+}
+
+.p-menubar-submenu {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  /*display: flex !important;*/
+  flex-direction: column !important;
+  gap: 2px !important;
+  justify-content: space-between !important;
+}
+
+.p-datatable-table {
+  display: block;
+  width: 50% !important;
+}
+
