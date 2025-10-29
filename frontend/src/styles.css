@@ -102,7 +102,8 @@ body{
 
 .p-menubar-item-link {
   background-color: #b2bfcf;
-  border-radius: 50px;
+  /*border-radius: 50px;*/
+  border: 1px #e9e1e1 solid;
 }
 
 .p-menubar {
@@ -136,7 +137,7 @@ body{
 }
 
 .p-datatable-table {
-  display: block;
-  width: 50% !important;
+  /*display: block;*/
+  /*width: 50% !important;*/
 }
 

@@ -10,10 +10,9 @@
         <div class="bg-white p-6 rounded-lg border border-gray-200 shadow-sm flex items-center justify-between hover:shadow-md transition-shadow">
           <div>
             <p class="text-sm  [text-shadow:0_0_5px_#FFF,0_0_10px_#FFF,0_0_15px_#FFF,0_0_20px_#49ff18,0_0_30px_#49FF18,0_0_40px_#49FF18,0_0_55px_#49FF18,0_0_75px_#49ff18] mb-1 ">{{ stat.label }}</p>
-            <p class="text-3xl font-bold text-gray-800">{{ stat.value }}</p>
+            <p class="font-bold font-sans tabular-nums text-gray-900 text-lg">{{ stat.value }}</p>
           </div>
           <div [class]="stat.bgColor + ' p-4 rounded-full'">
-            <!-- Icon placeholder - Replace with actual SVG icons -->
             <svg [class]="stat.color + ' w-8 h-8'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               @if (stat.icon === 'bus') {
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
