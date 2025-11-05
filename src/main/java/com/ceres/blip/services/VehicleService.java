@@ -6,8 +6,8 @@ import com.ceres.blip.exceptions.AuthorizationRequiredException;
 import com.ceres.blip.models.database.PartnerModel;
 import com.ceres.blip.models.database.SystemUserModel;
 import com.ceres.blip.models.database.VehicleModel;
-import com.ceres.blip.models.jpa_helpers.enums.AppDomains;
-import com.ceres.blip.models.jpa_helpers.enums.VehicleTypes;
+import com.ceres.blip.models.enums.AppDomains;
+import com.ceres.blip.models.enums.VehicleTypes;
 import com.ceres.blip.repositories.VehicleRepository;
 import com.ceres.blip.utils.LocalUtilsService;
 import com.ceres.blip.utils.OperationReturnObject;
@@ -17,9 +17,6 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-
-import java.util.Collections;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +29,7 @@ public class VehicleService extends LocalUtilsService{
     private static final String VEHICLES = "vehicles";
     private static final String VEHICLE_ID = "vehicle_id";
     private static final String STATUS = "status";
+    private static final String VEHICLE_NOT_FOUND = "Vehicle not found";
 
     private final VehicleRepository vehicleRepository;
 
@@ -121,7 +119,7 @@ public class VehicleService extends LocalUtilsService{
             Long vehicleId = data.getLong(VEHICLE_ID);
 
             VehicleModel vehicleModel = vehicleRepository.findById(vehicleId)
-                    .orElseThrow(() -> new IllegalArgumentException("Vehicle not found"));
+                    .orElseThrow(() -> new IllegalArgumentException(VEHICLE_NOT_FOUND));
 
             // Update fields if present
             if (data.containsKey(REGISTRATION_NUMBER)) {
@@ -156,7 +154,7 @@ public class VehicleService extends LocalUtilsService{
             PartnerModel partner = validatePartner(partnerCode);
 
             VehicleModel vehicleModel = vehicleRepository.findById(vehicleId)
-                    .orElseThrow(() -> new IllegalArgumentException("Vehicle not found"));
+                    .orElseThrow(() -> new IllegalArgumentException(VEHICLE_NOT_FOUND));
 
             vehicleModel.setPartnerCode(partner.getPartnerCode());
             VehicleModel updatedVehicle = vehicleRepository.save(vehicleModel);
@@ -185,7 +183,7 @@ public class VehicleService extends LocalUtilsService{
     public OperationReturnObject fetchVehicleDetails(Long vehicleId) throws AuthorizationRequiredException {
         requiresAuth();
         VehicleModel vehicleModel = vehicleRepository.findById(vehicleId)
-                .orElseThrow(() -> new IllegalArgumentException("Vehicle not found"));
+                .orElseThrow(() -> new IllegalArgumentException(VEHICLE_NOT_FOUND));
         return new OperationReturnObject(200, "Vehicle details successfully fetched.", vehicleModel);
     }
 

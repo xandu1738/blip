@@ -17,7 +17,7 @@ services:
     ports:
       - "6379:6379"   # Host 6379 -> Container 6379
     volumes:
-        - redis-data:/data
+      - redis-data:/data
 
   zipkin:
     image: openzipkin/zipkin:2.23.0
@@ -34,13 +34,15 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/blip
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: '@Test1234'
+      smtpUsername: ceres1738@gmail.com
+      smtpPassword: hcnbbinfwcdxgaya
       gcpBucketName: ceres-bucket
       gcpProjectId: banded-plateau-321516
       gcpCredentialsFile: classpath:hooker-b3f8d-firebase-adminsdk-2y0f3-2097b8a4dd.json
       SPRING_REDIS_HOST: redis
       SPRING_REDIS_PORT: 6379
     ports:
-      - "7107:8080"   # Host 7107 -> Container 8080
+      - "7107:7071"   # Host 7107 -> Container 7071
     depends_on:
       - db
       - redis

@@ -1,6 +1,6 @@
 package com.ceres.blip.models.database;
 
-import com.ceres.blip.models.jpa_helpers.enums.SubscriptionStatus;
+import com.ceres.blip.models.enums.SubscriptionStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -8,7 +8,6 @@ import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.sql.Timestamp;
-import java.time.Instant;
 
 @Getter
 @Setter

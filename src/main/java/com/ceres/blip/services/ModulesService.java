@@ -6,8 +6,9 @@ import com.ceres.blip.models.database.ModuleModel;
 import com.ceres.blip.models.database.PartnerModel;
 import com.ceres.blip.models.database.SubscriptionModel;
 import com.ceres.blip.models.database.SystemUserModel;
-import com.ceres.blip.models.jpa_helpers.enums.AppDomains;
-import com.ceres.blip.models.jpa_helpers.enums.SubscriptionStatus;
+import com.ceres.blip.models.enums.AppDomains;
+import com.ceres.blip.models.enums.Params;
+import com.ceres.blip.models.enums.SubscriptionStatus;
 import com.ceres.blip.repositories.ModuleRepository;
 import com.ceres.blip.repositories.SubscriptionRepository;
 import com.ceres.blip.utils.LocalUtilsService;
@@ -24,25 +25,25 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class ModulesService extends LocalUtilsService{
+public class ModulesService extends LocalUtilsService {
     private final ModuleRepository repository;
     private final SubscriptionRepository subscriptionRepository;
 
     public OperationReturnObject addModule(JSONObject object) {
         belongsTo(AppDomains.BACK_OFFICE);
         SystemUserModel authenticatedUser = authenticatedUser();
-        requires(object, "data");
-        JSONObject data = object.getJSONObject("data");
-        requires(data, "name", "description");
+        requires(object, Params.DATA.getRef());
+        JSONObject data = object.getJSONObject(Params.DATA.getRef());
+        requires(data, Params.NAME.getRef(), Params.DESCRIPTION.getRef());
 
-        String name = data.getString("name");
+        String name = data.getString(Params.NAME.getRef());
 
         if (StringUtils.isBlank(name)) {
             throw new IllegalArgumentException("Module name cannot be empty");
         }
 
-        String code = name.toUpperCase().replaceAll(" ", "_");
-        String description = data.getString("description");
+        String code = name.toUpperCase().replace(" ", "_");
+        String description = data.getString(Params.DESCRIPTION.getRef());
         if (StringUtils.isBlank(description)) {
             throw new IllegalArgumentException("Module description cannot be empty");
         }
@@ -61,18 +62,18 @@ public class ModulesService extends LocalUtilsService{
     public OperationReturnObject editModule(JSONObject request) throws AuthorizationRequiredException {
         belongsTo(AppDomains.BACK_OFFICE);
         requiresAuth();
-        requires(request, "data");
-        JSONObject data = request.getJSONObject("data");
-        requires(data, "code");
-        String code = data.getString("code");
+        requires(request, Params.DATA.getRef());
+        JSONObject data = request.getJSONObject(Params.DATA.getRef());
+        requires(data, Params.CODE.getRef());
+        String code = data.getString(Params.CODE.getRef());
 
         if (StringUtils.isBlank(code)) {
             throw new IllegalArgumentException("Module code cannot be empty");
         }
 
         ModuleModel moduleModel = repository.findByCode(code).orElseThrow(() -> new IllegalArgumentException("Module with code " + code + " not found."));
-        String name = data.getString("name");
-        String description = data.getString("description");
+        String name = data.getString(Params.NAME.getRef());
+        String description = data.getString(Params.DESCRIPTION.getRef());
 
         if (StringUtils.isNotBlank(name)) {
             moduleModel.setName(name);
@@ -111,19 +112,19 @@ public class ModulesService extends LocalUtilsService{
 
     public OperationReturnObject subscribeToModule(JSONObject request) {
         SystemUserModel authenticatedUser = authenticatedUser();
-        requires(request, "data");
-        JSONObject data = request.getJSONObject("data");
-        requires(data, "partner_code", "module_code");
-        String partnerCode = data.getString("partner_code");
-        String moduleCode = data.getString("module_code");
+        requires(request, Params.DATA.getRef());
+        JSONObject data = request.getJSONObject(Params.DATA.getRef());
+        requires(data, Params.PARTNER_CODE.getRef(), Params.MODULE_CODE.getRef());
+        String partnerCode = data.getString(Params.PARTNER_CODE.getRef());
+        String moduleCode = data.getString(Params.MODULE_CODE.getRef());
         if (StringUtils.isBlank(partnerCode) || StringUtils.isBlank(moduleCode)) {
             throw new IllegalArgumentException("Partner code and module code cannot be empty");
         }
 
-        String sd = data.getString("start_date");
-        String ed = data.getString("end_date");
+        String sd = data.getString(Params.START_DATE.getRef());
+        String ed = data.getString(Params.END_DATE.getRef());
 
-        if(sd == null || ed == null){
+        if (sd == null || ed == null) {
             throw new IllegalArgumentException("Start date and end date cannot be empty");
         }
 
@@ -149,7 +150,7 @@ public class ModulesService extends LocalUtilsService{
     }
 
     public OperationReturnObject subscriptionsList(String partnerCode, int pageNumber, int pageSize) {
-        Optional<Map<String, Object>> subscriptions = subscriptionRepository.getSubscriptions(partnerCode,pageNumber,pageSize);
+        Optional<Map<String, Object>> subscriptions = subscriptionRepository.getSubscriptions(partnerCode, pageNumber, pageSize);
         return new OperationReturnObject(200, "Subscriptions list successfully fetched.", subscriptions);
     }
 }

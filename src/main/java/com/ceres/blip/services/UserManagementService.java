@@ -9,7 +9,9 @@ import com.ceres.blip.exceptions.AuthorizationRequiredException;
 import com.ceres.blip.models.database.PartnerModel;
 import com.ceres.blip.models.database.SystemRolePermissionAssignmentModel;
 import com.ceres.blip.models.database.SystemUserModel;
-import com.ceres.blip.models.jpa_helpers.enums.DefaultRoles;
+import com.ceres.blip.models.enums.DefaultRoles;
+import com.ceres.blip.models.enums.Params;
+import com.ceres.blip.models.enums.TokenType;
 import com.ceres.blip.repositories.SystemRolePermissionRepository;
 import com.ceres.blip.repositories.SystemUserRepository;
 import com.ceres.blip.utils.LocalUtilsService;
@@ -53,8 +55,8 @@ public class UserManagementService extends LocalUtilsService {
 
 
     public OperationReturnObject login(JSONObject request) {
-        requires(request, "data");
-        JSONObject data = request.getJSONObject("data");
+        requires(request, Params.DATA.getRef());
+        JSONObject data = request.getJSONObject(Params.DATA.getRef());
 
         requires(data, USER_EMAIL, USER_PASSWORD);
 
@@ -70,8 +72,8 @@ public class UserManagementService extends LocalUtilsService {
         }
 
         final SystemUserModel userDetails = userDetailService.loadUserByUsername(email);
-        final String accessToken = jwtUtility.generateAccessToken(userDetails, "ACCESS");
-        final String refreshToken = jwtUtility.generateAccessToken(userDetails, "REFRESH");
+        final String accessToken = jwtUtility.generateAccessToken(userDetails, TokenType.ACCESS.name());
+        final String refreshToken = jwtUtility.generateAccessToken(userDetails, TokenType.REFRESH.name());
 
         UserDto profile = userDtoMapper.apply(userDetails);
 
@@ -91,16 +93,16 @@ public class UserManagementService extends LocalUtilsService {
 
     public OperationReturnObject refreshToken(JSONObject request) throws AuthorizationRequiredException {
         requiresAuth();
-        requires(request, "data");
+        requires(request, Params.DATA.getRef());
 
-        JSONObject data = request.getJSONObject("data");
+        JSONObject data = request.getJSONObject(Params.DATA.getRef());
         requires(data, REFRESH_TOKEN);
 
         try {
             String refreshToken = data.getString(REFRESH_TOKEN);
             String tokenType = jwtUtility.extractTokenType(refreshToken);
             log.info(tokenType);
-            if (!Objects.equals(tokenType, "REFRESH"))
+            if (!Objects.equals(tokenType, TokenType.REFRESH.name()))
                 throw new IllegalArgumentException("Refresh Token Required. You have provided an access token.");
 
             if (jwtUtility.isTokenValid(refreshToken, getContextUserDetails())) {
@@ -109,15 +111,14 @@ public class UserManagementService extends LocalUtilsService {
             }
             return new OperationReturnObject(401, "Invalid Refresh Token", null);
         } catch (Exception e) {
-            e.printStackTrace();
             return new OperationReturnObject(500, e.getMessage(), null);
         }
     }
 
     public OperationReturnObject signUp(JSONObject request) {
         SystemUserModel authenticatedUser = authenticatedUser();
-        requires(request, "data");
-        JSONObject data = request.getJSONObject("data");
+        requires(request, Params.DATA.getRef());
+        JSONObject data = request.getJSONObject(Params.DATA.getRef());
         requires(data, "role", "first_name", "last_name", USER_EMAIL, USER_PASSWORD);
         String role = data.getString("role");
         String firstName = data.getString("first_name");
