@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, HostListener, OnInit} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { Router } from '@angular/router';
@@ -66,6 +66,18 @@ export class RegisterComponent implements OnInit {
   ngOnInit(): void {
     this.loadPartnersFromServer();
   }
+
+
+  @HostListener('window:scroll', [])
+  onScroll() {
+    const tableHeader = document.querySelector('.p-datatable-thead');
+    if (window.scrollY > 300) {
+      tableHeader?.classList.add('sticky-active');
+    } else {
+      tableHeader?.classList.remove('sticky-active');
+    }
+  }
+
 
   loadPartnersFromServer(): void {
     this.isLoading = true;

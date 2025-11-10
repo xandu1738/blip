@@ -45,6 +45,14 @@ body{
   background-color: rgba(175, 175, 175, 0.21);
 }
 
+@media (max-width: 500px) {
+  .p-menubar-root-list {
+    margin-top: 10px !important;
+    margin-left: 10px !important;
+    width: 50% !important;
+  }
+}
+
 .p-menubar{
   padding: 20px !important;
   border: 1px solid rgba(128, 128, 128, 0.34) !important;
@@ -95,15 +103,20 @@ body{
   color: #4b5563 !important; /* Dark gray text */
 }
 
+.p-menuitem-text:hover {
+  color: #4b5563 !important; /* Dark gray text */
+}
+
 .p-menuitem-icon {
   color: #4b5563 !important; /* Dark gray icon */
 }
 
 
 .p-menubar-item-link {
-  background-color: #b2bfcf;
+  background-color: transparent;
+  color:black;
   /*border-radius: 50px;*/
-  border: 1px #e9e1e1 solid;
+  /*border: 1px #e9e1e1 solid;*/
 }
 
 .p-menubar {
@@ -112,13 +125,14 @@ body{
 
 
 .p-menubar-item-icon {
-  color: red !important;
+  color: gray !important;
   /*background-color: red;*/
 }
 
 
 .p-menubar-item-content:hover {
   background-color: transparent !important;
+  color: black;
 }
 
 
@@ -136,8 +150,28 @@ body{
   justify-content: space-between !important;
 }
 
+
+
+/* custom table styles */
 .p-datatable-table {
-  /*display: block;*/
+  display: block;
   /*width: 50% !important;*/
 }
+
+
+/* Keep header fixed at top when scrolling */
+:host ::ng-deep .p-datatable-thead > tr > th {
+  position: sticky;
+  top: 0;
+  background: white; /* Needed so it doesn’t blend with rows below */
+  z-index: 10; /* Ensures it stays above rows */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* Optional subtle separation */
+}
+
+
+:host ::ng-deep .p-datatable-thead.sticky-active {
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  background: white;
+}
+
 

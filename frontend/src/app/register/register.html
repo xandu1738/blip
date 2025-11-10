@@ -120,8 +120,8 @@
   </div>
 
   <!-- Partners Table -->
-  <div class="bg-white rounded-xl shadow-sm border border-gray-200 w-full overflow-x-auto">
-    <p-table [value]="filteredPartners" [tableStyle]="{ 'min-width': '50px' }">
+  <div class="relative bg-white rounded-xl shadow-sm border border-gray-200 w-full max-h-[70vh] overflow-y-auto">
+    <p-table [value]="filteredPartners" [tableStyle]="{ 'min-width': '100%' }">
 
       <ng-template pTemplate="header">
         <tr>

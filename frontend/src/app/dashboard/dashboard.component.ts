@@ -1,7 +1,8 @@
 // dashboard.component.html template
 
-import { Component } from '@angular/core';
+import {Component, signal, Input} from '@angular/core';
 import { CommonModule } from '@angular/common';
+import {Header} from '../shared-components/Header/header/header';
 
 interface Stat {
   label: string;
@@ -43,11 +44,17 @@ interface Expense {
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,Header],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
 export class DashboardComponent {
+  avatar: string[] = [
+    "mike ross",
+    "jack hymnal"
+  ]
+
+  hater = signal("true");
   stats: Stat[] = [
     {
       label: 'Total Bookings',
