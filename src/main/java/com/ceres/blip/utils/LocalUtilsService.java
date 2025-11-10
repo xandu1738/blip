@@ -7,7 +7,7 @@ import com.ceres.blip.models.database.ModuleModel;
 import com.ceres.blip.models.database.PartnerModel;
 import com.ceres.blip.models.database.SystemRoleModel;
 import com.ceres.blip.models.database.SystemUserModel;
-import com.ceres.blip.models.jpa_helpers.enums.AppDomains;
+import com.ceres.blip.models.enums.AppDomains;
 import com.ceres.blip.repositories.ModuleRepository;
 import com.ceres.blip.repositories.PartnersRepository;
 import com.ceres.blip.repositories.SystemRoleRepository;

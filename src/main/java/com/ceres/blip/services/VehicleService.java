@@ -6,8 +6,8 @@ import com.ceres.blip.exceptions.AuthorizationRequiredException;
 import com.ceres.blip.models.database.PartnerModel;
 import com.ceres.blip.models.database.SystemUserModel;
 import com.ceres.blip.models.database.VehicleModel;
-import com.ceres.blip.models.jpa_helpers.enums.AppDomains;
-import com.ceres.blip.models.jpa_helpers.enums.VehicleTypes;
+import com.ceres.blip.models.enums.AppDomains;
+import com.ceres.blip.models.enums.VehicleTypes;
 import com.ceres.blip.repositories.VehicleRepository;
 import com.ceres.blip.utils.LocalUtilsService;
 import com.ceres.blip.utils.OperationReturnObject;
@@ -17,9 +17,6 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-
-import java.util.Collections;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor

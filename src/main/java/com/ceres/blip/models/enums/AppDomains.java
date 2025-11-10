@@ -1,4 +1,4 @@
-package com.ceres.blip.models.jpa_helpers.enums;
+package com.ceres.blip.models.enums;
 
 /**
  * App domains are a way of categorizing your users.

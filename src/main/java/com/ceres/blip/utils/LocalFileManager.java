@@ -1,8 +1,8 @@
 package com.ceres.blip.utils;
 
 import com.ceres.blip.models.database.FileRepositoryModel;
-import com.ceres.blip.models.jpa_helpers.enums.AllowedFileExtensions;
-import com.ceres.blip.models.jpa_helpers.enums.FileCategories;
+import com.ceres.blip.models.enums.AllowedFileExtensions;
+import com.ceres.blip.models.enums.FileCategories;
 import com.ceres.blip.repositories.FilesRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

@@ -1,8 +1,7 @@
 package com.ceres.blip.models.database;
 
-import com.ceres.blip.models.jpa_helpers.enums.TripStatus;
+import com.ceres.blip.models.enums.TripStatus;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -1,6 +1,6 @@
 package com.ceres.blip.models.database;
 
-import com.ceres.blip.models.jpa_helpers.enums.AppDomains;
+import com.ceres.blip.models.enums.AppDomains;
 import jakarta.persistence.*;
 import lombok.*;
 

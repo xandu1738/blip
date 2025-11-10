@@ -9,7 +9,7 @@ import com.ceres.blip.exceptions.AuthorizationRequiredException;
 import com.ceres.blip.models.database.PartnerModel;
 import com.ceres.blip.models.database.SystemRolePermissionAssignmentModel;
 import com.ceres.blip.models.database.SystemUserModel;
-import com.ceres.blip.models.jpa_helpers.enums.DefaultRoles;
+import com.ceres.blip.models.enums.DefaultRoles;
 import com.ceres.blip.repositories.SystemRolePermissionRepository;
 import com.ceres.blip.repositories.SystemUserRepository;
 import com.ceres.blip.utils.LocalUtilsService;
