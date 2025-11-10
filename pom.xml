@@ -190,7 +190,7 @@
     </dependencyManagement>
 
     <build>
-        <finalName>${artifactId}-app</finalName>
+        <finalName>${artifactId}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -202,6 +202,7 @@
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
+                    <jvmArguments>-XX:+UseZGC -XX:+UseStringDeduplication -DSTOP.PORT=1084 -DSTOP.KEY=stop_blip -Xms256m -Xmx256m</jvmArguments>
                 </configuration>
             </plugin>
         </plugins>
