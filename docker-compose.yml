@@ -1,9 +1,9 @@
 services:
   db:
     image: postgres:17
-    container_name: ceres-temp-db
+    container_name: blip-db
     environment:
-      POSTGRES_DB: ceres_temp
+      POSTGRES_DB: blip
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: '@Test1234'
     ports:
@@ -13,7 +13,7 @@ services:
 
   redis:
     image: redis:7
-    container_name: ceres-temp-redis
+    container_name: blip-redis
     ports:
       - "6379:6379"   # Host 6379 -> Container 6379
     volumes:
@@ -21,7 +21,7 @@ services:
 
   zipkin:
     image: openzipkin/zipkin:2.23.0
-    container_name: ceres-temp-zipkin
+    container_name: blip-zipkin
     ports:
       - "9411:9411"  # Host 9411 -> Container 9411
 
@@ -29,14 +29,14 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: ceres-temp-app
+    container_name: blip-app
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/ceres_temp
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/blip
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: '@Test1234'
       gcpBucketName: ceres-bucket
       gcpProjectId: banded-plateau-321516
-      gcpCredentialsFile: classpath:banded-plateau-321516-006939d9d275.json
+      gcpCredentialsFile: classpath:hooker-b3f8d-firebase-adminsdk-2y0f3-2097b8a4dd.json
       SPRING_REDIS_HOST: redis
       SPRING_REDIS_PORT: 6379
     ports:

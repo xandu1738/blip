@@ -43,7 +43,7 @@ public class PartnersService extends LocalUtilsService {
         }
         String logo = data.getString("logo");
 
-        String partnerCode = partnerName.toUpperCase().replaceAll(" ", "_");
+        String partnerCode = partnerName.toUpperCase().replace(" ", "_");
         PartnerModel partnerModel = new PartnerModel();
         partnerModel.setPartnerName(partnerName);
         partnerModel.setPartnerCode(partnerCode);
