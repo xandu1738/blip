@@ -1,31 +1,47 @@
 import {Component, OnInit, signal, WritableSignal} from '@angular/core';
 import {Router, RouterOutlet} from '@angular/router';
+import {CommonModule} from '@angular/common';
 import {CommonService} from './services/commonService';
-import {AuthService} from './services/auth.service';
-import {MegaMenuModule} from 'primeng/megamenu';
-import {MenuItem} from 'primeng/api';
+import { LoginComponent } from './login/login.component';
+import { AuthService } from './services/auth.service';
+import { LoaderService } from './services/loader.service';
+import { MegaMenuModule } from 'primeng/megamenu';
 import {Menubar} from 'primeng/menubar';
-import {LoginComponent} from './login/login.component';
-import {ButtonDirective} from 'primeng/button';
+import { ToastModule } from 'primeng/toast';
+import {MenuItem} from 'primeng/api';
+import { TableModule } from 'primeng/table';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, MegaMenuModule, Menubar, LoginComponent, ButtonDirective],
+  imports: [RouterOutlet, MegaMenuModule, ToastModule, Menubar, TableModule, CommonModule, LoginComponent],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
 export class App implements OnInit {
   isLoggedIn: boolean = false; // Add login state
   items: MenuItem[] | undefined;
+  showLoader: boolean = false;
 
-  constructor(protected commonService: CommonService, private router: Router, private authService: AuthService) {
+  constructor(
+    protected commonService: CommonService,
+    private router: Router,
+    private authService: AuthService,
+    private loaderService: LoaderService
+  ) { // Inject Router and AuthService
   }
 
   ngOnInit() {
-    this.showLoader = this.commonService.showLoader;
+    // Subscribe to loader service
+    this.loaderService.status.subscribe((isLoading: boolean) => {
+      this.showLoader = isLoading;
+    });
+
+    // Subscribe to authentication state
     this.authService.isLoggedIn.subscribe((loggedIn: boolean) => {
+      console.log('App component: Login state changed to:', loggedIn);
       this.isLoggedIn = loggedIn;
     });
+
 
     this.items = [
       {
@@ -35,17 +51,17 @@ export class App implements OnInit {
       },
       {
         label: 'Configuration',
-        icon: 'pi pi-spinner',
+        icon: 'pi pi-briefcase',
         items:[
           {
             label: 'Partners',
             icon: 'pi pi-ticket',
-            command: () =>{this.router.navigate(['/bus-booking'])}
+            command: () =>{this.router.navigate(['/register'])}
           },
           {
             label: 'Modules & Subscriptions',
             icon: 'pi pi-verified',
-            command: () =>{this.router.navigate(['/bus-booking'])}
+            command: () =>{this.router.navigate(['/configuration'])}
           }
         ]
       },
@@ -56,27 +72,27 @@ export class App implements OnInit {
           {
             label: 'Bus Booking',
             icon: 'pi pi-ticket',
-            command: () =>{this.router.navigate(['/bus-booking'])}
+            command: () =>{this.router.navigate(['//dashboard'])}
           },
           {
             label: 'Drivers',
             icon: 'pi pi-user',
-            command: () =>{this.router.navigate([''])}
+            command: () =>{this.router.navigate(['/dashboard'])}
           },
           {
             label:'Vehicles',
             icon: 'pi pi-car',
-            command: () =>{this.router.navigate([''])}
+            command: () =>{this.router.navigate(['/dashboard'])}
           },
           {
             label:'Routes & Trips',
             icon: 'pi pi-map',
-            command: () =>{this.router.navigate([''])}
+            command: () =>{this.router.navigate(['/dashboard'])}
           },
           {
             label:'Fares and Charges',
             icon: 'pi pi-megaphone',
-            command: () =>{this.router.navigate([''])}
+            command: () =>{this.router.navigate(['/dashboard'])}
           },
         ]
       },
@@ -136,7 +152,6 @@ export class App implements OnInit {
   }
 
   protected currentTheme: WritableSignal<string> = signal('light');
-  showLoader: any;
 
   toggleDarkMode() {
     const element = document.querySelector('html')!;
@@ -145,9 +160,9 @@ export class App implements OnInit {
   }
 
   handleLogout() {
-    this.authService.logout(); // Call authService.logout()
-    this.isMobileMenuOpen = false; // Close mobile menu on logout
-    this.router.navigate(['/login']); // Navigate to login page
+    this.authService.logout();
+    this.isMobileMenuOpen = false;
+    this.router.navigate(['/login']);
   }
 
   isMobileMenuOpen: boolean = false;

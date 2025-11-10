@@ -9,12 +9,14 @@ export class RemoteService {
   constructor(protected httpClient: HttpClient) {
   }
 
-  sendPostToServer(url: string, data: string): Observable<any> {
+  private serverurl = '127.0.0.1:7071/api/v1'
+
+  sendPostToServer(url: string, data: any): Observable<any> {
     console.log("Will use url " + url)
     this.logDevMode("Sending to server " + data)
     let options = {
       headers: new HttpHeaders({
-        'Content-Type': 'text/plain',
+        'Content-Type': 'application/json',
         'Request-Origin': 'BLIP-PORTAL'
       }),
     };
@@ -47,14 +49,17 @@ export class RemoteService {
 
   sendGetToServer(url: string): Observable<any> {
     console.log("Will use url " + url);
-    let options = {
-      headers: new HttpHeaders({
-        'Content-Type': 'text/plain',
-        'Request-Origin': 'BLIP-PORTAL'
-      }),
-    };
-    return this.httpClient.get(url, options);
+    const accessToken = localStorage.getItem("access_token");
+    console.log("your auth token:",accessToken);
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Request-Origin': 'BLIP-PORTAL',
+      'Authorization': `Bearer ${accessToken}`
+    });
+
+    return this.httpClient.get(url, { headers });
   }
+
 
   logDevMode(event: string) {
     // if (!environment.production) console.log(event);

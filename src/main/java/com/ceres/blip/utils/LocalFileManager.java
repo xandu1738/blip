@@ -82,9 +82,19 @@ public class LocalFileManager {
     }
 
     public String storeBase64File(String base64Data, String fileName, FileCategories fileCategory) throws IOException {
+
+
         // Decode the base64 data
         byte[] decodedBytes = Base64.getDecoder().decode(base64Data);
 
+        // create the directory if not exists
+        if (Files.notExists(uploadDir)) {
+          try {
+            Files.createDirectories(uploadDir);
+          } catch (IOException e) {
+            throw new IllegalStateException("Failed to create upload directory: " + uploadDir, e);
+          }
+        }
         // Save the file to the upload directory
         Path filePath = uploadDir.resolve(fileName);
         Files.write(filePath, decodedBytes);

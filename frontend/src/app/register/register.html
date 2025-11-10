@@ -1,0 +1,204 @@
+<div class="p-4 flex justify-between">
+  <div>
+    <h1 class="text-3xl font-bold mb-2">Partner Details</h1>
+    <p class="text-gray-600 mx-4">Manage Partner Details and Information</p>
+  </div>
+  <button
+    (click)="addPartner()"
+    class="inline-flex items-center self-start gap-2 px-6 py-2 bg-cyan-900 text-white font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition shadow-sm">
+    <i class="pi pi-plus"></i>
+    <span>add Partners</span>
+  </button>
+</div>
+
+<div class="p-4 w-full">
+
+  <!-- Search Filters Card -->
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
+
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-lg font-semibold text-gray-800">Filter Partners</h2>
+      <button
+        (click)="clearFilters()"
+        class="text-sm text-gray-500 hover:text-gray-700 underline">
+        Clear all
+      </button>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+      <!-- Partner Code -->
+      <div class="relative">
+        <label for="partners_code" class="block text-sm font-medium text-gray-700 mb-1">
+          Partner Code
+        </label>
+        <div class="relative">
+          <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+            <i class="pi pi-tag"></i>
+          </span>
+          <input
+            type="text"
+            id="partners_code"
+            [(ngModel)]="userData.partners_code"
+            (input)="onChangeSearch($event)"
+            placeholder="e.g., PT001"
+            class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+          />
+        </div>
+      </div>
+
+      <!-- Contact Person -->
+      <div class="relative">
+        <label for="contact_person" class="block text-sm font-medium text-gray-700 mb-1">
+          Contact Person
+        </label>
+        <div class="relative">
+          <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+            <i class="pi pi-user"></i>
+          </span>
+          <input
+            type="text"
+            id="contact_person"
+            [(ngModel)]="userData.contact_person"
+            (input)="onChangeSearch($event)"
+            placeholder="e.g., John Doe"
+            class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+          />
+        </div>
+      </div>
+
+      <!-- Account Number -->
+      <div class="relative">
+        <label for="account_number" class="block text-sm font-medium text-gray-700 mb-1">
+          Account Number
+        </label>
+        <div class="relative">
+          <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+            <i class="pi pi-hashtag"></i>
+          </span>
+          <input
+            type="text"
+            id="account_number"
+            [(ngModel)]="userData.account_number"
+            (input)="onChangeSearch($event)"
+            placeholder="e.g., ACC123456"
+            class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+          />
+        </div>
+      </div>
+
+      <!-- Partner Name -->
+      <div class="relative">
+        <label for="search_name" class="block text-sm font-medium text-gray-700 mb-1">
+          Partner Name
+        </label>
+        <div class="relative">
+          <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+            <i class="pi pi-building"></i>
+          </span>
+          <input
+            type="text"
+            id="search_name"
+            [(ngModel)]="userData.search_name"
+            (input)="onChangeSearch($event)"
+            placeholder="e.g., ABC Logistics"
+            class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+          />
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Search Button -->
+    <div class="flex justify-end pt-2">
+      <button
+        (click)="filterPartners()"
+        class="inline-flex items-center gap-2 px-6 py-2.5 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition shadow-sm">
+        <i class="pi pi-search"></i>
+        <span>Search Partners</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Partners Table -->
+  <div class="relative bg-white rounded-xl shadow-sm border border-gray-200 w-full max-h-[70vh] overflow-y-auto">
+    <p-table [value]="filteredPartners" [tableStyle]="{ 'min-width': '100%' }">
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Partner Name</th>
+          <th>Account Number</th>
+          <th>Contact Person</th>
+          <th>Contact Phone</th>
+          <th>Account ID</th>
+          <th>Business Reference</th>
+          <th>Active</th>
+          <th>Package</th>
+          <th>Logo</th>
+          <th>Actions</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-partner>
+        <tr class="">
+          <td class="truncate">{{ partner.partnerName }}</td>
+          <td class="truncate">{{ partner.accountNumber }}</td>
+          <td class="truncate">{{ partner.contactPerson }}</td>
+          <td class="truncate">{{ partner.contactPhone }}</td>
+          <td class="truncate">{{ partner.accountId }}</td>
+          <td class="truncate">{{ partner.businessReference }}</td>
+          <td>
+            <span [class.text-green-500]="partner.active" [class.text-red-500]="!partner.active">
+              {{ partner.active ? 'Active' : 'Inactive' }}
+            </span>
+          </td>
+          <td class="truncate">{{ partner.packageField }}</td>
+          <td><img [ngSrc]="partner?.logo" alt="{{ partner.partnerName }}" width="50" height="50" style="object-fit: cover; border-radius: 6px;" /></td>
+          <td class="truncate">
+            <div class="flex gap-2">
+              <button class="p-2 bg-blue-100 text-blue-600 rounded-md hover:bg-blue-200 transition" title="Edit">
+                <i class="pi pi-pencil text-sm"></i>
+              </button>
+              <button class="p-2 bg-green-100 text-green-600 rounded-md hover:bg-green-200 transition" title="View">
+                <i class="pi pi-eye text-sm"></i>
+              </button>
+              <button class="p-2 bg-red-100 text-red-600 rounded-md hover:bg-red-200 transition" title="Delete">
+                <i class="pi pi-trash text-sm"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+  <!-- Add Partner Dialog -->
+  <p-dialog header="Add New Partner" [(visible)]="showAddDialog" [modal]="true" styleClass="w-[90%] sm:w-[50%]" >
+    <div class="space-y-4">
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label>Partner Name</label>
+          <input pInputText [(ngModel)]="newModule.name" placeholder="Enter partner name" class="w-full p-3 border rounded-lg"/>
+        </div>
+        <div>
+          <label>Service Package</label>
+          <select class="w-full p-3 border rounded-lg">
+            <option value="transport">Transport</option>
+            <option value="logistics">Logistics</option>
+            <option value="full">Full Package</option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <label>Business Description</label>
+        <textarea [(ngModel)]="newModule.description" rows="3" placeholder="Brief description..." class="w-full p-3 border rounded-lg"></textarea>
+      </div>
+
+      <div class="flex justify-end gap-3 mt-6">
+        <button pButton label="Cancel" class="p-button-outlined" (click)="showAddDialog = false"></button>
+        <button pButton label="Create Partner" class="bg-blue-600 text-white" (click)="addModule()"></button>
+      </div>
+    </div>
+  </p-dialog>
+
+</div>
