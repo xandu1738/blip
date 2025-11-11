@@ -1,9 +1,9 @@
 package com.ceres.blip.utils;
 
 import com.ceres.blip.models.database.*;
-import com.ceres.blip.models.jpa_helpers.enums.AppDomains;
-import com.ceres.blip.models.jpa_helpers.enums.DefaultPermissions;
-import com.ceres.blip.models.jpa_helpers.enums.DefaultRoles;
+import com.ceres.blip.models.enums.AppDomains;
+import com.ceres.blip.models.enums.DefaultPermissions;
+import com.ceres.blip.models.enums.DefaultRoles;
 import com.ceres.blip.repositories.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

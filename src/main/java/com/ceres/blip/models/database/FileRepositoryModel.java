@@ -1,6 +1,6 @@
 package com.ceres.blip.models.database;
 
-import com.ceres.blip.models.jpa_helpers.enums.FileCategories;
+import com.ceres.blip.models.enums.FileCategories;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
