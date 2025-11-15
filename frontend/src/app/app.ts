@@ -10,10 +10,11 @@ import {Menubar} from 'primeng/menubar';
 import { ToastModule } from 'primeng/toast';
 import {MenuItem} from 'primeng/api';
 import { TableModule } from 'primeng/table';
+import {ButtonDirective} from 'primeng/button';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, MegaMenuModule, ToastModule, Menubar, TableModule, CommonModule, LoginComponent],
+  imports: [RouterOutlet, MegaMenuModule, ToastModule, Menubar, TableModule, CommonModule, LoginComponent, ButtonDirective],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

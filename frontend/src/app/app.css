@@ -67,6 +67,79 @@
 
 
 
+/*!* PrimeNG Menubar Overrides *!*/
+
+.p-menubar {
+  background-color: var(--background) !important;
+  color: var(--text) !important;
+  /*border: none !important;*/
+}
+
+
+
+.p-menubar-item {
+  /*color:;*/
+
+  :hover{
+    background-color: var(--accent);
+  }
+
+}
+
+/*.p-menuitem-text {*/
+/*  color:black;*/
+/*}*/
+
+/*.p-menuitem-text:hover {*/
+/*  color:black;*/
+/*}*/
+
+/*.p-menuitem-icon {*/
+/*  color:black;*/
+/*}*/
+
+
+/*.p-menubar-item-link {*/
+/*  background-color: white;*/
+/*  color:black;*/
+/*  !*border-radius: 50px;*!*/
+/*  !*border: 1px #e9e1e1 solid;*!*/
+/*}*/
+
+/*.p-menubar {*/
+/*  border-radius: 20px !important;*/
+/*}*/
+
+
+/*.p-menubar-item-icon {*/
+/*  color: gray !important;*/
+/*  !*background-color: red;*!*/
+/*}*/
+
+
+/*.p-menubar-item-content:hover {*/
+/*  background-color: transparent !important;*/
+/*  color: black;*/
+/*}*/
+
+
+/*.p-menubar-item-content {*/
+/*  background-color: transparent !important;*/
+/*}*/
+
+/*.p-menubar-submenu {*/
+/*  background-color: transparent !important;*/
+/*  border: none !important;*/
+/*  box-shadow: none !important;*/
+/*  !*display: flex !important;*!*/
+/*  flex-direction: column !important;*/
+/*  gap: 2px !important;*/
+/*  justify-content: space-between !important;*/
+/*}*/
+
+
+
+
 
 
 /*cover shader*/
@@ -103,3 +176,4 @@
   background: currentColor;
   animation: l16-1 .5s infinite linear;
 }
+

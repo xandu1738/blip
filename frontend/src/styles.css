@@ -29,21 +29,71 @@
   font-style: italic;
 }
 
-:root{
-  --blue-one: #03045E;
-  --blue-two: #023E8A;
-  --blue-three: #0077B6;
-  --blue-four: #0096C7;
-  --blue-five: #00D4D8;
-  --blue-six: #48CAE4;
-  --blue-seven: #90E0EF;
-  --blue-eight: #ADE8F4;
-  --blue-nine: #CAF0F8;
+/*:root{*/
+/*  --blue-one: #03045E;*/
+/*  --blue-two: #023E8A;*/
+/*  --blue-three: #0077B6;*/
+/*  --blue-four: #0096C7;*/
+/*  --blue-five: #00D4D8;*/
+/*  --blue-six: #48CAE4;*/
+/*  --blue-seven: #90E0EF;*/
+/*  --blue-eight: #ADE8F4;*/
+/*  --blue-nine: #CAF0F8;*/
+/*}*/
+:root {
+
+  --text: #050316;
+  --background: #fbfbfe;
+  --primary: #236731;
+  --secondary: #dbf5ff;
+  --accent: #3dff98;
+
+  @media (prefers-color-scheme: dark) {
+    --text: #eae9fc;
+    --background: #010104;
+    --primary: #98dca6;
+    --secondary: #001a24;
+    --accent: #00c25a;
+  }
 }
 
-body{
-  background-color: rgba(175, 175, 175, 0.21);
+
+.dark-mode {
+
+  --text: #eae9fc;
+  --background: #010104;
+  --primary: #98dca6;
+  --secondary: #001a24;
+  --accent: #00c25a;
+
+  /*--background-color: #121212;*/
+  /*--text-color: #ffffff;*/
+  /*--primary-color: #bb86fc;*/
+  /*--secondary-color: #03dac6;*/
+  /*--error-color: #cf6679;*/
+  /*--surface-color: #1e1e1e;*/
+  /*--on-primary-color: #000000;*/
+  /*--on-secondary-color: #000000;*/
+  /*--on-surface-color: #ffffff;*/
+  /*--on-error-color: #000000;*/
 }
+
+
+body {
+  background-color: var(--background);
+  color: var(--text);
+}
+
+.primary-button {
+  background-color: var(--primary);
+  transform: translateY(0);
+}
+
+.primary-button:hover {
+  opacity: 0.6;
+  transform: translateY(-3px);
+}
+
 
 @media (max-width: 500px) {
   .p-menubar-root-list {
@@ -53,101 +103,45 @@ body{
   }
 }
 
-.p-menubar{
+.p-menubar {
   padding: 20px !important;
   border: 1px solid rgba(128, 128, 128, 0.34) !important;
 }
+
+.p-menubar-item{
+  /*background-color: red;*/
+  color: var(--text) !important;
+  :hover{
+    background-color: var(--secondary);
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 .p-button {
   background: #0096C7 !important;
   color: white !important;
   border: none !important;
-
-  /*&:hover {*/
-  /*  --p-button-bg: var(--p-primary-hover-color);*/
-  /*}*/
-
-  /*&:active {*/
-  /*  --p-button-bg: var(--p-primary-active-color);*/
-  /*}*/
-
-  /*&:focus-visible {*/
-  /*  box-shadow: 0 0 0 2px var(--p-primary-focus-ring-color);*/
-  /*}*/
-}
-
-.dark-mode {
-  --background-color: #121212;
-  --text-color: #ffffff;
-  --primary-color: #bb86fc;
-  --secondary-color: #03dac6;
-  --error-color: #cf6679;
-  --surface-color: #1e1e1e;
-  --on-primary-color: #000000;
-  --on-secondary-color: #000000;
-  --on-surface-color: #ffffff;
-  --on-error-color: #000000;
-}
-
-/* PrimeNG Menu Overrides */
-.p-menubar {
-  background-color: white !important;
-  border: none !important;
-}
-
-.p-menuitem-link:hover .p-menuitem-text {
-  color: red !important;
-}
-
-.p-menuitem-text {
-  color: #4b5563 !important; /* Dark gray text */
-}
-
-.p-menuitem-text:hover {
-  color: #4b5563 !important; /* Dark gray text */
-}
-
-.p-menuitem-icon {
-  color: #4b5563 !important; /* Dark gray icon */
-}
-
-
-.p-menubar-item-link {
-  background-color: transparent;
-  color:black;
-  /*border-radius: 50px;*/
-  /*border: 1px #e9e1e1 solid;*/
-}
-
-.p-menubar {
-  border-radius: 20px !important;
-}
-
-
-.p-menubar-item-icon {
-  color: gray !important;
-  /*background-color: red;*/
-}
-
-
-.p-menubar-item-content:hover {
-  background-color: transparent !important;
-  color: black;
-}
-
-
-.p-menubar-item-content {
-  background-color: transparent !important;
-}
-
-.p-menubar-submenu {
-  background-color: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-  /*display: flex !important;*/
-  flex-direction: column !important;
-  gap: 2px !important;
-  justify-content: space-between !important;
 }
 
 
@@ -155,22 +149,22 @@ body{
 /* custom table styles */
 .p-datatable-table {
   display: block;
-  /*width: 50% !important;*/
+  /*background-color: var(--background);*/
 }
 
 
-/* Keep header fixed at top when scrolling */
+
 :host ::ng-deep .p-datatable-thead > tr > th {
   position: sticky;
   top: 0;
-  background: white; /* Needed so it doesn’t blend with rows below */
-  z-index: 10; /* Ensures it stays above rows */
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* Optional subtle separation */
+  background: white;
+  z-index: 10;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 
 :host ::ng-deep .p-datatable-thead.sticky-active {
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   background: white;
 }
 

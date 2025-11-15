@@ -1,8 +1,8 @@
-// dashboard.component.html template
-
 import {Component, signal, Input} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {Header} from '../shared-components/Header/header/header';
+import {UIChart} from 'primeng/chart';
+import { ChartModule } from 'primeng/chart';
 
 interface Stat {
   label: string;
@@ -44,16 +44,16 @@ interface Expense {
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule,Header],
+  imports: [CommonModule, ChartModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
 export class DashboardComponent {
+
   avatar: string[] = [
     "mike ross",
     "jack hymnal"
-  ]
-
+  ];
   hater = signal("true");
   stats: Stat[] = [
     {
@@ -99,7 +99,6 @@ export class DashboardComponent {
       bgColor: 'bg-pink-50'
     }
   ];
-
   recentActivity: Activity[] = [
     {
       type: 'Bus Booking',
@@ -138,7 +137,6 @@ export class DashboardComponent {
       icon: 'bus'
     }
   ];
-
   notifications: Notification[] = [
     {
       id: 1,
@@ -181,7 +179,6 @@ export class DashboardComponent {
       color: 'text-purple-500'
     }
   ];
-
   expenses: Expense[] = [
     {
       id: 1,
@@ -253,4 +250,70 @@ export class DashboardComponent {
   formatCurrency(amount: number): string {
     return `UGX ${amount.toLocaleString()}`;
   }
+
+
+  basicData: any;
+
+  basicOptions: any;
+
+  ngOnInit() {
+    this.initChart();
+  }
+
+  initChart() {
+      const documentStyle = getComputedStyle(document.documentElement);
+      const textColor = documentStyle.getPropertyValue('--p-text-color');
+      const textColorSecondary = documentStyle.getPropertyValue('--p-text-muted-color');
+      const surfaceBorder = documentStyle.getPropertyValue('--p-content-border-color');
+
+      this.basicData = {
+        labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+        datasets: [
+          {
+            label: 'Sales',
+            data: [540, 325, 702, 620],
+            backgroundColor: [
+              'rgba(249, 115, 22, 0.2)',
+              'rgba(6, 182, 212, 0.2)',
+              'rgb(107, 114, 128, 0.2)',
+              'rgba(139, 92, 246, 0.2)',
+            ],
+            borderColor: ['rgb(249, 115, 22)', 'rgb(6, 182, 212)', 'rgb(107, 114, 128)', 'rgb(139, 92, 246)'],
+            borderWidth: 1,
+          },
+        ],
+      };
+
+      this.basicOptions = {
+        plugins: {
+          legend: {
+            labels: {
+              color: textColor,
+            },
+          },
+        },
+        scales: {
+          x: {
+            ticks: {
+              color: textColorSecondary,
+            },
+            grid: {
+              color: surfaceBorder,
+            },
+          },
+          y: {
+            beginAtZero: true,
+            ticks: {
+              color: textColorSecondary,
+            },
+            grid: {
+              color: surfaceBorder,
+            },
+          },
+        },
+      };
+    }
+
+
+
 }
