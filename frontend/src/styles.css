@@ -45,14 +45,14 @@
   --text: #050316;
   --background: #fbfbfe;
   --primary: #236731;
-  --secondary: #dbf5ff;
+  --secondary: #deffdb;
   --accent: #3dff98;
 
   @media (prefers-color-scheme: dark) {
     --text: #eae9fc;
     --background: #010104;
-    --primary: #98dca6;
-    --secondary: #001a24;
+    --primary: rgba(76, 96, 80, 0.45);
+    --secondary: #252926;
     --accent: #00c25a;
   }
 }
@@ -62,7 +62,7 @@
 
   --text: #eae9fc;
   --background: #010104;
-  --primary: #98dca6;
+  --primary: rgba(3, 87, 18, 0.46);
   --secondary: #001a24;
   --accent: #00c25a;
 
@@ -78,6 +78,49 @@
   /*--on-error-color: #000000;*/
 }
 
+.p-menubar-item-content {
+  color: var(--text) !important;
+}
+
+.p-menubar-item-active > .p-menubar-item-content {
+  background-color: var(--background) !important;
+  border-color: var(--primary);
+}
+
+.p-menubar-submenu {
+  /*display: none;*/
+  /*position: absolute;*/
+  /*min-width: 12.5rem;*/
+  /*z-index: 1;*/
+  background: var(--background) !important;
+  border-color: var(--primary) !important;
+  /*border: 1px solid var(--p-menubar-submenu-border-color);*/
+  border-radius: 5px !important;
+  /*box-shadow: var(--p-menubar-submenu-shadow);*/
+  color: var(--text) !important;
+  /*flex-direction: column;*/
+  /*padding: var(--p-menubar-submenu-padding);*/
+  /*gap: var(--p-menubar-submenu-gap);*/
+}
+
+.p-menubar-item-icon {
+  color: var(--text) !important;
+}
+
+.p-menubar-submenu-icon{
+  color: var(--text) !important;
+}
+
+.p-menubar-item-active > .p-menubar-item-content .p-menubar-submenu-icon {
+  color: var(--text) !important;
+}
+
+.p-menubar-item.p-focus > .p-menubar-item-content {
+  background-color: var(--secondary) !important;
+  border-color: var(--primary);
+  border-radius: 8px !important;
+  color: white !important;
+}
 
 body {
   background-color: var(--background);
@@ -108,34 +151,14 @@ body {
   border: 1px solid rgba(128, 128, 128, 0.34) !important;
 }
 
-.p-menubar-item{
+.p-menubar-item {
   /*background-color: red;*/
   color: var(--text) !important;
-  :hover{
+
+  :hover {
     background-color: var(--secondary);
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 .p-button {
@@ -145,13 +168,11 @@ body {
 }
 
 
-
 /* custom table styles */
 .p-datatable-table {
   display: block;
   /*background-color: var(--background);*/
 }
-
 
 
 :host ::ng-deep .p-datatable-thead > tr > th {
