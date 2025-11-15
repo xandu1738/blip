@@ -20,6 +20,9 @@ public class SubscriptionPlanModel {
     @Column(name = "name", length = Integer.MAX_VALUE)
     private String name;
 
+    @Column(name = "plan_code", length = Integer.MAX_VALUE)
+    private String planCode;
+
     @Column(name = "description", length = Integer.MAX_VALUE)
     private String description;
 

@@ -46,6 +46,11 @@ public enum Constants {
     TYPE("type"),
     STATUS("status"),
     PRICE("price"),
+    PARTNER_CODE("partnerCode"),
+    MODULE_CODE("moduleCode"),
+    SUBSCRIPTION_PLAN("subscriptionPlan"),
+    START_DATE("startDate"),
+    END_DATE("endDate"),
     AMENITIES("amenities"),
     REVIEW_COUNT("reviewCount");
     private final String value;

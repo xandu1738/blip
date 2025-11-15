@@ -37,6 +37,9 @@ public class SubscriptionModel {
     @Column(name = "created_by")
     private Long createdBy;
 
+    @Column(name = "subscription_plan")
+    private String subscriptionPlan;
+
     @Column(name = "start_date")
     private Timestamp startDate;
 

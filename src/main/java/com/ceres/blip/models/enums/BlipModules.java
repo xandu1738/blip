@@ -1,6 +1,6 @@
 package com.ceres.blip.models.enums;
 
-public enum BlipPackages {
+public enum BlipModules {
     FULL,
     LOGISTICS,
     TRANSPORT

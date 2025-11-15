@@ -4,7 +4,7 @@ import com.alibaba.fastjson2.JSONObject;
 import com.ceres.blip.exceptions.AuthorizationRequiredException;
 import com.ceres.blip.models.database.PartnerModel;
 import com.ceres.blip.models.enums.AppDomains;
-import com.ceres.blip.models.enums.BlipPackages;
+import com.ceres.blip.models.enums.BlipModules;
 import com.ceres.blip.models.enums.FileCategories;
 import com.ceres.blip.repositories.PartnersRepository;
 import com.ceres.blip.utils.LocalUtilsService;
@@ -71,7 +71,7 @@ public class PartnersService extends LocalUtilsService {
             pkg = "FULL";
         }
 
-        if (!EnumUtils.isValidEnumIgnoreCase(BlipPackages.class, pkg)) {
+        if (!EnumUtils.isValidEnumIgnoreCase(BlipModules.class, pkg)) {
             throw new IllegalArgumentException("Invalid package value. Allowed values are: TRANSPORT, LOGISTICS or FULL.");
         }
         partnerModel.setPackageField(pkg);
@@ -133,7 +133,7 @@ public class PartnersService extends LocalUtilsService {
             partnerModel.setPackageField(pkg);
         }
 
-        if (!EnumUtils.isValidEnumIgnoreCase(BlipPackages.class, pkg)) {
+        if (!EnumUtils.isValidEnumIgnoreCase(BlipModules.class, pkg)) {
             throw new IllegalArgumentException("Invalid package value. Allowed values are: TRANSPORT, LOGISTICS or FULL.");
         }
         partnerModel.setPackageField(pkg);

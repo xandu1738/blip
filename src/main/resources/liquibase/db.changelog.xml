@@ -12,5 +12,6 @@
     <include file="/changes/trips_init.sql" relativeToChangelogFile="true"/>
     <include file="/changes/tickets.sql" relativeToChangelogFile="true"/>
     <include file="/changes/subscriptions.sql" relativeToChangelogFile="true"/>
+    <include file="/changes/sub_modes.sql" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

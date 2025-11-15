@@ -3,15 +3,9 @@ package com.ceres.blip.utils;
 import com.alibaba.fastjson2.JSONObject;
 import com.ceres.blip.config.ApplicationConf;
 import com.ceres.blip.exceptions.AuthorizationRequiredException;
-import com.ceres.blip.models.database.ModuleModel;
-import com.ceres.blip.models.database.PartnerModel;
-import com.ceres.blip.models.database.SystemRoleModel;
-import com.ceres.blip.models.database.SystemUserModel;
+import com.ceres.blip.models.database.*;
 import com.ceres.blip.models.enums.AppDomains;
-import com.ceres.blip.repositories.ModuleRepository;
-import com.ceres.blip.repositories.PartnersRepository;
-import com.ceres.blip.repositories.SystemRoleRepository;
-import com.ceres.blip.repositories.SystemUserRepository;
+import com.ceres.blip.repositories.*;
 import jakarta.annotation.Nullable;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -43,6 +37,8 @@ public abstract class LocalUtilsService {
     private PartnersRepository partnersRepository;
     @Autowired
     private ModuleRepository moduleRepository;
+    @Autowired
+    private SubscriptionPlanRepository subscriptionPlanRepository;
 
     /**
      * Works as ```requires()``` above, but will check for only one field
@@ -289,12 +285,25 @@ public abstract class LocalUtilsService {
         );
     }
 
+    public SubscriptionPlanModel getSubscriptionPlan(String plan) {
+        return subscriptionPlanRepository.findByPlanCode(plan).orElseThrow(
+                ()-> new IllegalStateException(String.format("Subscription Plan with code %s not found. Please contact admin.", plan))
+        );
+    }
+
     public ModuleModel getModule(String moduleCode) {
         return moduleRepository.findByCode(moduleCode).orElseThrow(
                 ()-> new IllegalStateException(String.format("Module with code %s not found. Please contact admin.", moduleCode))
         );
     }
 
+    protected Timestamp stringToTImestamp(String timestampStr) {
+        try {
+            return Timestamp.valueOf(timestampStr);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalStateException(e.getMessage(), e);
+        }
+    }
     public void executeAsync(Runnable runnable) {
         CompletableFuture.runAsync(runnable);
     }

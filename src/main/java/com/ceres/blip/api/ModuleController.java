@@ -4,12 +4,14 @@ import com.alibaba.fastjson2.JSONObject;
 import com.ceres.blip.exceptions.AuthorizationRequiredException;
 import com.ceres.blip.services.ModulesService;
 import com.ceres.blip.utils.OperationReturnObject;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/modules")
+@Tag(name = "Modules", description = "Modules API")
 @RequiredArgsConstructor
 public class ModuleController {
     private final ModulesService modulesService;
