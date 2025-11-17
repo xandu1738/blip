@@ -33,49 +33,12 @@
   }
 }
 
-
-/*.p-menuitem-link:hover .p-menuitem-text {*/
-/*  color: red !important;*/
-/*}*/
-
-/*!* PrimeNG Menu Overrides *!*/
-/*.p-menubar {*/
-/*  background-color: white !important;*/
-/*  border: none !important;*/
-/*}*/
-
-/*.p-menuitem-link:hover {*/
-/*  background-color: white !important;*/
-/*}*/
-
-/*.p-menuitem-link {*/
-/*  background-color: white !important;*/
-/*  color: white !important;*/
-/*}*/
-
-/*.p-menuitem-text {*/
-/*  color: white !important;*/
-/*}*/
-
-/*.p-menuitem-icon {*/
-/*  color: white !important;*/
-/*}*/
-
-/*.p-menubar .p-menuitem-link:focus {*/
-/*  box-shadow: 0 0 0 0.2rem rgba(250, 96, 96, 0.5) !important;*/
-/*}*/
-
-
-
 /*!* PrimeNG Menubar Overrides *!*/
-
 .p-menubar {
   background-color: var(--background) !important;
   color: var(--text) !important;
   /*border: none !important;*/
 }
-
-
 
 .p-menubar-item {
   /*color:;*/
@@ -86,56 +49,7 @@
 
 }
 
-/*.p-menuitem-text {*/
-/*  color:black;*/
-/*}*/
 
-/*.p-menuitem-text:hover {*/
-/*  color:black;*/
-/*}*/
-
-/*.p-menuitem-icon {*/
-/*  color:black;*/
-/*}*/
-
-
-/*.p-menubar-item-link {*/
-/*  background-color: white;*/
-/*  color:black;*/
-/*  !*border-radius: 50px;*!*/
-/*  !*border: 1px #e9e1e1 solid;*!*/
-/*}*/
-
-/*.p-menubar {*/
-/*  border-radius: 20px !important;*/
-/*}*/
-
-
-/*.p-menubar-item-icon {*/
-/*  color: gray !important;*/
-/*  !*background-color: red;*!*/
-/*}*/
-
-
-/*.p-menubar-item-content:hover {*/
-/*  background-color: transparent !important;*/
-/*  color: black;*/
-/*}*/
-
-
-/*.p-menubar-item-content {*/
-/*  background-color: transparent !important;*/
-/*}*/
-
-/*.p-menubar-submenu {*/
-/*  background-color: transparent !important;*/
-/*  border: none !important;*/
-/*  box-shadow: none !important;*/
-/*  !*display: flex !important;*!*/
-/*  flex-direction: column !important;*/
-/*  gap: 2px !important;*/
-/*  justify-content: space-between !important;*/
-/*}*/
 
 
 
@@ -143,7 +57,6 @@
 
 
 /*cover shader*/
-
 .spinner-overlay {
   position: fixed;
   top: 0;
@@ -162,7 +75,7 @@
   width: 50px;
   aspect-ratio: 1;
   display: flex;
-  color: orange;
+  color: #1e1c1c;
   background: linear-gradient(currentColor 0 0) right  /51% 100%,
   linear-gradient(currentColor 0 0) bottom /100% 51%;
   background-repeat: no-repeat;

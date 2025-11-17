@@ -1,45 +1,35 @@
-
-
-
-
-
-
-
-
-
 <div class="">
 
   <!-- Header -->
   <div class="flex items-center justify-between mb-6">
     <div>
-      <h1 class="text-3xl font-bold font-sans text-gray-800 mb-2">Modules & Subscriptions</h1>
-      <p class="text-gray-600 mx-4">Manage transport and logistics business modules available for partner subscription</p>
+      <h1 class="text-3xl font-bold font-sans mb-2">Modules & Subscriptions</h1>
+      <p class="mx-4">Manage transport and logistics business modules available for partner
+        subscription</p>
     </div>
     <div class="flex gap-3">
       <button
-        pButton
-        label="Refresh"
-        icon="pi pi-refresh"
-        class="p-button-outlined px-4 py-2 rounded-lg border-2 border-gray-300 hover:border-blue-500 transition-colors"
+        class="px-4 py-2 rounded-lg transition-colors p-button"
         (click)="refreshModules()">
+        <i class="pi pi-refresh"></i>
       </button>
       <button
-        pButton
-        label="Add Module"
-        icon="pi pi-plus"
-        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow-md transition-colors"
+        class="px-4 py-2 rounded-lg transition-colors p-button"
         (click)="openAddDialog()">
+        <i class="pi pi-plus"></i>
+        <span>add Module</span>
       </button>
     </div>
   </div>
 
   <!-- Quick Stats -->
   <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-    <div class="bg-white p-4 rounded-lg border border-gray-400 shadow-3xl">
+
+    <div class="stat-card p-4 rounded-lg shadow-3xl">
       <div class="flex items-center justify-between">
         <div>
-          <p class="text-sm text-gray-500">Total Modules</p>
-          <p class="text-2xl font-bold text-blue-600">{{ modules.length }}</p>
+          <p class="text-sm mb-1">Total Modules</p>
+          <p class="font-bold font-sans tabular-nums text-lg text-white">{{ modules.length }}</p>
         </div>
         <div class="bg-blue-100 p-3 rounded-full">
           <span class="text-blue-600 text-xl">📦</span>
@@ -47,11 +37,11 @@
       </div>
     </div>
 
-    <div class="bg-white p-4 rounded-lg border border-gray-400 shadow-3xl">
+    <div class="stat-card p-4 rounded-lg shadow-3xl">
       <div class="flex items-center justify-between">
         <div>
-          <p class="text-sm text-gray-500">Transport Module</p>
-          <p class="text-2xl font-bold text-green-600">Active</p>
+          <p class="text-sm mb-1">Transport Module</p>
+          <p class="font-bold font-sans tabular-nums text-lg text-green-300">Active</p>
         </div>
         <div class="bg-green-100 p-3 rounded-full">
           <span class="text-green-600 text-xl">🚌</span>
@@ -59,11 +49,11 @@
       </div>
     </div>
 
-    <div class="bg-white p-4 rounded-lg border border-gray-400 shadow-3xl">
+    <div class="stat-card p-4 rounded-lg shadow-3xl">
       <div class="flex items-center justify-between">
         <div>
-          <p class="text-sm text-gray-500">Logistics Module</p>
-          <p class="text-2xl font-bold text-green-600">Active</p>
+          <p class="text-sm mb-1">Logistics Module</p>
+          <p class="font-bold font-sans tabular-nums text-lg text-green-300">Active</p>
         </div>
         <div class="bg-green-100 p-3 rounded-full">
           <span class="text-green-600 text-xl">📦</span>
@@ -71,77 +61,117 @@
       </div>
     </div>
 
-    <div class="bg-white p-4 rounded-lg border border-gray-400 shadow-3xl">
+    <div class="stat-card p-4 rounded-lg shadow-3xl">
       <div class="flex items-center justify-between">
         <div>
-          <p class="text-sm text-gray-500">Active Subscriptions</p>
-          <p class="text-2xl font-bold text-purple-600">{{ getActiveSubscriptionsCount() }}</p>
+          <p class="text-sm mb-1">Active Subscriptions</p>
+          <p class="font-bold font-sans tabular-nums text-lg text-purple-300">{{ getActiveSubscriptionsCount() }}</p>
         </div>
         <div class="bg-purple-100 p-3 rounded-full">
           <span class="text-purple-600 text-xl">📋</span>
         </div>
       </div>
     </div>
+
   </div>
 
   <!-- Filter Bar -->
-  <div class="bg-white p-4 rounded-lg border border-gray-400 mb-6">
-    <div class="flex items-center gap-4">
-      <div class="relative flex-1 flex gap-2">
-<!--        <span class="pi pi-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></span>-->
-        <input
-          type="text"
-          pInputText
-          [(ngModel)]="searchQuery"
-          placeholder="Search modules by name or description..."
-          class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent"
-        />
-        <input
-          type="text"
-          pInputText
-          [(ngModel)]="searchQuery"
-          placeholder="Search modules by name or description..."
-          class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent"
-        />
-        <input
-          type="text"
-          pInputText
-          [(ngModel)]="searchQuery"
-          placeholder="Search modules by name or description..."
-          class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent"
-        />
-        <input
-          type="text"
-          pInputText
-          [(ngModel)]="searchQuery"
-          placeholder="Search modules by name or description..."
-          class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent"
-        />
+  <!-- Search Filters Card -->
+  <div class="rounded-xl shadow-sm border  p-6 mb-6 bg-background">
 
-
-      </div>
-      <div class="flex items-center gap-2">
-        <span class="text-sm text-gray-600">Show:</span>
-        <select class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-400">
-          <option value="all">All Modules</option>
-          <option value="transport">Transport Only</option>
-          <option value="logistics">Logistics Only</option>
-        </select>
-      </div>
+    <!-- add accordion component -->
+    <!--        (click)="filterPartners()"-->
+    <div class="flex justify-end pt-2">
+      <button
+      class="inline-flex items-center gap-2 px-6 py-2.5 p-button text-white font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition shadow-sm">
+        <i class="pi pi-search"></i>
+      <span>Search Partners</span>
+      </button>
     </div>
+
+    <!-- Search Button -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+
+      <!-- Partner Code -->
+      <div class="relative">
+        <label for="partners_code" class="block text-sm font-medium mb-1">
+          Partner Code
+        </label>
+        <div class="relative">
+          <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+            <i class="pi pi-tag"></i>
+          </span>
+          <input
+            type="text"
+            id="partners_code"
+            placeholder="e.g., PT001"
+          class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+          />
+        </div>
+      </div>
+      <!--            [(ngModel)]="userData.partners_code"-->
+      <!--            (input)="onChangeSearch($event)"-->
+
+      <div class="relative">
+        <label for="partners_code" class="block text-sm font-medium mb-1">
+          Partner Code
+        </label>
+        <div class="relative">
+          <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+            <i class="pi pi-tag"></i>
+          </span>
+          <input
+            type="text"
+            id="partners_code"
+            placeholder="e.g., PT001"
+            class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+          />
+        </div>
+      </div>
+
+      <div class="relative">
+        <label for="partners_code" class="block text-sm font-medium mb-1">
+          Partner Code
+        </label>
+        <div class="relative">
+          <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+            <i class="pi pi-tag"></i>
+          </span>
+          <input
+            type="text"
+            id="partners_code"
+            placeholder="e.g., PT001"
+            class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+          />
+        </div>
+      </div>
+
+      <div class="relative">
+        <label for="partners_code" class="block text-sm font-medium mb-1">
+          Partner Code
+        </label>
+        <div class="relative">
+          <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+            <i class="pi pi-tag"></i>
+          </span>
+          <input
+            type="text"
+            id="partners_code"
+            placeholder="e.g., PT001"
+            class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+          />
+        </div>
+      </div>
+
+
+    </div>
+
   </div>
 
-  <!-- Modules Table -->
-  <div class="bg-white rounded-lg border border-gray-400 shadow-3xl">
-    <p-table
-      [value]="filteredModules"
-      [paginator]="true"
-      [rows]="10"
-      [showCurrentPageReport]="true"
-      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} modules"
-      [tableStyle]="{ 'min-width': '50rem' }"
-      styleClass="p-datatable-gridlines">
 
+  <!-- Modules Table -->
+  <div class="rounded-lg shadow-3xl">
+    <p-table [value]="filteredModules" [paginator]="true" [rows]="10" [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} modules">
       <ng-template pTemplate="header">
         <tr>
           <th class="w-16 text-center">
@@ -151,20 +181,20 @@
             Module Name
             <p-sortIcon field="name"></p-sortIcon>
           </th>
-          <th pSortableColumn="code">
+          <th pSortableColumn="code" class="text-center">
             Module Code
             <p-sortIcon field="code"></p-sortIcon>
           </th>
-          <th>Description</th>
-          <th>Category</th>
-          <th class="text-center">Subscriptions</th>
-          <th class="text-center">Status</th>
-          <th class="text-center w-32">Actions</th>
+          <th class="break-all">Description</th>
+          <th class="break-all">Category</th>
+          <th class="text-center break-all">Subscriptions</th>
+          <th class="text-center break-all">Status</th>
+          <th class="text-center w-32 break-all">Actions</th>
         </tr>
       </ng-template>
 
       <ng-template pTemplate="body" let-module>
-        <tr class="hover:bg-gray-50 transition-colors">
+        <tr class="transition-colors">
           <td class="text-center">
             @if (module.name.toLowerCase().includes('transport')) {
               <span class="text-2xl">🚌</span>
@@ -174,34 +204,35 @@
               <span class="text-2xl">⚙️</span>
             }
           </td>
-          <td>
+          <td class="break-all">
             <div class="font-semibold text-gray-800">{{ module.name }}</div>
             <div class="text-xs text-gray-500">Created {{ module.createdAt | date:'MMM d, y' }}</div>
           </td>
           <td>
-            <span class="font-mono text-sm bg-gray-100 px-2 py-1 rounded">{{ module.code }}</span>
+            <span
+              class="font-mono text-sm bg-gray-100 px-2 py-1 rounded line-clamp-2 break-all">{{ module.code }}</span>
           </td>
           <td class="max-w-xs">
-            <p class="text-sm text-gray-600 line-clamp-2">{{ module.description }}</p>
+            <p class="text-sm text-gray-600">{{ module.description }}</p>
           </td>
           <td>
             @if (module.name.toLowerCase().includes('transport')) {
-              <span class="px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded-full">Transport</span>
+              <span class="px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded-full break-all">Transport</span>
             } @else if (module.name.toLowerCase().includes('logistics')) {
-              <span class="px-2 py-1 text-xs bg-green-100 text-green-700 rounded-full">Logistics</span>
+              <span class="px-2 py-1 text-xs bg-green-100 text-green-700 rounded-full break-all">Logistics</span>
             } @else {
-              <span class="px-2 py-1 text-xs bg-gray-100 text-gray-700 rounded-full">General</span>
+              <span class="px-2 py-1 text-xs bg-gray-100 text-gray-700 rounded-full break-all">General</span>
             }
           </td>
-          <td class="text-center">
+          <td class="text-center break-all">
             <span class="text-lg font-semibold text-gray-800">{{ getModuleSubscriptions(module.code) }}</span>
             <div class="text-xs text-gray-500">partners</div>
           </td>
-          <td class="text-center">
+          <td class="text-center break-all">
             <span class="px-2 py-1 text-xs bg-green-100 text-green-700 rounded-full">Active</span>
           </td>
           <td class="text-center">
-            <div class="flex items-center justify-center gap-1">
+            <div class="flex flex-col md:flex-row items-center justify-center gap-1">
               <button
                 pButton
                 icon="pi pi-eye"
@@ -252,12 +283,7 @@
 </div>
 
 <!-- Add Module Dialog -->
-<p-dialog
-  header="Add New Business Module"
-  [(visible)]="showAddDialog"
-  [modal]="true"
-  [style]="{ width: '600px' }"
-  [closable]="true">
+<p-dialog header="Add New Business Module" [(visible)]="showAddDialog" [modal]="true" [style]="{ width: '600px' }" [closable]="true">
 
   <div class="space-y-6">
     <!-- Header Info -->
@@ -268,7 +294,8 @@
         </div>
         <div class="ml-3">
           <p class="text-sm font-medium text-blue-800">Transport & Logistics Module</p>
-          <p class="text-sm text-blue-600">Create a new business module that partners can subscribe to for their operations.</p>
+          <p class="text-sm text-blue-600">Create a new business module that partners can subscribe to for their
+            operations.</p>
         </div>
       </div>
     </div>
@@ -282,7 +309,7 @@
           pInputText
           [(ngModel)]="newModule.name"
           placeholder="e.g., Fleet Management, Customer Portal, etc."
-          class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent" />
+          class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent"/>
         <p class="text-xs text-gray-500 mt-1">Choose a descriptive name for your business module</p>
       </div>
 
@@ -293,7 +320,7 @@
           pInputText
           [(ngModel)]="newModule.code"
           placeholder="AUTO_GENERATED (or enter custom code)"
-          class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent" />
+          class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent"/>
         <p class="text-xs text-gray-500 mt-1">Unique identifier (will be auto-generated from name if left blank)</p>
       </div>
 

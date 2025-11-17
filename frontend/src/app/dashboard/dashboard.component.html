@@ -4,10 +4,6 @@
 <!--  <app-header [avatar]="avatar[1]"></app-header>-->
 <!--</div>-->
 
-<!--<h1 class="text-3xl font-bold font-sans text-gray-800 mb-6">Partner Dashboard</h1>-->
-
-<!--[text-shadow:0_0_5px_#FFF,0_0_10px_#FFF,0_0_15px_#FFF,0_0_20px_#49ff18,0_0_30px_#49FF18,0_0_40px_#49FF18,0_0_55px_#49FF18,0_0_75px_#49ff18]-->
-
 <div class="flex flex-col md:flex-col lg:flex-row gap-2 p-2">
   <!-- Main Content -->
   <div class="flex-[7] flex flex-col gap-6">
@@ -15,11 +11,13 @@
     <!-- Stats Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       @for (stat of stats; track stat.label) {
-        <div class="bg-[#252926] p-6 rounded-lg shadow-sm flex items-center justify-between hover:shadow-md transition-shadow">
+        <div class="stat-card p-6 rounded-lg shadow-sm flex items-center justify-between hover:shadow-md transition-shadow">
+
           <div>
             <p class="text-sm mb-1 ">{{ stat.label }}</p>
             <p class="font-bold font-sans tabular-nums text-lg">{{ stat.value }}</p>
           </div>
+
           <div [class]="stat.bgColor + ' p-4 rounded-full'">
             <svg [class]="stat.color + ' w-8 h-8'" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               @if (stat.icon === 'bus') {
@@ -37,24 +35,18 @@
               }
             </svg>
           </div>
+
         </div>
       }
     </div>
 
     <!-- Overview Section with Chart -->
-    <div class="rounded-lg border p-6 shadow-sm">
+    <div class="rounded-lg border-[1px] border-gray-400 p-6 shadow-sm">
       <h2 class="text-2xl font-semibold mb-6">Performance Overview</h2>
 
       <!-- Chart Placeholder -->
-<!--      bg-gradient-to-br from-blue-50 to-purple-50-->
-      <div class="rounded-lg p-2 mb-6 border">
-<!--        <div class="text-center">-->
-<!--          <svg class="w-16 h-16 text-gray-400 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">-->
-<!--            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>-->
-<!--          </svg>-->
-<!--          <p class="text-gray-600 text-lg mb-2">Revenue & Operations Chart</p>-->
-<!--          <p class="text-sm text-gray-500">Monthly performance metrics and trends</p>-->
-<!--        </div>-->
+      <!-- bg-gradient-to-br from-blue-50 to-purple-50 -->
+      <div class="rounded-lg p-2 mb-6 border border-[#252926] stat-card">
         <p-chart type="bar" [data]="basicData" [options]="basicOptions" />
       </div>
 
@@ -62,8 +54,9 @@
       <h3 class="text-lg font-semibold mb-4">Today's Operations</h3>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         @for (activity of recentActivity; track activity.id) {
-          <div class="rounded-lg p-5 border hover:shadow-md transition-shadow">
+          <div class="rounded-lg p-5 border border-[#252926] stat-card hover:shadow-md transition-shadow">
             <div class="flex items-start justify-between mb-3">
+
               <div class="flex items-center gap-3">
                 <div class="p-2 rounded-full shadow-sm">
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -85,23 +78,30 @@
                 {{ activity.status }}
               </span>
             </div>
+
             <div class="flex items-center justify-between text-sm">
+
               <div class="flex items-center gap-2">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                 </svg>
                 <span>{{ activity.client }}</span>
               </div>
+
               <div class="flex items-center gap-1 text-xs">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                 </svg>
                 <span>{{ activity.date }}</span>
               </div>
+
             </div>
+
           </div>
+
         }
       </div>
+
     </div>
 
   </div>
@@ -110,7 +110,7 @@
   <div class="flex-[3] flex flex-col gap-4 h-fit sticky top-0">
 
     <!-- Alerts & Updates -->
-    <div class="rounded-lg border border-[#252926] p-4 shadow-sm">
+    <div class="rounded-lg border-[1px] border-gray-400 p-4 shadow-sm">
       <div class="flex items-center justify-between mb-4">
         <h2 class="text-xl font-semibold">Alerts & Updates</h2>
         <span class="text-xs font-semibold px-2 py-1 rounded-full">
@@ -120,31 +120,7 @@
       <div class="flex flex-col gap-3 max-h-[calc(100vh-500px)] overflow-y-auto mb-2">
         @for (notification of notifications; track notification.id) {
           <div class="p-4 rounded-lg transition-colors cursor-pointer h-full">
-<!--            <div class="flex gap-3">-->
-<!--              <div class="flex-shrink-0 mt-1">-->
-<!--                <div [class]="'w-8 h-8 rounded-full flex items-center justify-center ' + (notification.type === 'success' ? 'bg-green-100' : notification.type === 'warning' ? 'bg-amber-100' : 'bg-blue-100')">-->
-<!--                  <svg [class]="'w-4 h-4 ' + notification.color" fill="none" stroke="currentColor" viewBox="0 0 24 24">-->
-<!--                    @if (notification.type === 'success') {-->
-<!--                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>-->
-<!--                    } @else if (notification.type === 'warning') {-->
-<!--                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>-->
-<!--                    } @else {-->
-<!--                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>-->
-<!--                    }-->
-<!--                  </svg>-->
-<!--                </div>-->
-<!--              </div>-->
-<!--              <div class="flex-1 min-w-0">-->
-<!--                <p class="text-sm font-semibold text-gray-900 mb-1">{{ notification.title }}</p>-->
-<!--                <p class="text-xs text-gray-600 mb-2">{{ notification.message }}</p>-->
-<!--                <div class="flex items-center text-xs text-gray-400">-->
-<!--                  <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">-->
-<!--                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>-->
-<!--                  </svg>-->
-<!--                  {{ notification.time }}-->
-<!--                </div>-->
-<!--              </div>-->
-<!--            </div>-->
+
           </div>
         }
       </div>
@@ -154,43 +130,19 @@
     </div>
 
     <!-- Fleet Expenses -->
-    <div class="rounded-lg border p-4 shadow-sm">
+    <div class="rounded-lg border-[1px] border-gray-100 p-4 shadow-sm">
       <div class="flex items-center justify-between mb-4">
-        <h2 class="text-xl font-semibold text-gray-800">Fleet Expenses</h2>
+        <h2 class="text-xl font-semibold">Fleet Expenses</h2>
         <span class="text-xs">Today</span>
       </div>
       <div class="flex flex-col gap-3 max-h-[calc(100vh-500px)] overflow-y-auto mb-2">
         @for (notification of notifications; track notification.id) {
           <div class="p-4 rounded-lg transition-colors cursor-pointer h-full">
-            <!--            <div class="flex gap-3">-->
-            <!--              <div class="flex-shrink-0 mt-1">-->
-            <!--                <div [class]="'w-8 h-8 rounded-full flex items-center justify-center ' + (notification.type === 'success' ? 'bg-green-100' : notification.type === 'warning' ? 'bg-amber-100' : 'bg-blue-100')">-->
-            <!--                  <svg [class]="'w-4 h-4 ' + notification.color" fill="none" stroke="currentColor" viewBox="0 0 24 24">-->
-            <!--                    @if (notification.type === 'success') {-->
-            <!--                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>-->
-            <!--                    } @else if (notification.type === 'warning') {-->
-            <!--                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>-->
-            <!--                    } @else {-->
-            <!--                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>-->
-            <!--                    }-->
-            <!--                  </svg>-->
-            <!--                </div>-->
-            <!--              </div>-->
-            <!--              <div class="flex-1 min-w-0">-->
-            <!--                <p class="text-sm font-semibold text-gray-900 mb-1">{{ notification.title }}</p>-->
-            <!--                <p class="text-xs text-gray-600 mb-2">{{ notification.message }}</p>-->
-            <!--                <div class="flex items-center text-xs text-gray-400">-->
-            <!--                  <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">-->
-            <!--                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>-->
-            <!--                  </svg>-->
-            <!--                  {{ notification.time }}-->
-            <!--                </div>-->
-            <!--              </div>-->
-            <!--            </div>-->
+
           </div>
         }
       </div>
-      <div class="flex justify-end">
+      <div class="flex justify-center border-t border-[#252926]">
         <button class="mt-4 py-2 text-sm font-medium transition-colors pt-4">
           View All Expenses
         </button>
