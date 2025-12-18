@@ -33,44 +33,30 @@
   }
 }
 
+/*!* PrimeNG Menubar Overrides *!*/
+.p-menubar {
+  background-color: var(--background) !important;
+  color: var(--text) !important;
+  /*border: none !important;*/
+}
 
-/*.p-menuitem-link:hover .p-menuitem-text {*/
-/*  color: red !important;*/
-/*}*/
+.p-menubar-item {
+  /*color:;*/
 
-/*!* PrimeNG Menu Overrides *!*/
-/*.p-menubar {*/
-/*  background-color: white !important;*/
-/*  border: none !important;*/
-/*}*/
+  :hover{
+    background-color: var(--accent);
+  }
 
-/*.p-menuitem-link:hover {*/
-/*  background-color: white !important;*/
-/*}*/
+}
 
-/*.p-menuitem-link {*/
-/*  background-color: white !important;*/
-/*  color: white !important;*/
-/*}*/
 
-/*.p-menuitem-text {*/
-/*  color: white !important;*/
-/*}*/
 
-/*.p-menuitem-icon {*/
-/*  color: white !important;*/
-/*}*/
-
-/*.p-menubar .p-menuitem-link:focus {*/
-/*  box-shadow: 0 0 0 0.2rem rgba(250, 96, 96, 0.5) !important;*/
-/*}*/
 
 
 
 
 
 /*cover shader*/
-
 .spinner-overlay {
   position: fixed;
   top: 0;
@@ -89,7 +75,7 @@
   width: 50px;
   aspect-ratio: 1;
   display: flex;
-  color: orange;
+  color: #1e1c1c;
   background: linear-gradient(currentColor 0 0) right  /51% 100%,
   linear-gradient(currentColor 0 0) bottom /100% 51%;
   background-repeat: no-repeat;
@@ -103,3 +89,4 @@
   background: currentColor;
   animation: l16-1 .5s infinite linear;
 }
+

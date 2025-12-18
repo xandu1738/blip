@@ -1,6 +1,5 @@
 package com.ceres.blip.services;
 
-import com.alibaba.fastjson2.JSONObject;
 import com.ceres.blip.exceptions.AuthorizationRequiredException;
 import com.ceres.blip.models.database.ModuleModel;
 import com.ceres.blip.models.database.PartnerModel;
@@ -12,6 +11,7 @@ import com.ceres.blip.repositories.ModuleRepository;
 import com.ceres.blip.repositories.SubscriptionRepository;
 import com.ceres.blip.utils.LocalUtilsService;
 import com.ceres.blip.utils.OperationReturnObject;
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
@@ -28,21 +28,21 @@ public class ModulesService extends LocalUtilsService{
     private final ModuleRepository repository;
     private final SubscriptionRepository subscriptionRepository;
 
-    public OperationReturnObject addModule(JSONObject object) {
+    public OperationReturnObject addModule(JsonNode object) {
         belongsTo(AppDomains.BACK_OFFICE);
         SystemUserModel authenticatedUser = authenticatedUser();
         requires(object, "data");
-        JSONObject data = object.getJSONObject("data");
+        JsonNode data = getRequestData(object);
         requires(data, "name", "description");
 
-        String name = data.getString("name");
+        String name = data.get("name").asText();
 
         if (StringUtils.isBlank(name)) {
             throw new IllegalArgumentException("Module name cannot be empty");
         }
 
         String code = name.toUpperCase().replaceAll(" ", "_");
-        String description = data.getString("description");
+        String description = data.get("description").asText();
         if (StringUtils.isBlank(description)) {
             throw new IllegalArgumentException("Module description cannot be empty");
         }
@@ -58,21 +58,21 @@ public class ModulesService extends LocalUtilsService{
         return new OperationReturnObject(200, "Module successfully added.", moduleModel);
     }
 
-    public OperationReturnObject editModule(JSONObject request) throws AuthorizationRequiredException {
+    public OperationReturnObject editModule(JsonNode request) throws AuthorizationRequiredException {
         belongsTo(AppDomains.BACK_OFFICE);
         requiresAuth();
         requires(request, "data");
-        JSONObject data = request.getJSONObject("data");
+        JsonNode data = getRequestData(request);
         requires(data, "code");
-        String code = data.getString("code");
+        String code = data.get("code").asText();
 
         if (StringUtils.isBlank(code)) {
             throw new IllegalArgumentException("Module code cannot be empty");
         }
 
         ModuleModel moduleModel = repository.findByCode(code).orElseThrow(() -> new IllegalArgumentException("Module with code " + code + " not found."));
-        String name = data.getString("name");
-        String description = data.getString("description");
+        String name = data.get("name").asText();
+        String description = data.get("description").asText();
 
         if (StringUtils.isNotBlank(name)) {
             moduleModel.setName(name);
@@ -109,19 +109,19 @@ public class ModulesService extends LocalUtilsService{
         return new OperationReturnObject(200, "Module successfully removed.", null);
     }
 
-    public OperationReturnObject subscribeToModule(JSONObject request) {
+    public OperationReturnObject subscribeToModule(JsonNode request) {
         SystemUserModel authenticatedUser = authenticatedUser();
         requires(request, "data");
-        JSONObject data = request.getJSONObject("data");
+        JsonNode data = getRequestData(request);
         requires(data, "partner_code", "module_code");
-        String partnerCode = data.getString("partner_code");
-        String moduleCode = data.getString("module_code");
+        String partnerCode = data.get("partner_code").asText();
+        String moduleCode = data.get("module_code").asText();
         if (StringUtils.isBlank(partnerCode) || StringUtils.isBlank(moduleCode)) {
             throw new IllegalArgumentException("Partner code and module code cannot be empty");
         }
 
-        String sd = data.getString("start_date");
-        String ed = data.getString("end_date");
+        String sd = data.get("start_date").asText();
+        String ed = data.get("end_date").asText();
 
         if(sd == null || ed == null){
             throw new IllegalArgumentException("Start date and end date cannot be empty");

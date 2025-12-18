@@ -1,6 +1,5 @@
 package com.ceres.blip.services;
 
-import com.alibaba.fastjson2.JSONObject;
 import com.ceres.blip.config.ApplicationConf;
 import com.ceres.blip.config.JwtUtility;
 import com.ceres.blip.dtos.UserDto;
@@ -15,6 +14,7 @@ import com.ceres.blip.repositories.SystemUserRepository;
 import com.ceres.blip.utils.LocalUtilsService;
 import com.ceres.blip.utils.OperationReturnObject;
 import com.ceres.blip.utils.events.UserRegistrationEvent;
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -52,14 +52,15 @@ public class UserManagementService extends LocalUtilsService {
     private final ApplicationEventPublisher publisher;
 
 
-    public OperationReturnObject login(JSONObject request) {
+    public OperationReturnObject login(JsonNode request) {
         requires(request, "data");
-        JSONObject data = request.getJSONObject("data");
+
+        JsonNode data = getRequestData(request);
 
         requires(data, USER_EMAIL, USER_PASSWORD);
 
-        String email = data.getString(USER_EMAIL);
-        String password = data.getString(USER_PASSWORD);
+        String email = data.get(USER_EMAIL).asText();
+        String password = data.get(USER_PASSWORD).asText();
 
         try {
             authenticationManager.authenticate(
@@ -89,15 +90,15 @@ public class UserManagementService extends LocalUtilsService {
         return new OperationReturnObject(200, "Welcome back " + userDetails.getUsername(), response);
     }
 
-    public OperationReturnObject refreshToken(JSONObject request) throws AuthorizationRequiredException {
+    public OperationReturnObject refreshToken(JsonNode request) throws AuthorizationRequiredException {
         requiresAuth();
         requires(request, "data");
 
-        JSONObject data = request.getJSONObject("data");
-        requires(data, REFRESH_TOKEN);
 
         try {
-            String refreshToken = data.getString(REFRESH_TOKEN);
+            JsonNode data = getRequestData(request);
+            requires(data, REFRESH_TOKEN);
+            String refreshToken = data.get(REFRESH_TOKEN).asText();
             String tokenType = jwtUtility.extractTokenType(refreshToken);
             log.info(tokenType);
             if (!Objects.equals(tokenType, "REFRESH"))
@@ -114,21 +115,21 @@ public class UserManagementService extends LocalUtilsService {
         }
     }
 
-    public OperationReturnObject signUp(JSONObject request) {
+    public OperationReturnObject signUp(JsonNode request) {
         SystemUserModel authenticatedUser = authenticatedUser();
         requires(request, "data");
-        JSONObject data = request.getJSONObject("data");
+        JsonNode data = getRequestData(request);
         requires(data, "role", "first_name", "last_name", USER_EMAIL, USER_PASSWORD);
-        String role = data.getString("role");
-        String firstName = data.getString("first_name");
-        String lastName = data.getString("last_name");
-        String email = data.getString(USER_EMAIL);
-        String password = data.getString(USER_PASSWORD);
+        String role = data.get("role").asText();
+        String firstName = data.get("first_name").asText();
+        String lastName = data.get("last_name").asText();
+        String email = data.get(USER_EMAIL).asText();
+        String password = data.get(USER_PASSWORD).asText();
 
         SystemUserModel user = new SystemUserModel();
         if (!Objects.equals(role, DefaultRoles.SUPER_ADMIN.name()) || !Objects.equals(authenticatedUser.getRoleCode(), DefaultRoles.SUPER_ADMIN.name())) {
             requires(data, "partner");
-            String partner = data.getString("partner");
+            String partner = data.get("partner").asText();
             PartnerModel partnerProfile = validatePartner(partner);
             user.setPartnerCode(partnerProfile.getPartnerCode());
         }

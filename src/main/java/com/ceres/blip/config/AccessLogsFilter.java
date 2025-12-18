@@ -1,12 +1,12 @@
 package com.ceres.blip.config;
 
-import com.alibaba.fastjson2.JSON;
-import com.alibaba.fastjson2.JSONObject;
 import com.ceres.blip.models.database.AccessLogModel;
-import com.ceres.blip.models.database.SystemRoleModel;
 import com.ceres.blip.models.database.SystemUserModel;
 import com.ceres.blip.repositories.AccessLogRepository;
 import com.ceres.blip.repositories.SystemRoleRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -42,17 +42,7 @@ public class AccessLogsFilter extends OncePerRequestFilter {
 
         long currentTimeMillis = System.currentTimeMillis();
 
-        String username = request.getRemoteUser() != null ? request.getRemoteUser() : "anonymousUser";
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (authentication != null
-            && authentication.isAuthenticated()
-            && !(authentication instanceof AnonymousAuthenticationToken)) {
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            if (userDetails != null && userDetails.getUsername() != null) {
-                username = userDetails.getUsername();
-            }
-        }
+        String username = getUsername(request);
 
         // Proceed with the filter chain
         filterChain.doFilter(request, response);
@@ -66,56 +56,83 @@ public class AccessLogsFilter extends OncePerRequestFilter {
 
         wrappedResponse.copyBodyToResponse(); // important!
         long duration = System.currentTimeMillis() - currentTimeMillis;
-        String method = request.getMethod();
         String uri = request.getRequestURI();
-        String remoteAddr = request.getRemoteAddr();
         int status = response.getStatus();
 
+        String method = request.getMethod();
+        String remoteAddr = getClientIp(request);
+        String userAgent = request.getHeader("User-Agent");
+
+        SystemUserModel authenticatedUser = getAuthenticatedSystemUser();
+        String partnerCode = null;
+        if (authenticatedUser != null) {
+            partnerCode = authenticatedUser.getPartnerCode();
+        }
+
         AccessLogModel accessLog = new AccessLogModel();
-        accessLog.setMethod(request.getMethod());
+        accessLog.setMethod(method);
         accessLog.setPath(request.getRequestURI());
         accessLog.setQueryParams(requestBody);
-        accessLog.setAddress(getClientIp(request));
-        accessLog.setUserAgent(request.getHeader("User-Agent"));
+        accessLog.setAddress(remoteAddr);
+        accessLog.setUserAgent(userAgent);
         accessLog.setContentType(request.getContentType());
         accessLog.setResponse(responseBody); // placeholder
         accessLog.setIsError(response.getStatus() >= 400);
-        accessLog.setPartnerCode(request.getHeader("X-Partner-Code"));
+        accessLog.setPartnerCode(partnerCode);
         accessLog.setClientInfo("{}"); // can populate with device info
         accessLog.setUsername(username);
         accessLog.setCreatedAt(new Timestamp(Instant.now().toEpochMilli()));
         accessLog.setIsError(false);
 
-
         boolean isLoginRequest = isLoginRequest(wrappedRequest);
 
-
-        SystemUserModel user = null;
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (!isLoginRequest && principal instanceof SystemUserModel) {
-            user = (SystemUserModel) principal;
-            SystemRoleModel role = systemRoleRepository.findByRoleCode(user.getRoleCode()).orElseThrow(() -> new IllegalStateException("Couldn't resolve Role"));
-//                only log requests from web users
-//                    if (Objects.equals(role.getRoleDomain(), AppDomains.CLIENT)) {
-            wrappedResponse.copyBodyToResponse();
-            return;
-//                    }
-        }
-
-        JSONObject responseJson = JSON.parseObject(responseBody);
-        JSONObject requestJson = null;
-
         wrappedResponse.copyBodyToResponse();
-        return;
+    }
+
+    private static String getUsername(HttpServletRequest request) {
+        String username = request.getRemoteUser() != null ? request.getRemoteUser() : "anonymousUser";
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication != null
+            && authentication.isAuthenticated()
+            && !(authentication instanceof AnonymousAuthenticationToken)) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            if (userDetails != null && userDetails.getUsername() != null) {
+                username = userDetails.getUsername();
+            }
+        }
+        return username;
     }
 
     public boolean isLoginRequest(ContentCachingRequestWrapper requestWrapper) {
         String requestBody = new String(requestWrapper.getContentAsByteArray());
-        JSONObject requestJson = JSON.parseObject(requestBody);
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode requestJson = null;
+        if (requestBody.isBlank()) {
+            return false;
+        }
+        try {
+            requestJson = mapper.readValue(requestBody, JsonNode.class);
+        } catch (JsonProcessingException e) {
+            throw new IllegalStateException(e.getMessage(), e);
+        }
         if (requestJson == null || requestJson.isEmpty()) {
             return false;
         }
-        return requestJson.containsKey("ACTION") && Objects.equals(requestJson.getString("ACTION"), "login");
+        return requestJson.has("ACTION") && Objects.equals(requestJson.get("ACTION").asText(), "login");
+    }
+
+    private SystemUserModel getAuthenticatedSystemUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null
+            && authentication.isAuthenticated()
+            && !(authentication instanceof AnonymousAuthenticationToken)) {
+            Object principal = authentication.getPrincipal();
+            if (principal instanceof SystemUserModel) {
+                return (SystemUserModel) principal;
+            }
+        }
+        return null;
     }
 
     private String getClientIp(HttpServletRequest request) {

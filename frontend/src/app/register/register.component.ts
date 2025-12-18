@@ -11,6 +11,9 @@ import { Dialog, DialogModule } from 'primeng/dialog';
 import { ButtonDirective } from 'primeng/button';
 import { InputText } from 'primeng/inputtext';
 import { RemoteService } from '../services/remoteService';
+import { AccordionModule } from 'primeng/accordion';
+import {FloatLabelModule} from 'primeng/floatlabel';
+import { DatePickerModule } from 'primeng/datepicker';
 
 interface Partner {
   partnerName: string;
@@ -35,7 +38,10 @@ interface Partner {
     Dialog,
     DialogModule,
     InputText,
-    NgOptimizedImage
+    NgOptimizedImage,
+    AccordionModule,
+    FloatLabelModule,
+    DatePickerModule
   ],
   templateUrl: './register.html',
   styleUrls: ['./register.css']

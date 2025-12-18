@@ -1,6 +1,8 @@
 package com.ceres.blip.utils.gcp_storage;
 
-import com.alibaba.fastjson2.JSONObject;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.Bucket;
@@ -43,6 +45,8 @@ public class BucketUtil {
     private String uploadDir;
 
     private Storage storage;
+    private static final ObjectMapper MAPPER = new ObjectMapper();
+
 
     public FileDto uploadFile(MultipartFile file, String fileName) {
         try {
@@ -72,11 +76,11 @@ public class BucketUtil {
         }
     }
 
-    public List<JSONObject> listFiles() {
-        List<JSONObject> fileNames = new ArrayList<>();
+    public List<JsonNode> listFiles() {
+        List<JsonNode> fileNames = new ArrayList<>();
         Bucket bucket = storage.get(bucketName);
         for (Blob blob : bucket.list().iterateAll()) {
-            JSONObject o = new JSONObject();
+            ObjectNode o = MAPPER.createObjectNode();
             o.put("fileName", blob.getName());
             o.put("fileSize", blob.getSize());
             o.put("contentType", blob.getContentType());

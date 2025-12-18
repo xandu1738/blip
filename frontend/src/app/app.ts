@@ -10,10 +10,13 @@ import {Menubar} from 'primeng/menubar';
 import { ToastModule } from 'primeng/toast';
 import {MenuItem} from 'primeng/api';
 import { TableModule } from 'primeng/table';
+import {ButtonDirective} from 'primeng/button';
+import {Ripple} from 'primeng/ripple';
+import {Events} from './services/events';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, MegaMenuModule, ToastModule, Menubar, TableModule, CommonModule, LoginComponent],
+  imports: [RouterOutlet, MegaMenuModule, ToastModule, Menubar, TableModule, CommonModule, LoginComponent, ButtonDirective, Ripple],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
@@ -24,6 +27,7 @@ export class App implements OnInit {
 
   constructor(
     protected commonService: CommonService,
+    private eventService: Events,
     private router: Router,
     private authService: AuthService,
     private loaderService: LoaderService
@@ -41,7 +45,6 @@ export class App implements OnInit {
       console.log('App component: Login state changed to:', loggedIn);
       this.isLoggedIn = loggedIn;
     });
-
 
     this.items = [
       {
@@ -149,6 +152,12 @@ export class App implements OnInit {
         command: () =>{this.router.navigate(['/settings'])}
       }
     ];
+
+    this.eventService.connect();
+
+    this.eventService.events$.subscribe((event) => {
+      console.log("Received event from Redis:", event);
+    });
   }
 
   protected currentTheme: WritableSignal<string> = signal('light');

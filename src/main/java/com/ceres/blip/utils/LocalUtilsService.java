@@ -1,6 +1,5 @@
 package com.ceres.blip.utils;
 
-import com.alibaba.fastjson2.JSONObject;
 import com.ceres.blip.config.ApplicationConf;
 import com.ceres.blip.exceptions.AuthorizationRequiredException;
 import com.ceres.blip.models.database.ModuleModel;
@@ -12,6 +11,9 @@ import com.ceres.blip.repositories.ModuleRepository;
 import com.ceres.blip.repositories.PartnersRepository;
 import com.ceres.blip.repositories.SystemRoleRepository;
 import com.ceres.blip.repositories.SystemUserRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.Nullable;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -44,6 +46,9 @@ public abstract class LocalUtilsService {
     @Autowired
     private ModuleRepository moduleRepository;
 
+    private static final ObjectMapper MAPPER = new ObjectMapper();
+    private static final String DATA = "data";
+
     /**
      * Works as ```requires()``` above, but will check for only one field
      * This will check for one field at a time
@@ -51,9 +56,9 @@ public abstract class LocalUtilsService {
      * @param fields  String - The key to look for
      * @param request JSONObject - The object to check in
      */
-    public void requires(JSONObject request, String... fields) {
+    public void requires(JsonNode request, String... fields) {
         for (String field : fields) {
-            if (!request.containsKey(field) || request.get(field) == null) {
+            if (!request.has(field) || request.get(field) == null) {
                 throw new IllegalArgumentException(field.replace("_", " ") + " cannot be empty");
             }
         }
@@ -285,18 +290,29 @@ public abstract class LocalUtilsService {
 
     public PartnerModel validatePartner(String partnerCode) {
         return partnersRepository.findByPartnerCode(partnerCode).orElseThrow(
-                ()-> new IllegalStateException(String.format("Partner with code %s not found. Please contact admin to set up.", partnerCode))
+                () -> new IllegalStateException(String.format("Partner with code %s not found. Please contact admin to set up.", partnerCode))
         );
     }
 
     public ModuleModel getModule(String moduleCode) {
         return moduleRepository.findByCode(moduleCode).orElseThrow(
-                ()-> new IllegalStateException(String.format("Module with code %s not found. Please contact admin.", moduleCode))
+                () -> new IllegalStateException(String.format("Module with code %s not found. Please contact admin.", moduleCode))
         );
     }
 
     public void executeAsync(Runnable runnable) {
         CompletableFuture.runAsync(runnable);
+    }
+
+
+    protected JsonNode getRequestData(JsonNode request) {
+        requires(request,DATA);
+        try {
+            String dataString = request.get(DATA).asText();
+            return MAPPER.readValue(dataString, JsonNode.class);
+        } catch (JsonProcessingException e) {
+            throw new IllegalStateException(e.getMessage(), e);
+        }
     }
 }
 

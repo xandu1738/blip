@@ -23,8 +23,8 @@
 
       <p-menubar [model]="items" class="sm:hidden md:flex m-3">
         <ng-template #end>
-          <button id="logout-button" pButton size="small"
-                  class="rounded-full py-2 px-4 text-sm hover:underline hover:cursor-pointer focus:outline-none transition duration-200"
+          <button id="logout-button" pButton pRipple size="small"
+                  class="rounded-full py-2 px-4 text-sm hover:cursor-pointer focus:outline-none transition duration-200"
                   (click)="handleLogout()">
             Log Out
           </button>

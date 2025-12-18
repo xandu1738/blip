@@ -29,34 +29,15 @@ export class AuthService {
 
   constructor(private http: HttpClient) {
     // Initialize with demo user for testing
-    this.initializeDemoMode();
-  }
-
-  private initializeDemoMode(): void {
-    // Check if we should initialize demo mode
-    const existingToken = this.getAccessToken();
-    if (!existingToken) {
-      console.log('AuthService: No existing token, initializing demo mode');
-      const demoUser = {
-        id: 1,
-        firstName: 'Demo',
-        lastName: 'User',
-        email: 'demo@blip.com',
-        roleCode: 'USER',
-        domain: 'DEMO',
-        createdAt: new Date().toISOString(),
-        lastLoggedInAt: new Date().toISOString(),
-        isActive: true,
-        username: 'demo@blip.com'
-      };
-      this.simulateLogin(demoUser);
-    }
+    // this.initializeDemoMode();
   }
 
   login(email: string, password: string): Observable<LoginResponse> {
     const loginData: LoginRequest = {
       data: { email, password }
     };
+
+
 
 
     return this.http.post<ApiResponse<any>>(`${this.apiUrl}/user-management/login`, loginData)

@@ -1,7 +1,5 @@
 package com.ceres.blip.services;
 
-import com.alibaba.fastjson2.JSONArray;
-import com.alibaba.fastjson2.JSONObject;
 import com.ceres.blip.exceptions.AuthorizationRequiredException;
 import com.ceres.blip.models.database.PartnerModel;
 import com.ceres.blip.models.database.SystemUserModel;
@@ -11,6 +9,7 @@ import com.ceres.blip.models.enums.VehicleTypes;
 import com.ceres.blip.repositories.VehicleRepository;
 import com.ceres.blip.utils.LocalUtilsService;
 import com.ceres.blip.utils.OperationReturnObject;
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.EnumUtils;
 import org.springframework.cache.annotation.Cacheable;
@@ -33,17 +32,17 @@ public class VehicleService extends LocalUtilsService{
     private final VehicleRepository vehicleRepository;
 
     //Add a new vehicle for partner
-    public OperationReturnObject addNewVehicle(JSONObject object) {
+    public OperationReturnObject addNewVehicle(JsonNode object) {
         try {
             SystemUserModel authenticatedUser = authenticatedUser();
 
             requires(object, DATA);
-            JSONObject data = object.getJSONObject(DATA);
+            JsonNode data = getRequestData(object);
             requires(data, REGISTRATION_NUMBER, TYPE, PARTNER_CODE, CAPACITY);
-            String registrationNumber = data.getString(REGISTRATION_NUMBER);
-            String partnerCode = data.getString(PARTNER_CODE);
-            String type = data.getString(TYPE);
-            Integer capacity = data.getInteger(CAPACITY);
+            String registrationNumber = data.get(REGISTRATION_NUMBER).asText();
+            String partnerCode = data.get(PARTNER_CODE).asText();
+            String type = data.get(TYPE).asText();
+            Integer capacity = data.get(CAPACITY).asInt();
 
             if (!EnumUtils.isValidEnum(VehicleTypes.class, type)) {
                 throw new IllegalArgumentException("Invalid vehicle type");
@@ -65,26 +64,27 @@ public class VehicleService extends LocalUtilsService{
     }
 
     //Vehicle Bulk Registration: Receives a list of vehicles to be registered for a partner as a JSON array
-    public OperationReturnObject bulkVehicleRegistration(JSONObject object) {
+    public OperationReturnObject bulkVehicleRegistration(JsonNode object) {
         try {
             SystemUserModel authenticatedUser = authenticatedUser();
 
-            requires(object, DATA);
-            JSONObject data = object.getJSONObject(DATA);
+            JsonNode data = getRequestData(object);
             requires(data, VEHICLES);
+            JsonNode vehiclesArray = data.path(VEHICLES);
 
-            JSONArray vehiclesArray = data.getJSONArray(VEHICLES);
+            if (!vehiclesArray.isArray()) {
+                throw new IllegalArgumentException("Invalid vehicles array");
+            }
 
-            String partnerCode = data.getString(PARTNER_CODE);
+            String partnerCode = data.get(PARTNER_CODE).asText();
             PartnerModel partner = validatePartner(partnerCode);
 
             // Process each vehicle in the array
-            vehiclesArray.forEach(vehicle -> {
-                JSONObject vehicleData = (JSONObject) vehicle;
+            vehiclesArray.forEach(vehicleData -> {
                 requires(vehicleData, REGISTRATION_NUMBER, TYPE, PARTNER_CODE, CAPACITY);
-                String registrationNumber = vehicleData.getString(REGISTRATION_NUMBER);
-                String type = vehicleData.getString(TYPE);
-                Integer capacity = vehicleData.getInteger(CAPACITY);
+                String registrationNumber = vehicleData.get(REGISTRATION_NUMBER).asText();
+                String type = vehicleData.get(TYPE).asText();
+                Integer capacity = vehicleData.get(CAPACITY).asInt();
 
                 if (!EnumUtils.isValidEnum(VehicleTypes.class, type)) {
                     throw new IllegalArgumentException("Invalid vehicle type for registration number: " + registrationNumber);
@@ -108,34 +108,34 @@ public class VehicleService extends LocalUtilsService{
     }
 
     //Edit Vehicle information
-    public OperationReturnObject editVehicleInformation(JSONObject object) {
+    public OperationReturnObject editVehicleInformation(JsonNode object) {
         try {
             authenticatedUser();
 
             requires(object, DATA);
-            JSONObject data = object.getJSONObject(DATA);
+            JsonNode data = getRequestData(object);
             requires(data, VEHICLE_ID);
-            Long vehicleId = data.getLong(VEHICLE_ID);
+            Long vehicleId = data.get(VEHICLE_ID).asLong();
 
             VehicleModel vehicleModel = vehicleRepository.findById(vehicleId)
                     .orElseThrow(() -> new IllegalArgumentException("Vehicle not found"));
 
             // Update fields if present
-            if (data.containsKey(REGISTRATION_NUMBER)) {
-                vehicleModel.setRegistrationNumber(data.getString(REGISTRATION_NUMBER));
+            if (data.has(REGISTRATION_NUMBER)) {
+                vehicleModel.setRegistrationNumber(data.get(REGISTRATION_NUMBER).asText());
             }
-            if (data.containsKey(TYPE)) {
-                String type = data.getString(TYPE);
+            if (data.has(TYPE)) {
+                String type = data.get(TYPE).asText();
                 if (!EnumUtils.isValidEnum(VehicleTypes.class, type)) {
                     throw new IllegalArgumentException("Invalid vehicle type");
                 }
                 vehicleModel.setType(VehicleTypes.valueOf(type));
             }
-            if (data.containsKey(CAPACITY)) {
-                vehicleModel.setCapacity(data.getInteger(CAPACITY));
+            if (data.has(CAPACITY)) {
+                vehicleModel.setCapacity(data.get(CAPACITY).asInt());
             }
-            if (data.containsKey(STATUS)) {
-                vehicleModel.setStatus(data.getString(STATUS));
+            if (data.has(STATUS)) {
+                vehicleModel.setStatus(data.get(STATUS).asText());
             }
 
             VehicleModel updatedVehicle = vehicleRepository.save(vehicleModel);
