@@ -1,8 +1,8 @@
 package com.ceres.blip.api;
 
-import com.alibaba.fastjson2.JSONObject;
 import com.ceres.blip.services.TripService;
 import com.ceres.blip.utils.OperationReturnObject;
+import com.fasterxml.jackson.databind.JsonNode;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,12 +16,12 @@ public class TripController {
     private final TripService tripService;
 
     @PostMapping("/add-trip")
-    public ResponseEntity<OperationReturnObject> addNewTrip(@RequestBody JSONObject request) {
+    public ResponseEntity<OperationReturnObject> addNewTrip(@RequestBody JsonNode request) {
         return ResponseEntity.ok(tripService.addTrip(request));
     }
 
     @PostMapping("/edit-trip")
-    public ResponseEntity<OperationReturnObject> editTrip(@RequestBody JSONObject request) {
+    public ResponseEntity<OperationReturnObject> editTrip(@RequestBody JsonNode request) {
         return ResponseEntity.ok(tripService.editTrip(request));
     }
 

@@ -1,8 +1,8 @@
 package com.ceres.blip.api;
 
-import com.alibaba.fastjson2.JSONObject;
 import com.ceres.blip.services.RouteService;
 import com.ceres.blip.utils.OperationReturnObject;
+import com.fasterxml.jackson.databind.JsonNode;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,12 +16,12 @@ public class RoutesController {
     private final RouteService routeService;
 
     @PostMapping("/add-route")
-    public ResponseEntity<OperationReturnObject> addNewRoute(@RequestBody JSONObject request) {
+    public ResponseEntity<OperationReturnObject> addNewRoute(@RequestBody JsonNode request) {
         return ResponseEntity.ok(routeService.createNewRoute(request));
     }
 
     @PostMapping("/edit-route-details")
-    public ResponseEntity<OperationReturnObject> editRouteDetails(@RequestBody JSONObject request) {
+    public ResponseEntity<OperationReturnObject> editRouteDetails(@RequestBody JsonNode request) {
         return ResponseEntity.ok(routeService.editRouteDetails(request));
     }
 

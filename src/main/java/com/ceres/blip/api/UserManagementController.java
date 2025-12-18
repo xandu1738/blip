@@ -1,9 +1,9 @@
 package com.ceres.blip.api;
 
-import com.alibaba.fastjson2.JSONObject;
 import com.ceres.blip.exceptions.AuthorizationRequiredException;
 import com.ceres.blip.services.UserManagementService;
 import com.ceres.blip.utils.OperationReturnObject;
+import com.fasterxml.jackson.databind.JsonNode;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,17 +17,17 @@ public class UserManagementController {
     private final UserManagementService userManagementService;
 
     @PostMapping("/create-user")
-    public ResponseEntity<OperationReturnObject> createUserProfile(@RequestBody JSONObject request) {
+    public ResponseEntity<OperationReturnObject> createUserProfile(@RequestBody JsonNode request) {
         return ResponseEntity.ok(userManagementService.signUp(request));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<OperationReturnObject> login(@RequestBody JSONObject request) {
+    public ResponseEntity<OperationReturnObject> login(@RequestBody JsonNode request) {
         return ResponseEntity.ok(userManagementService.login(request));
     }
 
     @PostMapping("/refresh-token")
-    public ResponseEntity<OperationReturnObject> refreshToken(@RequestBody JSONObject request) throws AuthorizationRequiredException {
+    public ResponseEntity<OperationReturnObject> refreshToken(@RequestBody JsonNode request) throws AuthorizationRequiredException {
         return ResponseEntity.ok(userManagementService.refreshToken(request));
     }
 

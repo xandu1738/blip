@@ -1,7 +1,7 @@
 package com.ceres.blip.utils.mail;
 
-import com.alibaba.fastjson2.JSONObject;
 import com.ceres.blip.models.database.SystemUserModel;
+import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.activation.DataHandler;
 import jakarta.activation.DataSource;
 import jakarta.activation.FileDataSource;
@@ -44,11 +44,10 @@ public class MailService {
         emailSender.send(mimeMessage);
     }
 
-    public void sendTemplateMailToEmail(String receiverEmail, JSONObject variables, String subject, String template) throws MessagingException, UnsupportedEncodingException {
+    public void sendTemplateMailToEmail(String receiverEmail, JsonNode variables, String subject, String template) throws MessagingException, UnsupportedEncodingException {
         Context context = new Context();
 
-        var keys = variables.keySet();
-        keys.forEach(k -> context.setVariable(k, variables.get(k)));
+        variables.fieldNames().forEachRemaining(k -> context.setVariable(k, variables.get(k)));
 
         String process = templateEngine.process(template, context);
         MimeMessage mimeMessage = emailSender.createMimeMessage();

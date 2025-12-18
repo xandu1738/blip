@@ -1,9 +1,9 @@
 package com.ceres.blip.api;
 
-import com.alibaba.fastjson2.JSONObject;
 import com.ceres.blip.exceptions.AuthorizationRequiredException;
 import com.ceres.blip.services.PartnersService;
 import com.ceres.blip.utils.OperationReturnObject;
+import com.fasterxml.jackson.databind.JsonNode;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,17 +17,17 @@ public class PartnersController {
     private final PartnersService partnersService;
 
     @PostMapping("/add-partner")
-    public ResponseEntity<OperationReturnObject> addNewPartner(@RequestBody JSONObject request) {
+    public ResponseEntity<OperationReturnObject> addNewPartner(@RequestBody JsonNode request) {
         return ResponseEntity.ok(partnersService.addNewPartner(request));
     }
 
     @PostMapping("/edit-partner-info")
-    public ResponseEntity<OperationReturnObject> editPartnerInfo(@RequestBody JSONObject request) {
+    public ResponseEntity<OperationReturnObject> editPartnerInfo(@RequestBody JsonNode request) {
         return ResponseEntity.ok(partnersService.editPartnerInfo(request));
     }
 
     @PostMapping("/update-partner-status")
-    public ResponseEntity<OperationReturnObject> updatePartnerStatus(@RequestBody JSONObject request) throws AuthorizationRequiredException {
+    public ResponseEntity<OperationReturnObject> updatePartnerStatus(@RequestBody JsonNode request) throws AuthorizationRequiredException {
         return ResponseEntity.ok(partnersService.updatePartnerStatus(request));
     }
 

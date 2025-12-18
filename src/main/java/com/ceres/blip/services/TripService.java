@@ -1,6 +1,5 @@
 package com.ceres.blip.services;
 
-import com.alibaba.fastjson2.JSONObject;
 import com.ceres.blip.models.database.TripModel;
 import com.ceres.blip.models.database.TripSeatModel;
 import com.ceres.blip.models.enums.TripSeatStatus;
@@ -11,6 +10,7 @@ import com.ceres.blip.repositories.TripSeatRepository;
 import com.ceres.blip.repositories.VehicleRepository;
 import com.ceres.blip.utils.LocalUtilsService;
 import com.ceres.blip.utils.OperationReturnObject;
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheEvict;
@@ -30,13 +30,12 @@ public class TripService extends LocalUtilsService {
     private final SeatRepository seatRepository;
     private final TripSeatRepository tripSeatRepository;
 
-    public OperationReturnObject addTrip(JSONObject object) {
-        requires(object, "data");
-        JSONObject data = object.getJSONObject("data");
+    public OperationReturnObject addTrip(JsonNode object) {
+        JsonNode data = getRequestData(object);
         requires(data, "route_id", "bus_id", "trip_date");
-        Long routeId = data.getLong("route_id");
-        Long busId = data.getLong("bus_id");
-        String td = data.getString("trip_date");
+        Long routeId = data.get("route_id").asLong();
+        Long busId = data.get("bus_id").asLong();
+        String td = data.get("trip_date").asText();
         LocalDate tripDate = LocalDate.parse(td);
 
         TripStatus status = TripStatus.SCHEDULED;
@@ -63,23 +62,18 @@ public class TripService extends LocalUtilsService {
     }
 
     @CachePut(value = "trip", key = "#object.data.id")
-    public OperationReturnObject editTrip(JSONObject object) {
-        requires(object, "data");
-        JSONObject data = object.getJSONObject("data");
+    public OperationReturnObject editTrip(JsonNode object) {
+        JsonNode data = getRequestData(object);
         requires(data, "id");
-        Long id = data.getLong("id");
+        Long id = data.get("id").asLong();
 
         TripModel tripModel = repository.findById(id).orElseThrow(() -> new IllegalArgumentException("Trip with ID " + id + " not found."));
-        Long routeId = data.getLong("route_id");
-        if (routeId != null) {
-            tripModel.setRouteId(routeId);
-        }
-        Long busId = data.getLong("bus_id");
+        Long routeId = data.get("route_id").asLong();
+        tripModel.setRouteId(routeId);
+        Long busId = data.get("bus_id").asLong();
         //todo: reconcile trip seats to new bus seats. UNLESS we have some good number that has already booked seats then reject modification.
-        if (busId != null) {
-            tripModel.setBusId(busId);
-        }
-        String td = data.getString("trip_date");
+        tripModel.setBusId(busId);
+        String td = data.get("trip_date").asText();
         if (StringUtils.isNotBlank(td)) {
             LocalDate tripDate = LocalDate.parse(td);
             tripModel.setTripDate(tripDate);

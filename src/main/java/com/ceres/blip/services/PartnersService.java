@@ -1,6 +1,5 @@
 package com.ceres.blip.services;
 
-import com.alibaba.fastjson2.JSONObject;
 import com.ceres.blip.exceptions.AuthorizationRequiredException;
 import com.ceres.blip.models.database.PartnerModel;
 import com.ceres.blip.models.enums.AppDomains;
@@ -10,6 +9,7 @@ import com.ceres.blip.repositories.PartnersRepository;
 import com.ceres.blip.utils.LocalUtilsService;
 import com.ceres.blip.utils.LocalFileManager;
 import com.ceres.blip.utils.OperationReturnObject;
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -28,29 +28,28 @@ public class PartnersService extends LocalUtilsService {
     private final PartnersRepository partnersRepository;
 
 
-    public OperationReturnObject addNewPartner(JSONObject request) {
+    public OperationReturnObject addNewPartner(JsonNode request) {
         belongsTo(AppDomains.BACK_OFFICE);
-        requires(request, "data");
 
-        JSONObject data = request.getJSONObject("data");
+        JsonNode data = getRequestData(request);
         requires(data, "partner_name", "account_number", "contact_person", "contact_phone", "account_id", "business_reference", "active", "package");
-        String partnerName = data.getString("partner_name");
+        String partnerName = data.get("partner_name").asText();
 
         if (StringUtils.isBlank(partnerName)) {
             throw new IllegalArgumentException("Partner name cannot be empty");
         }
-        String logo = data.getString("logo");
+        String logo = data.get("logo").asText();
 
         String partnerCode = partnerName.toUpperCase().replace(" ", "_");
         PartnerModel partnerModel = new PartnerModel();
         partnerModel.setPartnerName(partnerName);
         partnerModel.setPartnerCode(partnerCode);
-        partnerModel.setAccountNumber(data.getString("account_number"));
-        partnerModel.setContactPerson(data.getString("contact_person"));
-        partnerModel.setContactPhone(data.getString("contact_phone"));
-        partnerModel.setAccountId(data.getLong("account_id"));
-        partnerModel.setBusinessReference(data.getString("business_reference"));
-        partnerModel.setActive(data.getBoolean("active"));
+        partnerModel.setAccountNumber(data.get("account_number").asText());
+        partnerModel.setContactPerson(data.get("contact_person").asText());
+        partnerModel.setContactPhone(data.get("contact_phone").asText());
+        partnerModel.setAccountId(data.get("account_id").asLong());
+        partnerModel.setBusinessReference(data.get("business_reference").asText());
+        partnerModel.setActive(data.get("active").asBoolean());
 
         if (StringUtils.isNotBlank(logo)) {
             if (!logo.startsWith("data:image/")) {
@@ -66,7 +65,7 @@ public class PartnersService extends LocalUtilsService {
             }
         }
         partnerModel.setDateCreated(getCurrentTimestamp());
-        String pkg = data.getString("package");
+        String pkg = data.get("package").asText();
         if (StringUtils.isBlank(pkg)) {
             pkg = "FULL";
         }
@@ -82,38 +81,37 @@ public class PartnersService extends LocalUtilsService {
     }
 
     @CachePut(value = "partners", key = "#request.data.id")
-    public OperationReturnObject editPartnerInfo(JSONObject request) {
+    public OperationReturnObject editPartnerInfo(JsonNode request) {
         belongsTo(AppDomains.BACK_OFFICE);
-        requires(request, "data");
 
-        JSONObject data = request.getJSONObject("data");
-        Long id = data.getLong("id");
+        JsonNode data = getRequestData(request);
+        Long id = data.get("id").asLong();
         PartnerModel partnerModel = partnersRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Partner with ID " + id + " not found."));
 
-        String partnerName = data.getString("partner_name");
+        String partnerName = data.get("partner_name").asText();
         if (StringUtils.isBlank(partnerName)) {
             throw new IllegalArgumentException("Partner name cannot be empty");
         }
-        String logo = data.getString("logo");
+        String logo = data.get("logo").asText();
         // Only update fields that are provided in the request
-        if (data.containsKey("partner_name")) {
+        if (data.has("partner_name")) {
             partnerModel.setPartnerName(partnerName);
         }
-        if (data.containsKey("account_number")) {
-            partnerModel.setAccountNumber(data.getString("account_number"));
+        if (data.has("account_number")) {
+            partnerModel.setAccountNumber(data.get("account_number").asText());
         }
-        if (data.containsKey("contact_person")) {
-            partnerModel.setContactPerson(data.getString("contact_person"));
+        if (data.has("contact_person")) {
+            partnerModel.setContactPerson(data.get("contact_person").asText());
         }
-        if (data.containsKey("contact_phone")) {
-            partnerModel.setContactPhone(data.getString("contact_phone"));
+        if (data.has("contact_phone")) {
+            partnerModel.setContactPhone(data.get("contact_phone").asText());
         }
-        if (data.containsKey("account_id")) {
-            partnerModel.setAccountId(data.getLong("account_id"));
+        if (data.has("account_id")) {
+            partnerModel.setAccountId(data.get("account_id").asLong());
         }
-        if (data.containsKey("business_reference")) {
-            partnerModel.setBusinessReference(data.getString("business_reference"));
+        if (data.has("business_reference")) {
+            partnerModel.setBusinessReference(data.get("business_reference").asText());
         }
 
         if (StringUtils.isNotBlank(logo)) {
@@ -128,7 +126,7 @@ public class PartnersService extends LocalUtilsService {
             }
         }
 
-        String pkg = data.getString("package");
+        String pkg = data.get("package").asText();
         if (StringUtils.isNotBlank(pkg)) {
             partnerModel.setPackageField(pkg);
         }
@@ -153,15 +151,14 @@ public class PartnersService extends LocalUtilsService {
     }
 
     @CachePut(value = "partners", key = "#request.data.id")
-    public OperationReturnObject updatePartnerStatus(JSONObject request) throws AuthorizationRequiredException {
+    public OperationReturnObject updatePartnerStatus(JsonNode request) throws AuthorizationRequiredException {
         belongsTo(AppDomains.BACK_OFFICE);
         requiresAuth();
-        requires(request, "data");
-        JSONObject data = request.getJSONObject("data");
+        JsonNode data = getRequestData(request);
         requires(data, "id", "active");
 
-        Long id = data.getLong("id");
-        Boolean active = data.getBoolean("active");
+        Long id = data.get("id").asLong();
+        Boolean active = data.get("active").asBoolean();
 
         PartnerModel partnerModel = partnersRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Partner with ID " + id + " not found."));
@@ -169,7 +166,7 @@ public class PartnersService extends LocalUtilsService {
         partnerModel.setActive(active);
         PartnerModel saved = partnersRepository.save(partnerModel);
 
-        String status = Boolean.TRUE.equals(active) ? "activated" : "deactivated";
+        String status = active ? "activated" : "deactivated";
         return new OperationReturnObject(200, "Partner successfully " + status + ".", saved);
     }
 

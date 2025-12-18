@@ -1,6 +1,5 @@
 package com.ceres.blip.services;
 
-import com.alibaba.fastjson2.JSONObject;
 import com.ceres.blip.models.database.PartnerModel;
 import com.ceres.blip.models.database.RouteModel;
 import com.ceres.blip.models.database.SystemUserModel;
@@ -9,6 +8,7 @@ import com.ceres.blip.models.enums.RouteStatus;
 import com.ceres.blip.repositories.RouteRepository;
 import com.ceres.blip.utils.LocalUtilsService;
 import com.ceres.blip.utils.OperationReturnObject;
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -34,17 +34,16 @@ public class RouteService extends LocalUtilsService{
     private static final String ROUTES_FETCHED_SUCCESSFULLY = "Routes fetched successfully";
     private final RouteRepository routeRepository;
     //create a new route for a partner
-    public OperationReturnObject createNewRoute(JSONObject object) {
+    public OperationReturnObject createNewRoute(JsonNode object) {
         try {
             SystemUserModel authenticatedUser = authenticatedUser();
-            requires(object, DATA);
-            JSONObject data = object.getJSONObject(DATA);
+            JsonNode data = getRequestData(object);
             requires(data, ORIGIN, DESTINATION, PARTNER_CODE, ESTIMATED_DISTANCE, ESTIMATED_DURATION);
-            String origin = data.getString(ORIGIN);
-            String destination = data.getString(DESTINATION);
-            String partnerCode = data.getString(PARTNER_CODE);
-            Double estimatedDistance = data.getDouble(ESTIMATED_DISTANCE);
-            Double estimatedDuration = data.getDouble(ESTIMATED_DURATION);
+            String origin = data.get(ORIGIN).asText();
+            String destination = data.get(DESTINATION).asText();
+            String partnerCode = data.get(PARTNER_CODE).asText();
+            Double estimatedDistance = data.get(ESTIMATED_DISTANCE).asDouble();
+            Double estimatedDuration = data.get(ESTIMATED_DURATION).asDouble();
 
             PartnerModel partner = validatePartner(partnerCode);
 
@@ -69,31 +68,31 @@ public class RouteService extends LocalUtilsService{
 
     //Edit route details
     @CachePut(value = "routes", key = "#object.data.id")
-    public OperationReturnObject editRouteDetails(JSONObject object) {
+    public OperationReturnObject editRouteDetails(JsonNode object) {
         try {
             requiresAuth();
             requires(object, DATA);
-            JSONObject data = object.getJSONObject(DATA);
+            JsonNode data = getRequestData(object);
             requires(data, ROUTE_ID);
-            Long routeId = data.getLong(ROUTE_ID);
+            Long routeId = data.get(ROUTE_ID).asLong();
 
             RouteModel existingRoute = routeRepository.findById(routeId)
                     .orElseThrow(() -> new IllegalArgumentException("Route with ID " + routeId + " not found"));
 
-            if (data.containsKey(ORIGIN)) {
-                existingRoute.setOrigin(data.getString(ORIGIN));
+            if (data.has(ORIGIN)) {
+                existingRoute.setOrigin(data.get(ORIGIN).asText());
             }
-            if (data.containsKey(DESTINATION)) {
-                existingRoute.setDestination(data.getString(DESTINATION));
+            if (data.has(DESTINATION)) {
+                existingRoute.setDestination(data.get(DESTINATION).asText());
             }
-            if (data.containsKey(ESTIMATED_DISTANCE)) {
-                existingRoute.setEstimatedDistance(BigDecimal.valueOf(data.getDouble(ESTIMATED_DISTANCE)));
+            if (data.has(ESTIMATED_DISTANCE)) {
+                existingRoute.setEstimatedDistance(BigDecimal.valueOf(data.get(ESTIMATED_DISTANCE).asDouble()));
             }
-            if (data.containsKey(ESTIMATED_DURATION)) {
-                existingRoute.setEstimatedDuration(data.getDouble(ESTIMATED_DURATION));
+            if (data.has(ESTIMATED_DURATION)) {
+                existingRoute.setEstimatedDuration(data.get(ESTIMATED_DURATION).asDouble());
             }
-            if (data.containsKey(STATUS)) {
-                String status = data.getString(STATUS);
+            if (data.has(STATUS)) {
+                String status = data.get(STATUS).asText();
                 if (!EnumUtils.isValidEnum(RouteStatus.class, status)) {
                     throw new IllegalArgumentException("Invalid status value");
                 }

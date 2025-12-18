@@ -1,12 +1,12 @@
 package com.ceres.blip.config;
 
-import com.alibaba.fastjson2.JSON;
-import com.alibaba.fastjson2.JSONObject;
 import com.ceres.blip.models.database.AccessLogModel;
-import com.ceres.blip.models.database.SystemRoleModel;
 import com.ceres.blip.models.database.SystemUserModel;
 import com.ceres.blip.repositories.AccessLogRepository;
 import com.ceres.blip.repositories.SystemRoleRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -86,9 +86,6 @@ public class AccessLogsFilter extends OncePerRequestFilter {
 
         boolean isLoginRequest = isLoginRequest(wrappedRequest);
 
-        JSONObject responseJson = JSON.parseObject(responseBody);
-        JSONObject requestJson = null;
-
         wrappedResponse.copyBodyToResponse();
     }
 
@@ -109,11 +106,20 @@ public class AccessLogsFilter extends OncePerRequestFilter {
 
     public boolean isLoginRequest(ContentCachingRequestWrapper requestWrapper) {
         String requestBody = new String(requestWrapper.getContentAsByteArray());
-        JSONObject requestJson = JSON.parseObject(requestBody);
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode requestJson = null;
+        if (requestBody.isBlank()) {
+            return false;
+        }
+        try {
+            requestJson = mapper.readValue(requestBody, JsonNode.class);
+        } catch (JsonProcessingException e) {
+            throw new IllegalStateException(e.getMessage(), e);
+        }
         if (requestJson == null || requestJson.isEmpty()) {
             return false;
         }
-        return requestJson.containsKey("ACTION") && Objects.equals(requestJson.getString("ACTION"), "login");
+        return requestJson.has("ACTION") && Objects.equals(requestJson.get("ACTION").asText(), "login");
     }
 
     private SystemUserModel getAuthenticatedSystemUser() {
