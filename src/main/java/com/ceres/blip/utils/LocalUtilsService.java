@@ -306,13 +306,8 @@ public abstract class LocalUtilsService {
 
 
     protected JsonNode getRequestData(JsonNode request) {
-        requires(request,DATA);
-        try {
-            String dataString = request.get(DATA).asText();
-            return MAPPER.readValue(dataString, JsonNode.class);
-        } catch (JsonProcessingException e) {
-            throw new IllegalStateException(e.getMessage(), e);
-        }
+        requires(request, DATA);
+        return request.get(DATA);
     }
 }
 

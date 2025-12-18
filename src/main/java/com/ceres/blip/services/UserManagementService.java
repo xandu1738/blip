@@ -53,8 +53,6 @@ public class UserManagementService extends LocalUtilsService {
 
 
     public OperationReturnObject login(JsonNode request) {
-        requires(request, "data");
-
         JsonNode data = getRequestData(request);
 
         requires(data, USER_EMAIL, USER_PASSWORD);
