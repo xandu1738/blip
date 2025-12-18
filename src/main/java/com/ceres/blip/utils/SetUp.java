@@ -35,7 +35,6 @@ public class SetUp {
 
     private final SystemDomainRepository domainRepository;
     private final SystemPermissionRepository permissionRepository;
-    private final SystemRolePermissionRepository permissionAssignmentRepository;
     private final SystemRoleRepository roleRepository;
 
     @javax.annotation.PostConstruct
@@ -139,7 +138,7 @@ public class SetUp {
         user.setLastName("Sepius");
         user.setEmail("ceres1738@gmail.com");
         user.setRoleCode(DefaultRoles.SUPER_ADMIN.name());
-        user.setPassword(passwordEncoder.encode("password")); // This should be hashed in a real application
+        user.setPassword(passwordEncoder.encode("@Secure1234")); // This should be hashed in a real application
         user.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         user.setIsActive(true);
         Optional<SystemUserModel> existingUser = systemUserRepository.findByEmail(user.getEmail());

@@ -140,7 +140,7 @@ public class PartnersService extends LocalUtilsService {
         return new OperationReturnObject(200, "Partner info successfully updated.", saved);
     }
 
-//    @Cacheable(value = "partners", key = "#pageNumber + '-' + #pageSize")
+    @Cacheable(value = "partners", key = "#pageNumber + '-' + #pageSize")
     public OperationReturnObject fetchPartnersList(int pageNumber, int pageSize) throws AuthorizationRequiredException {
 //        belongsTo(AppDomains.BACK_OFFICE);
 //        requiresAuth();
