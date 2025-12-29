@@ -26,170 +26,183 @@
 
   <div class="sticky top-0 above">
 
-      <p-accordion value="0">
-        <p-accordion-panel value="0">
-          <p-accordion-header>Filter</p-accordion-header>
-          <p-accordion-content>
+    <p-accordion value="0">
+      <p-accordion-panel value="0">
+        <p-accordion-header>Filter</p-accordion-header>
+        <p-accordion-content>
 
 
-            <!-- Search Filters Card -->
-            <div class="p-6 mb-6">
+          <!-- Search Filters Card -->
+          <div class="p-6 mb-6">
 
-              <div class="flex justify-between">
-                <!-- Partner Name -->
+            <div class="flex justify-between">
+              <!-- Partner Name -->
+              <div class="relative">
+                <label for="search_name" class="block text-sm font-medium mb-1">
+                  Partner Name
+                </label>
                 <div class="relative">
-                  <label for="search_name" class="block text-sm font-medium mb-1">
-                    Partner Name
-                  </label>
-                  <div class="relative">
                   <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
             <i class="pi pi-building"></i>
           </span>
-                    <input
-                      type="text"
-                      id="search_name"
-                      [(ngModel)]="userData.search_name"
-                      (input)="onChangeSearch($event)"
-                      placeholder="e.g., ABC Logistics"
-                      class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-                    />
-                  </div>
-                </div>
-
-                <!-- Partner Name -->
-                <div class="relative">
-                  <label for="search_name" class="block text-sm font-medium mb-1">
-                    Partner Name
-                  </label>
-                  <div class="relative">
-                  <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-            <i class="pi pi-building"></i>
-          </span>
-                    <input
-                      type="text"
-                      id="search_name"
-                      [(ngModel)]="userData.search_name"
-                      (input)="onChangeSearch($event)"
-                      placeholder="e.g., ABC Logistics"
-                      class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-                    />
-                  </div>
-                </div>
-
-                <!-- Partner Name -->
-                <div class="relative">
-                  <label for="search_name" class="block text-sm font-medium mb-1">
-                    Partner Name
-                  </label>
-                  <div class="relative">
-                  <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-            <i class="pi pi-building"></i>
-          </span>
-                    <input
-                      type="text"
-                      id="search_name"
-                      [(ngModel)]="userData.search_name"
-                      (input)="onChangeSearch($event)"
-                      placeholder="e.g., ABC Logistics"
-                      class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-                    />
-                  </div>
-                </div>
-
-                <!-- Partner Name -->
-                <div class="relative">
-                  <label for="search_name" class="block text-sm font-medium mb-1">
-                    Partner Name
-                  </label>
-                  <div class="relative">
-                  <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-            <i class="pi pi-building"></i>
-          </span>
-                    <input
-                      type="text"
-                      id="search_name"
-                      [(ngModel)]="userData.search_name"
-                      (input)="onChangeSearch($event)"
-                      placeholder="e.g., ABC Logistics"
-                      class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-                    />
-                  </div>
-                </div>
-
-                <!-- Partner Name -->
-                <div class="relative">
-                  <label for="search_name" class="block text-sm font-medium mb-1">
-                    Partner Name
-                  </label>
-                  <div class="relative">
-                  <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-            <i class="pi pi-building"></i>
-          </span>
-                    <input
-                      type="text"
-                      id="search_name"
-                      [(ngModel)]="userData.search_name"
-                      (input)="onChangeSearch($event)"
-                      placeholder="e.g., ABC Logistics"
-                      class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-                    />
-                  </div>
+                  <input
+                    type="text"
+                    id="search_name"
+                    [(ngModel)]="userData.search_name"
+                    (input)="onChangeSearch($event)"
+                    placeholder="e.g., ABC Logistics"
+                    class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                  />
                 </div>
               </div>
 
-              <!-- Search Button -->
-              <div class="flex justify-end pt-2">
-                <button
-                  (click)="filterPartners()"
-                  class="inline-flex items-center gap-2 px-6 py-2.5 p-button text-white font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition shadow-sm">
-                  <i class="pi pi-search"></i>
-                  <span>Search Partners</span>
-                </button>
+              <!-- Partner Name -->
+              <div class="relative">
+                <label for="search_name" class="block text-sm font-medium mb-1">
+                  Partner Name
+                </label>
+                <div class="relative">
+                  <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+            <i class="pi pi-building"></i>
+          </span>
+                  <input
+                    type="text"
+                    id="search_name"
+                    [(ngModel)]="userData.search_name"
+                    (input)="onChangeSearch($event)"
+                    placeholder="e.g., ABC Logistics"
+                    class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                  />
+                </div>
               </div>
 
+              <!-- Partner Name -->
+              <div class="relative">
+                <label for="search_name" class="block text-sm font-medium mb-1">
+                  Partner Name
+                </label>
+                <div class="relative">
+                  <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+            <i class="pi pi-building"></i>
+          </span>
+                  <input
+                    type="text"
+                    id="search_name"
+                    [(ngModel)]="userData.search_name"
+                    (input)="onChangeSearch($event)"
+                    placeholder="e.g., ABC Logistics"
+                    class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                  />
+                </div>
+              </div>
+
+              <!-- Partner Name -->
+              <div class="relative">
+                <label for="search_name" class="block text-sm font-medium mb-1">
+                  Partner Name
+                </label>
+                <div class="relative">
+                  <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+            <i class="pi pi-building"></i>
+          </span>
+                  <input
+                    type="text"
+                    id="search_name"
+                    [(ngModel)]="userData.search_name"
+                    (input)="onChangeSearch($event)"
+                    placeholder="e.g., ABC Logistics"
+                    class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                  />
+                </div>
+              </div>
+
+              <!-- Partner Name -->
+              <div class="relative">
+                <label for="search_name" class="block text-sm font-medium mb-1">
+                  Partner Name
+                </label>
+                <div class="relative">
+                  <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+            <i class="pi pi-building"></i>
+          </span>
+                  <input
+                    type="text"
+                    id="search_name"
+                    [(ngModel)]="userData.search_name"
+                    (input)="onChangeSearch($event)"
+                    placeholder="e.g., ABC Logistics"
+                    class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                  />
+                </div>
+              </div>
             </div>
 
-          </p-accordion-content>
-        </p-accordion-panel>
+            <!-- Search Button -->
+            <div class="flex justify-end pt-2">
+              <button
+                (click)="filterPartners()"
+                class="inline-flex items-center gap-2 px-6 py-2.5 p-button text-white font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition shadow-sm">
+                <i class="pi pi-search"></i>
+                <span>Search Partners</span>
+              </button>
+            </div>
 
-      </p-accordion>
+          </div>
+
+        </p-accordion-content>
+      </p-accordion-panel>
+
+    </p-accordion>
 
 
     <!-- Partners Table -->
     <div class="relative shadow-sm border border-gray-200 max-h-[70vh] overflow-y-auto below">
-      <p-table [value]="filteredPartners" [tableStyle]="{ 'min-width': '100%' }">
-
+      <p-table [value]="filteredPartners"
+               styleClass="small-word-grid"
+               [rows]="15"
+               [paginator]="true"
+               [pageLinks]="5"
+               [lazy]="true"
+               [rowsPerPageOptions]="[15, 20, 50, 100]"
+               (onLazyLoad)="loadLazy($event)"
+               [totalRecords]="search.totalRecords"
+               [resizableColumns]="true"
+               [tableStyle]="{ 'min-width': '100%' }">
         <ng-template pTemplate="header">
           <tr class="">
-            <th style="width: 8%">Logo</th>
-            <th style="width: 15%">Partner Name</th>
-            <th style="width: 10%">Account Number</th>
-            <th style="width: 12%">Contact Person</th>
-            <th style="width: 10%">Contact Phone</th>
-            <th style="width: 10%">Account ID</th>
-            <th style="width: 12%">Business Reference</th>
-            <th style="width: 8%">Active</th>
-            <th style="width: 10%">Package</th>
-            <th style="width: 15%">Actions</th>
+            <th id="logo" style="width: 8%">Logo</th>
+            <th id="partnerName" style="width: 15%">Partner Name</th>
+            <th id="accNo" style="width: 10%">Account Number</th>
+            <th id="person" style="width: 12%">Contact Person</th>
+            <th id="phone" style="width: 10%">Contact Phone</th>
+            <th id="acc" style="width: 10%">Account ID</th>
+            <th id="reference" style="width: 12%">Business Reference</th>
+            <th id="active" style="width: 8%">Active</th>
+            <th id="pkg" style="width: 10%">Package</th>
+            <th id="act" style="width: 15%">Actions</th>
           </tr>
         </ng-template>
 
         <ng-template pTemplate="body" let-partner>
           <tr class="">
-            <td class="truncate"><img [ngSrc]="partner?.logo" alt="{{ partner.partnerName }}" width="50" height="50"
-                                      style="object-fit: cover; border-radius: 6px;"/></td>
-            <td class="truncate">{{ partner.partnerName }}</td>
-            <td class="truncate">{{ partner.accountNumber }}</td>
-            <td class="truncate">{{ partner.contactPerson }}</td>
-            <td class="truncate">{{ partner.contactPhone }}</td>
-            <td class="truncate">{{ partner.accountId }}</td>
-            <td class="truncate">{{ partner.businessReference }}</td>
+            <td class="truncate">
+              @if (partner?.logo) {
+                <img [ngSrc]="partner?.logo" alt="{{ partner?.partnerName }}" width="50" height="50"
+                     style="object-fit: cover; border-radius: 6px;"/>
+              }
+            </td>
+            <td class="truncate">{{ partner?.partnerName || '---' }}</td>
+            <td class="truncate">{{ partner?.accountNumber || '---' }}</td>
+            <td class="truncate">{{ partner?.contactPerson || '---' }}</td>
+            <td class="truncate">{{ partner?.contactPhone || '---' }}</td>
+            <td class="truncate">{{ partner?.accountId || '---' }}</td>
+            <td class="truncate">{{ partner?.businessReference || '---' }}</td>
             <td class="truncate">
             <span [class.text-green-500]="partner.active" [class.text-red-500]="!partner.active">
-              {{ partner.active ? 'Active' : 'Inactive' }}
+              {{ partner?.active ? 'Active' : 'Inactive' }}
             </span>
             </td>
-            <td class="truncate">{{ partner.packageField }}</td>
+            <td class="truncate">{{ partner?.package || '---' }}</td>
             <td class="truncate">
               <div class="flex gap-2">
                 <button class="py-2 px-3 bg-blue-100 text-gray-600 rounded-md hover:bg-blue-200 transition"
@@ -223,76 +236,95 @@
     <div class="space-y-4">
       <div class="grid grid-cols-2 gap-4">
         <div>
-          <label class="block font-medium mb-2">Partner Name</label>
+          <label for="partners_name" class="block font-medium mb-2">Partner Name</label>
           <input
+            id="partners_name"
             type="text"
             pInputText
-            [(ngModel)]="newModule.name"
+            [(ngModel)]="partnerDetails.partner_name"
             placeholder="Enter partner name"
-            class="w-full p-3 border-none outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"/>
+            class="w-full p-3"/>
         </div>
 
         <div class="">
-          <label class="block font-medium mb-2">Service Package</label>
-          <select class="w-full p-3 focus:ring-2 focus:ring-blue-400 focus:border-transparent stat-card">
-            <option value="transport">Transport</option>
-            <option value="logistics">Logistics</option>
-            <option value="full">Full Package</option>
-          </select>
+          <label for="package" class="block font-medium mb-2">Service Package</label>
+          <p-autoComplete
+            [(ngModel)]="partnerDetails.package"
+            optionValue="value"
+            optionLabel="label"
+            id="package"
+            [dropdown]="true"
+            [suggestions]="filteredPackages"
+            (completeMethod)="searchPackages($event)"/>
         </div>
       </div>
 
       <div>
-        <label class="block font-medium mb-2">Business Description</label>
+        <label for="description" class="block font-medium mb-2">Business Description</label>
         <textarea
-          [(ngModel)]="newModule.description"
+          pInputText
+          id="description"
+          [(ngModel)]="partnerDetails.bio"
           rows="3"
           placeholder="Brief description of partner's business..."
-          class="w-full p-3 stat-card focus:ring-2 focus:ring-blue-400 focus:border-transparent"></textarea>
+          class="w-full p-3"></textarea>
       </div>
 
       <div class="grid grid-cols-2 gap-4">
         <div>
-          <label class="block font-medium mb-2">Contact Person</label>
+          <label for="contact_person" class="block font-medium mb-2">Contact Person</label>
           <input
+            id="contact_person"
             type="text"
+            [(ngModel)]="partnerDetails.contact_person"
             pInputText
             placeholder="Full name"
             class="w-full p-3 border border-gray-300 focus:ring-2 focus:ring-blue-400 focus:border-transparent"/>
         </div>
 
         <div>
-          <label class="block font-medium mb-2">Contact Phone</label>
+          <label for="contact_phone" class="block font-medium mb-2">Contact Phone</label>
           <input
+            id="contact_phone"
             type="tel"
+            [(ngModel)]="partnerDetails.contact_phone"
             pInputText
-            placeholder="+256 XXX XXXXXX"
-            class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-transparent"/>
+            class="w-full p-3"/>
         </div>
 
       </div>
 
+      <div class="flex flex-col items-start gap-3 pt-4 border-t border-gray-200">
+        <label for="autoStart" class="block font-medium mb-1">Partner Logo</label>
+        <p-fileupload #fu mode="basic"
+                      chooseLabel="Upload Logo"
+                      chooseIcon="pi pi-upload"
+                      name="logo"
+                      accept="image/*"
+                      maxFileSize="1000000"
+                      (onSelect)="onUpload($event)"/>
+      </div>
       <div class="flex items-center gap-3 pt-4 border-t border-gray-200">
-        <input type="checkbox" id="autoStart" class="rounded">
+        <input type="checkbox" id="autoStart" class="rounded" [(ngModel)]="partnerDetails.active">
         <label for="autoStart" class="text-sm">Activate partner account immediately</label>
       </div>
 
       <div class="flex justify-end gap-3 mt-6">
-        <button
-          pButton
+        <p-button
           label="Cancel"
           icon="pi pi-times"
-          class="p-button-outlined px-6 py-2 rounded-lg"
-          (click)="showAddDialog = false">
-        </button>
+          severity="secondary"
+          size="small"
+          (onClick)="showAddDialog = false">
+        </p-button>
 
-        <button
-          pButton
+        <p-button
           label="Create Partner"
           icon="pi pi-check"
-          class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg"
-          (click)="addModule()">
-        </button>
+          severity="success"
+          size="small"
+          (onClick)="registerPartner()">
+        </p-button>
       </div>
     </div>
 

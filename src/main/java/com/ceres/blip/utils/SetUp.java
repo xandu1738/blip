@@ -137,6 +137,7 @@ public class SetUp {
         user.setFirstName("Julian");
         user.setLastName("Sepius");
         user.setEmail("ceres1738@gmail.com");
+        user.setUserName("ceres1738");
         user.setRoleCode(DefaultRoles.SUPER_ADMIN.name());
         user.setPassword(passwordEncoder.encode("@Secure1234")); // This should be hashed in a real application
         user.setCreatedAt(new Timestamp(System.currentTimeMillis()));

@@ -23,7 +23,7 @@ public class ApplicationConf implements UserDetailsService {
     private final SystemPermissionRepository permissionRepository;
     @Override
     public SystemUserModel loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<SystemUserModel> usersModel = userRepository.findByUsernameOrEmail(username, username);
+        Optional<SystemUserModel> usersModel = userRepository.findByUserNameOrEmail(username, username);
         if (usersModel.isPresent()) {
             SystemUserModel user = usersModel.get();
             // if the user account is not activated, then we eject from here.

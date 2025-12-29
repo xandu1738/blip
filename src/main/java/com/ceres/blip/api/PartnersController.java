@@ -5,6 +5,7 @@ import com.ceres.blip.services.PartnersService;
 import com.ceres.blip.utils.OperationReturnObject;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,13 +18,13 @@ public class PartnersController {
     private final PartnersService partnersService;
 
     @PostMapping("/add-partner")
-    public ResponseEntity<OperationReturnObject> addNewPartner(@RequestBody JsonNode request) {
-        return ResponseEntity.ok(partnersService.addNewPartner(request));
+    public ResponseEntity<OperationReturnObject> addNewPartner(@RequestBody JsonNode request, HttpServletRequest httpServletRequest) {
+        return ResponseEntity.ok(partnersService.addNewPartner(request, httpServletRequest));
     }
 
     @PostMapping("/edit-partner-info")
-    public ResponseEntity<OperationReturnObject> editPartnerInfo(@RequestBody JsonNode request) {
-        return ResponseEntity.ok(partnersService.editPartnerInfo(request));
+    public ResponseEntity<OperationReturnObject> editPartnerInfo(@RequestBody JsonNode request, HttpServletRequest httpServletRequest) {
+        return ResponseEntity.ok(partnersService.editPartnerInfo(request, httpServletRequest));
     }
 
     @PostMapping("/update-partner-status")

@@ -27,7 +27,6 @@ export class LoginComponent {
   }
 
   onLogin() {
-
     // Regular authentication
     if (!this.username || !this.password) {
       this.notificationService.showWarning('Please enter both username and password');
@@ -40,12 +39,8 @@ export class LoginComponent {
 
     this.authService.login(this.username, this.password).subscribe({
       next: (response) => {
-        console.log("welcome back",response)
-        this.notificationService.showSuccess(
-          `Welcome back ${response?.user?.firstName || 'anthony'}!`,
-          'Login Successful'
-        );
-        this.router.navigate(['/dashboard']);
+        if (!response) return;
+        this.router.navigate(['/dashboard']).catch(err => console.error('Login redirect error:', err));
       },
       error: (error) => {
         console.log("error found")

@@ -9,14 +9,21 @@ export class RemoteService {
   constructor(protected httpClient: HttpClient) {
   }
 
-  sendPostToServer(url: string, data: any): Observable<any> {
+  sendPostToServer(url: string, data: any, authenticated: boolean = true): Observable<any> {
     console.log("Will use url " + url)
     this.logDevMode("Sending to server " + data)
+    let requestHeaders: any = {
+      'Content-Type': 'application/json',
+      'Request-Origin': 'BLIP-PORTAL'
+    };
+
+    if (authenticated) {
+      const accessToken = localStorage.getItem("access_token");
+      requestHeaders['Authorization'] = `Bearer ${accessToken}`;
+    }
+
     let options = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        'Request-Origin': 'BLIP-PORTAL'
-      }),
+      headers: new HttpHeaders(requestHeaders),
     };
     return this.httpClient.post(url, data, options);
   }
@@ -48,14 +55,14 @@ export class RemoteService {
   sendGetToServer(url: string): Observable<any> {
     console.log("Will use url " + url);
     const accessToken = localStorage.getItem("access_token");
-    console.log("your auth token:",accessToken);
+    console.log("your auth token:", accessToken);
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Request-Origin': 'BLIP-PORTAL',
       'Authorization': `Bearer ${accessToken}`
     });
 
-    return this.httpClient.get(url, { headers });
+    return this.httpClient.get(url, {headers});
   }
 
 

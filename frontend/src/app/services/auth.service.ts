@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { BehaviorSubject, Observable, throwError } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
-import { environment } from '../../environments/environment';
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import {BehaviorSubject, Observable, throwError} from 'rxjs';
+import {catchError, map, tap} from 'rxjs/operators';
+import {environment} from '../../environments/environment';
 import {
   User,
   LoginRequest,
@@ -11,6 +11,7 @@ import {
   ApiResponse,
   RefreshTokenRequest
 } from '../models/user.models';
+import {MessageService} from 'primeng/api';
 
 @Injectable({
   providedIn: 'root'
@@ -27,24 +28,24 @@ export class AuthService {
   private readonly REFRESH_TOKEN_KEY = 'blip_refresh_token';
   private readonly USER_KEY = 'blip_user';
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private messageService: MessageService) {
     // Initialize with demo user for testing
     // this.initializeDemoMode();
   }
 
   login(email: string, password: string): Observable<LoginResponse> {
     const loginData: LoginRequest = {
-      data: { email, password }
+      data: {email, password}
     };
-
-
-
 
     return this.http.post<ApiResponse<any>>(`${this.apiUrl}/user-management/login`, loginData)
       .pipe(
-        map(response => response?.returnObject),
+        map(response => {
+          this.validateLoginResponse(response);
+          return response?.returnObject;
+        }),
         tap(returnObject => {
-          console.log("data:", returnObject);
+          if (!returnObject) return;
 
           this.setTokens(returnObject?.accessToken, returnObject?.refreshToken);
           this.setUser(returnObject?.user);
@@ -70,7 +71,7 @@ export class AuthService {
     }
 
     const refreshData: RefreshTokenRequest = {
-      data: { refreshToken }
+      data: {refreshToken}
     };
 
     return this.http.post<ApiResponse<string>>(`${this.apiUrl}/user-management/refresh-token`, refreshData)
@@ -93,7 +94,7 @@ export class AuthService {
     const mockAccessToken = 'demo-access-token-' + Date.now();
     const mockRefreshToken = 'demo-refresh-token-' + Date.now();
 
-    console.log('AuthService: Generated tokens:', { mockAccessToken, mockRefreshToken }); // Debug log
+    console.log('AuthService: Generated tokens:', {mockAccessToken, mockRefreshToken}); // Debug log
 
     this.setTokens(mockAccessToken, mockRefreshToken);
     this.setUser(user);
@@ -176,4 +177,15 @@ export class AuthService {
 
     return throwError(() => new Error(errorMessage));
   };
+
+  private validateLoginResponse(response: ApiResponse<any>) {
+    if (response?.returnCode != 200) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: response?.returnMessage || 'Invalid Credentials'
+      });
+      return;
+    }
+  }
 }
