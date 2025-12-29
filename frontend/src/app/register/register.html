@@ -157,39 +157,52 @@
 
     <!-- Partners Table -->
     <div class="relative shadow-sm border border-gray-200 max-h-[70vh] overflow-y-auto below">
-      <p-table [value]="filteredPartners" [tableStyle]="{ 'min-width': '100%' }">
-
+      <p-table [value]="filteredPartners"
+               styleClass="small-word-grid"
+               [rows]="15"
+               [paginator]="true"
+               [pageLinks]="5"
+               [lazy]="true"
+               [rowsPerPageOptions]="[15, 20, 50, 100]"
+               (onLazyLoad)="loadLazy($event)"
+               [totalRecords]="search.totalRecords"
+               [resizableColumns]="true"
+               [tableStyle]="{ 'min-width': '100%' }">
         <ng-template pTemplate="header">
           <tr class="">
-            <th style="width: 8%">Logo</th>
-            <th style="width: 15%">Partner Name</th>
-            <th style="width: 10%">Account Number</th>
-            <th style="width: 12%">Contact Person</th>
-            <th style="width: 10%">Contact Phone</th>
-            <th style="width: 10%">Account ID</th>
-            <th style="width: 12%">Business Reference</th>
-            <th style="width: 8%">Active</th>
-            <th style="width: 10%">Package</th>
-            <th style="width: 15%">Actions</th>
+            <th id="logo" style="width: 8%">Logo</th>
+            <th id="partnerName" style="width: 15%">Partner Name</th>
+            <th id="accNo" style="width: 10%">Account Number</th>
+            <th id="person" style="width: 12%">Contact Person</th>
+            <th id="phone" style="width: 10%">Contact Phone</th>
+            <th id="acc" style="width: 10%">Account ID</th>
+            <th id="reference" style="width: 12%">Business Reference</th>
+            <th id="active" style="width: 8%">Active</th>
+            <th id="pkg" style="width: 10%">Package</th>
+            <th id="act" style="width: 15%">Actions</th>
           </tr>
         </ng-template>
 
         <ng-template pTemplate="body" let-partner>
           <tr class="">
-            <td class="truncate"><img [ngSrc]="partner?.logo" alt="{{ partner.partnerName }}" width="50" height="50"
-                                      style="object-fit: cover; border-radius: 6px;"/></td>
-            <td class="truncate">{{ partner.partnerName }}</td>
-            <td class="truncate">{{ partner.accountNumber }}</td>
-            <td class="truncate">{{ partner.contactPerson }}</td>
-            <td class="truncate">{{ partner.contactPhone }}</td>
-            <td class="truncate">{{ partner.accountId }}</td>
-            <td class="truncate">{{ partner.businessReference }}</td>
+            <td class="truncate">
+              @if (partner?.logo) {
+                <img [ngSrc]="partner?.logo" alt="{{ partner?.partnerName }}" width="50" height="50"
+                     style="object-fit: cover; border-radius: 6px;"/>
+              }
+            </td>
+            <td class="truncate">{{ partner?.partnerName || '---' }}</td>
+            <td class="truncate">{{ partner?.accountNumber || '---' }}</td>
+            <td class="truncate">{{ partner?.contactPerson || '---' }}</td>
+            <td class="truncate">{{ partner?.contactPhone || '---' }}</td>
+            <td class="truncate">{{ partner?.accountId || '---' }}</td>
+            <td class="truncate">{{ partner?.businessReference || '---' }}</td>
             <td class="truncate">
             <span [class.text-green-500]="partner.active" [class.text-red-500]="!partner.active">
-              {{ partner.active ? 'Active' : 'Inactive' }}
+              {{ partner?.active ? 'Active' : 'Inactive' }}
             </span>
             </td>
-            <td class="truncate">{{ partner.packageField }}</td>
+            <td class="truncate">{{ partner?.package || '---' }}</td>
             <td class="truncate">
               <div class="flex gap-2">
                 <button class="py-2 px-3 bg-blue-100 text-gray-600 rounded-md hover:bg-blue-200 transition"
@@ -228,7 +241,7 @@
             id="partners_name"
             type="text"
             pInputText
-            [(ngModel)]="newModule.name"
+            [(ngModel)]="partnerDetails.partner_name"
             placeholder="Enter partner name"
             class="w-full p-3"/>
         </div>
@@ -236,11 +249,13 @@
         <div class="">
           <label for="package" class="block font-medium mb-2">Service Package</label>
           <p-autoComplete
+            [(ngModel)]="partnerDetails.package"
+            optionValue="value"
+            optionLabel="label"
             id="package"
             [dropdown]="true"
             [suggestions]="filteredPackages"
             (completeMethod)="searchPackages($event)"/>
-
         </div>
       </div>
 
@@ -249,7 +264,7 @@
         <textarea
           pInputText
           id="description"
-          [(ngModel)]="newModule.description"
+          [(ngModel)]="partnerDetails.bio"
           rows="3"
           placeholder="Brief description of partner's business..."
           class="w-full p-3"></textarea>
@@ -261,6 +276,7 @@
           <input
             id="contact_person"
             type="text"
+            [(ngModel)]="partnerDetails.contact_person"
             pInputText
             placeholder="Full name"
             class="w-full p-3 border border-gray-300 focus:ring-2 focus:ring-blue-400 focus:border-transparent"/>
@@ -271,14 +287,25 @@
           <input
             id="contact_phone"
             type="tel"
+            [(ngModel)]="partnerDetails.contact_phone"
             pInputText
             class="w-full p-3"/>
         </div>
 
       </div>
 
+      <div class="flex flex-col items-start gap-3 pt-4 border-t border-gray-200">
+        <label for="autoStart" class="block font-medium mb-1">Partner Logo</label>
+        <p-fileupload #fu mode="basic"
+                      chooseLabel="Upload Logo"
+                      chooseIcon="pi pi-upload"
+                      name="logo"
+                      accept="image/*"
+                      maxFileSize="1000000"
+                      (onSelect)="onUpload($event)"/>
+      </div>
       <div class="flex items-center gap-3 pt-4 border-t border-gray-200">
-        <input type="checkbox" id="autoStart" class="rounded">
+        <input type="checkbox" id="autoStart" class="rounded" [(ngModel)]="partnerDetails.active">
         <label for="autoStart" class="text-sm">Activate partner account immediately</label>
       </div>
 
@@ -296,7 +323,7 @@
           icon="pi pi-check"
           severity="success"
           size="small"
-          (onClick)="addModule()">
+          (onClick)="registerPartner()">
         </p-button>
       </div>
     </div>

@@ -5,27 +5,33 @@ import {Router} from '@angular/router';
 import {AuthService} from '../services/auth.service';
 import {NotificationService} from '../services/notification.service';
 import {LoaderService} from '../services/loader.service';
-import {CreateUserRequest} from '../models/user.models';
 import {TableModule} from 'primeng/table';
 import {Dialog, DialogModule} from 'primeng/dialog';
-import {Button, ButtonDirective} from 'primeng/button';
+import {Button} from 'primeng/button';
 import {InputText} from 'primeng/inputtext';
 import {RemoteService} from '../services/remoteService';
 import {AccordionModule} from 'primeng/accordion';
 import {FloatLabelModule} from 'primeng/floatlabel';
 import {DatePickerModule} from 'primeng/datepicker';
 import {AutoComplete} from 'primeng/autocomplete';
+import {FileUpload} from 'primeng/fileupload';
+import {BaseComponent} from '../services/base-component';
+import {DialogService} from 'primeng/dynamicdialog';
+import {ConfirmationService, MessageService} from 'primeng/api';
+import {ApiResponse} from '../models/user.models';
 
 interface Partner {
-  partnerName: string;
-  accountNumber: string;
-  contactPerson: string;
-  contactPhone: string;
-  accountId: number;
-  businessReference: string;
+  // "partner_name", "account_number", "contact_person", "contact_phone", "account_id", "business_reference", "active", "package"
+  partner_name: string;
+  account_number: string;
+  contact_person: string;
+  contact_phone: string;
+  account_id: number;
+  business_reference: string;
   active: boolean;
   logo: string;
-  packageField: string;
+  bio: string;
+  package: string;
 }
 
 @Component({
@@ -35,7 +41,6 @@ interface Partner {
     FormsModule,
     CommonModule,
     TableModule,
-    ButtonDirective,
     Dialog,
     DialogModule,
     InputText,
@@ -44,12 +49,28 @@ interface Partner {
     FloatLabelModule,
     DatePickerModule,
     AutoComplete,
-    Button
+    Button,
+    FileUpload
   ],
   templateUrl: './register.html',
   styleUrls: ['./register.css']
 })
-export class RegisterComponent implements OnInit {
+export class RegisterComponent extends BaseComponent implements OnInit {
+  constructor(
+    helper: RemoteService,
+    loaderService: LoaderService,
+    dialogService: DialogService,
+    confirmationService: ConfirmationService,
+    messageService: MessageService,
+    protected authService: AuthService,
+    protected remoteService: RemoteService,
+    protected router: Router,
+    protected notificationService: NotificationService
+  ) {
+    super(helper, loaderService, dialogService, confirmationService, messageService);
+    this.filteredPackages = [...this.packages];
+  }
+
   userData: any = {};
   partners: Partner[] = [];
   filteredPartners: Partner[] = [];
@@ -64,26 +85,34 @@ export class RegisterComponent implements OnInit {
     type: 'core'
   };
 
+  search: any = {
+    pageNumber: 0,
+    pageSize: 15,
+  }
+
   packages = [
     {label: 'Transport', value: 'TRANSPORT'},
     {label: 'Logistics', value: 'LOGISTICS'},
     {label: 'Full Package', value: 'FULL'},
   ];
 
-  filteredPackages: any[];
-
-  constructor(
-    private authService: AuthService,
-    private remoteService: RemoteService,
-    private router: Router,
-    private notificationService: NotificationService,
-    private loaderService: LoaderService
-  ) {
-    this.filteredPackages = [...this.packages];
+  partnerDetails: Partner = {
+    account_id: 0,
+    account_number: '',
+    active: false,
+    business_reference: '',
+    contact_person: '',
+    contact_phone: '',
+    logo: '',
+    bio: '',
+    package: '',
+    partner_name: ''
   }
 
-  ngOnInit(): void {
-    this.loadPartnersFromServer();
+  filteredPackages: any[];
+
+  override ngOnInit(): void {
+    // this.loadPartnersFromServer();
   }
 
 
@@ -103,12 +132,13 @@ export class RegisterComponent implements OnInit {
     this.loaderService.display(true);
 
     this.remoteService
-      .sendGetToServer(`${this.authService.apiUrl}/partners/list/0/20`)
+      .sendGetToServer(`${this.authService.apiUrl}/partners/list/${this.search.pageNumber}/${this.search.pageSize}`)
       .subscribe({
         next: (response) => {
-          this.partners = response.returnObject || [];
+          this.partners = response?.returnObject?.rows || [];
+
+          this.search.totalRecords = response?.returnObject?.totalRecords || 20;
           this.filteredPartners = [...this.partners];
-          this.notificationService.showSuccess('', 'Partners loaded successfully');
         },
         error: (error) => {
           console.error(error);
@@ -147,19 +177,53 @@ export class RegisterComponent implements OnInit {
     this.showAddDialog = true;
   }
 
-  addModule(): void {
+  registerPartner(): void {
     // Example: just closes the dialog
-    this.notificationService.showSuccess('New partner added successfully');
-    this.showAddDialog = false;
+    this.sendRequestToServer(
+      "partners/add-partner",
+      {data: this.partnerDetails},
+      true,
+      (response: ApiResponse<any>) => {
+        if (response.returnCode != 200) {
+          this.showError(response.returnMessage);
+          return;
+        }
+        this.showAddDialog = false;
+        this.loadPartnersFromServer();
+      },
+      true,
+    );
   }
 
   clearFilters(): void {
-
+    //Clear input fields
+    this.userData = {};
+    this.filteredPartners = [...this.partners];
   }
 
   searchPackages(event: any) {
     this.filteredPackages = event.query ?
       this.packages.filter(p => p.label.toLowerCase().indexOf(event.query.toLowerCase()) == 0) :
       this.packages;
+  }
+
+  protected onUpload($event: any) {
+    let file = $event.files[0];
+    const fileReader = new FileReader();
+
+    fileReader.onloadend = () => {
+      this.partnerDetails.logo = fileReader.result as string;
+      console.log(this.partnerDetails.logo);
+    };
+
+    fileReader.readAsDataURL(file);
+  }
+
+  protected loadLazy($event: any) {
+    if ($event) {
+      this.search.pageNumber = $event.first;
+      this.search.pageSize = $event.rows;
+      this.loadPartnersFromServer();
+    }
   }
 }

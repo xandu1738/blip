@@ -1,5 +1,6 @@
 package com.ceres.blip.services;
 
+import com.ceres.blip.dtos.ListResponseDto;
 import com.ceres.blip.exceptions.AuthorizationRequiredException;
 import com.ceres.blip.models.database.PartnerModel;
 import com.ceres.blip.models.enums.AppDomains;
@@ -10,9 +11,11 @@ import com.ceres.blip.utils.LocalUtilsService;
 import com.ceres.blip.utils.LocalFileManager;
 import com.ceres.blip.utils.OperationReturnObject;
 import com.fasterxml.jackson.databind.JsonNode;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
@@ -20,6 +23,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +33,8 @@ public class PartnersService extends LocalUtilsService {
     private final PartnersRepository partnersRepository;
 
 
-    public OperationReturnObject addNewPartner(JsonNode request) {
+    @CacheEvict(value = "partners", allEntries = true)
+    public OperationReturnObject addNewPartner(JsonNode request,HttpServletRequest httpServletRequest) {
         belongsTo(AppDomains.BACK_OFFICE);
 
         JsonNode data = getRequestData(request);
@@ -41,6 +47,12 @@ public class PartnersService extends LocalUtilsService {
         String logo = data.get("logo").asText();
 
         String partnerCode = partnerName.toUpperCase().replace(" ", "_");
+
+        Optional<PartnerModel> duplicate = partnersRepository.findByPartnerCode(partnerCode);
+        if (duplicate.isPresent()) {
+            throw new IllegalArgumentException("Partner with code " + partnerCode + " already exists.");
+        }
+
         PartnerModel partnerModel = new PartnerModel();
         partnerModel.setPartnerName(partnerName);
         partnerModel.setPartnerCode(partnerCode);
@@ -51,14 +63,20 @@ public class PartnersService extends LocalUtilsService {
         partnerModel.setBusinessReference(data.get("business_reference").asText());
         partnerModel.setActive(data.get("active").asBoolean());
 
+        partnersRepository.flush();
+
         if (StringUtils.isNotBlank(logo)) {
             if (!logo.startsWith("data:image/")) {
                 throw new IllegalArgumentException("Logo must be a base64 encoded image string.");
             }
 
-            String encodedString = logo.substring(logo.indexOf(',') + 1);
             try {
-                String logoFilePath = localFileManager.storeBase64File(encodedString, generateRandomString(20L), FileCategories.PARTNER_LOGO);
+                String logoFilePath = localFileManager.handleFileUpload(
+                        logo,
+                        partnerModel.getId(),
+                        FileCategories.PARTNER_LOGO,
+                        httpServletRequest);
+
                 partnerModel.setLogo(logoFilePath);
             } catch (IOException e) {
                 throw new IllegalStateException(e.getMessage());
@@ -81,7 +99,7 @@ public class PartnersService extends LocalUtilsService {
     }
 
     @CachePut(value = "partners", key = "#request.data.id")
-    public OperationReturnObject editPartnerInfo(JsonNode request) {
+    public OperationReturnObject editPartnerInfo(JsonNode request,HttpServletRequest httpServletRequest) {
         belongsTo(AppDomains.BACK_OFFICE);
 
         JsonNode data = getRequestData(request);
@@ -119,7 +137,13 @@ public class PartnersService extends LocalUtilsService {
                 throw new IllegalArgumentException("Logo must be a base64 encoded image string.");
             }
             try {
-                String logoFilePath = localFileManager.storeBase64File(logo, generateRandomString(20L), FileCategories.PARTNER_LOGO);
+//                String logoFilePath = localFileManager.storeBase64File(logo, generateRandomString(20L), FileCategories.PARTNER_LOGO);
+                String logoFilePath = localFileManager.handleFileUpload(
+                        logo,
+                        partnerModel.getId(),
+                        FileCategories.PARTNER_LOGO,
+                        httpServletRequest);
+
                 partnerModel.setLogo(logoFilePath);
             } catch (IOException e) {
                 throw new IllegalStateException(e.getMessage());
@@ -142,12 +166,20 @@ public class PartnersService extends LocalUtilsService {
 
     @Cacheable(value = "partners", key = "#pageNumber + '-' + #pageSize")
     public OperationReturnObject fetchPartnersList(int pageNumber, int pageSize) throws AuthorizationRequiredException {
-//        belongsTo(AppDomains.BACK_OFFICE);
-//        requiresAuth();
+        belongsTo(AppDomains.BACK_OFFICE);
+        requiresAuth();
 
-        List<PartnerModel> partners = partnersRepository.findAll(PageRequest.of(pageNumber, pageSize)).toList();
+        List<PartnerModel> partners = partnersRepository.findAll(PageRequest.of(pageNumber, pageSize))
+                .toList();
+        //Total count of partners
+        Optional<Map<String,Object>> partnersCount = partnersRepository.partnersCount();
 
-        return new OperationReturnObject(200, "Partners list successfully fetched.", partners);
+        Long count = 10L;
+        if (partnersCount.isPresent()){
+            count = (Long) partnersCount.get().get("count");
+        }
+        ListResponseDto listResponseDto = new ListResponseDto(count, partners);
+        return new OperationReturnObject(200, "Partners list successfully fetched.", listResponseDto);
     }
 
     @CachePut(value = "partners", key = "#request.data.id")
