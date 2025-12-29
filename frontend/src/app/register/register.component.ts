@@ -1,19 +1,20 @@
 import {Component, HostListener, OnInit} from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { CommonModule, NgOptimizedImage } from '@angular/common';
-import { Router } from '@angular/router';
-import { AuthService } from '../services/auth.service';
-import { NotificationService } from '../services/notification.service';
-import { LoaderService } from '../services/loader.service';
-import { CreateUserRequest } from '../models/user.models';
-import { TableModule } from 'primeng/table';
-import { Dialog, DialogModule } from 'primeng/dialog';
-import { ButtonDirective } from 'primeng/button';
-import { InputText } from 'primeng/inputtext';
-import { RemoteService } from '../services/remoteService';
-import { AccordionModule } from 'primeng/accordion';
+import {FormsModule} from '@angular/forms';
+import {CommonModule, NgOptimizedImage} from '@angular/common';
+import {Router} from '@angular/router';
+import {AuthService} from '../services/auth.service';
+import {NotificationService} from '../services/notification.service';
+import {LoaderService} from '../services/loader.service';
+import {CreateUserRequest} from '../models/user.models';
+import {TableModule} from 'primeng/table';
+import {Dialog, DialogModule} from 'primeng/dialog';
+import {Button, ButtonDirective} from 'primeng/button';
+import {InputText} from 'primeng/inputtext';
+import {RemoteService} from '../services/remoteService';
+import {AccordionModule} from 'primeng/accordion';
 import {FloatLabelModule} from 'primeng/floatlabel';
-import { DatePickerModule } from 'primeng/datepicker';
+import {DatePickerModule} from 'primeng/datepicker';
+import {AutoComplete} from 'primeng/autocomplete';
 
 interface Partner {
   partnerName: string;
@@ -41,7 +42,9 @@ interface Partner {
     NgOptimizedImage,
     AccordionModule,
     FloatLabelModule,
-    DatePickerModule
+    DatePickerModule,
+    AutoComplete,
+    Button
   ],
   templateUrl: './register.html',
   styleUrls: ['./register.css']
@@ -61,13 +64,23 @@ export class RegisterComponent implements OnInit {
     type: 'core'
   };
 
+  packages = [
+    {label: 'Transport', value: 'TRANSPORT'},
+    {label: 'Logistics', value: 'LOGISTICS'},
+    {label: 'Full Package', value: 'FULL'},
+  ];
+
+  filteredPackages: any[];
+
   constructor(
     private authService: AuthService,
     private remoteService: RemoteService,
     private router: Router,
     private notificationService: NotificationService,
     private loaderService: LoaderService
-  ) {}
+  ) {
+    this.filteredPackages = [...this.packages];
+  }
 
   ngOnInit(): void {
     this.loadPartnersFromServer();
@@ -114,7 +127,7 @@ export class RegisterComponent implements OnInit {
     const key = input.id;
     const value = input.value.toLowerCase();
 
-    this.userData = { ...this.userData, [key]: value };
+    this.userData = {...this.userData, [key]: value};
 
     this.filteredPartners = this.partners.filter(partner => {
       return Object.keys(this.userData).every(k => {
@@ -140,7 +153,13 @@ export class RegisterComponent implements OnInit {
     this.showAddDialog = false;
   }
 
-  clearFilters():void{
+  clearFilters(): void {
 
+  }
+
+  searchPackages(event: any) {
+    this.filteredPackages = event.query ?
+      this.packages.filter(p => p.label.toLowerCase().indexOf(event.query.toLowerCase()) == 0) :
+      this.packages;
   }
 }

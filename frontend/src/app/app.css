@@ -43,17 +43,11 @@
 .p-menubar-item {
   /*color:;*/
 
-  :hover{
+  :hover {
     background-color: var(--accent);
   }
 
 }
-
-
-
-
-
-
 
 
 /*cover shader*/

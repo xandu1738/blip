@@ -33,9 +33,11 @@ public class SystemUserModel implements UserDetails {
     @Basic
     @Column(name = "email")
     private String email;
+
+    //We use userName because we do not want it to collide with the username column presented by implementing UserDetails
     @Basic
     @Column(name = "username")
-    private String username;
+    private String userName;
     @Basic
     @Column(name = "role_code")
     private String roleCode;
