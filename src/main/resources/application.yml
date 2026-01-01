@@ -98,9 +98,6 @@ server:
   jetty:
     connection-idle-timeout: 150000 # 150 seconds
 
-gcp:
-  bucket:
-    name: ${gcpBucketName}
 
 application:
   url: https://blip.sakisofts.com
