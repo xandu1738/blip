@@ -47,6 +47,16 @@ public enum Constants {
     STATUS("status"),
     PRICE("price"),
     AMENITIES("amenities"),
-    REVIEW_COUNT("reviewCount");
+    REVIEW_COUNT("reviewCount"),
+
+    PARTNER_NAME("partner_name"),
+    ACCOUNT_NUMBER("account_number"),
+    CONTACT_PERSON("contact_person"),
+    CONTACT_PHONE("contact_phone"),
+    ACCOUNT_ID("account_id"),
+    BUSINESS_REFERENCE("business_reference"),
+    ACTIVE("active"),
+    USER_NOT_FOUND("User not found"),
+    PACKAGE("package");
     private final String value;
 }

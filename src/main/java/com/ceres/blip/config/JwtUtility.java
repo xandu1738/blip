@@ -49,7 +49,7 @@ public class JwtUtility {
         };
     }
 
-    public boolean isTokenValid(String token, UserDetails userDetails) throws Exception {
+    public boolean isTokenValid(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername())) && !isTokenExpired(token, username);
     }
@@ -62,19 +62,18 @@ public class JwtUtility {
      * and will also check of the user has already requested for another token, requesting for another token
      * makes all the previously generated token expired.
      */
-    private boolean isTokenExpired(String token, String email) throws Exception {
-        SystemUserModel usersModel = userRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalStateException("User not found"));
+    private boolean isTokenExpired(String token, String email) {
+        SystemUserModel usersModel = userRepository.findByEmail(email).orElseThrow(IllegalStateException::new);
         if (usersModel == null) {
             throw new IllegalStateException("User not found");
         } else if (extractExpiration(token).before(new Date())) {
-            throw new Exception("SESSION EXPIRED");
+            throw new IllegalStateException("SESSION EXPIRED");
         } else if (usersModel.getLastLoggedInAt() == null) {
             throw new IllegalStateException("INVALID TOKEN");
         } else if (extractIssuedAt(token).after(usersModel.getLastLoggedInAt())) {
-            throw new Exception("EXPIRED TOKEN USED");
-        } else if (!usersModel.getIsActive()) {
-            throw new Exception("ACCOUNT INACTIVE");
+            throw new IllegalStateException("EXPIRED TOKEN USED");
+        } else if (Boolean.FALSE.equals(usersModel.getIsActive())) {
+            throw new IllegalStateException("ACCOUNT INACTIVE");
         }
         return false;
     }
