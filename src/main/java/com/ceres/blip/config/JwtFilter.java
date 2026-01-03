@@ -60,6 +60,15 @@ public class JwtFilter extends OncePerRequestFilter {
                             new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                     authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                } else {
+                    // Token validation failed - environment mismatch
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    response.setContentType("application/json");
+                    response.getWriter().write(
+                            "{\"error\": \"Token is not valid for this environment. " +
+                            "Please login again from this client.\"}"
+                    );
+                    return;
                 }
             }
         } catch (ExpiredJwtException e) {
