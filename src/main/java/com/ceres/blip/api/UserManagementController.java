@@ -5,6 +5,7 @@ import com.ceres.blip.services.UserManagementService;
 import com.ceres.blip.utils.OperationReturnObject;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,13 +23,13 @@ public class UserManagementController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<OperationReturnObject> login(@RequestBody JsonNode request) {
-        return ResponseEntity.ok(userManagementService.login(request));
+    public ResponseEntity<OperationReturnObject> login(@RequestBody JsonNode request, HttpServletRequest httpServletRequest) {
+        return ResponseEntity.ok(userManagementService.login(request, httpServletRequest));
     }
 
     @PostMapping("/refresh-token")
-    public ResponseEntity<OperationReturnObject> refreshToken(@RequestBody JsonNode request) throws AuthorizationRequiredException {
-        return ResponseEntity.ok(userManagementService.refreshToken(request));
+    public ResponseEntity<OperationReturnObject> refreshToken(@RequestBody JsonNode request,HttpServletRequest httpServletRequest) throws AuthorizationRequiredException {
+        return ResponseEntity.ok(userManagementService.refreshToken(request,httpServletRequest));
     }
 
     @GetMapping("/users-list/{pageNumber}/{pageSize}")
