@@ -15,6 +15,7 @@ import com.ceres.blip.utils.LocalUtilsService;
 import com.ceres.blip.utils.OperationReturnObject;
 import com.ceres.blip.utils.events.UserRegistrationEvent;
 import com.fasterxml.jackson.databind.JsonNode;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -52,7 +53,7 @@ public class UserManagementService extends LocalUtilsService {
     private final ApplicationEventPublisher publisher;
 
 
-    public OperationReturnObject login(JsonNode request) {
+    public OperationReturnObject login(JsonNode request, HttpServletRequest httpServletRequest) {
         JsonNode data = getRequestData(request);
 
         requires(data, USER_EMAIL, USER_PASSWORD);
@@ -69,8 +70,8 @@ public class UserManagementService extends LocalUtilsService {
         }
 
         final SystemUserModel userDetails = userDetailService.loadUserByUsername(email);
-        final String accessToken = jwtUtility.generateAccessToken(userDetails, "ACCESS");
-        final String refreshToken = jwtUtility.generateAccessToken(userDetails, "REFRESH");
+        final String accessToken = jwtUtility.generateToken(userDetails, "ACCESS", httpServletRequest);
+        final String refreshToken = jwtUtility.generateToken(userDetails, "REFRESH", httpServletRequest);
 
         UserDto profile = userDtoMapper.apply(userDetails);
 
@@ -88,7 +89,7 @@ public class UserManagementService extends LocalUtilsService {
         return new OperationReturnObject(200, "Welcome back " + userDetails.getUsername(), response);
     }
 
-    public OperationReturnObject refreshToken(JsonNode request) throws AuthorizationRequiredException {
+    public OperationReturnObject refreshToken(JsonNode request, HttpServletRequest httpServletRequest) throws AuthorizationRequiredException {
         requiresAuth();
         requires(request, "data");
 
@@ -99,11 +100,12 @@ public class UserManagementService extends LocalUtilsService {
             String refreshToken = data.get(REFRESH_TOKEN).asText();
             String tokenType = jwtUtility.extractTokenType(refreshToken);
             log.info(tokenType);
-            if (!Objects.equals(tokenType, "REFRESH"))
+            if (!Objects.equals(tokenType, "REFRESH")) {
                 throw new IllegalArgumentException("Refresh Token Required. You have provided an access token.");
+            }
 
-            if (jwtUtility.isTokenValid(refreshToken, getContextUserDetails())) {
-                String token = jwtUtility.generateAccessToken(getContextUserDetails(), "ACCESS");
+            if (jwtUtility.isTokenValid(refreshToken, getContextUserDetails(), httpServletRequest)) {
+                String token = jwtUtility.generateToken(getContextUserDetails(), "ACCESS", httpServletRequest);
                 return new OperationReturnObject(200, "Token successfully Refreshed.", token);
             }
             return new OperationReturnObject(401, "Invalid Refresh Token", null);

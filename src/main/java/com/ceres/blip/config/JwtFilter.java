@@ -43,34 +43,41 @@ public class JwtFilter extends OncePerRequestFilter {
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
         final String userTag;
-        if (authHeader == null || !authHeader.startsWith("Bearer ")){
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
         jwt = authHeader.substring(7);
         try {
 
-        userTag = jwtUtility.extractUsername(jwt);
-        if (userTag != null && SecurityContextHolder.getContext().getAuthentication() == null){
-            SystemUserModel userDetails = userDetailsService.loadUserByUsername(userTag);
-            if (userDetails == null){
-                throw new IllegalStateException("User not found");
+            userTag = jwtUtility.extractUsername(jwt);
+            if (userTag != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                SystemUserModel userDetails = userDetailsService.loadUserByUsername(userTag);
+
+                if (jwtUtility.isTokenValid(jwt, userDetails,request)) {
+                    // check if is_authority_admin and add that permission here
+                    UsernamePasswordAuthenticationToken authenticationToken =
+                            new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                    authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                } else {
+                    // Token validation failed - environment mismatch
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    response.setContentType("application/json");
+                    response.getWriter().write(
+                            "{\"error\": \"Token is not valid for this environment. " +
+                            "Please login again from this client.\"}"
+                    );
+                    return;
+                }
             }
-            if (jwtUtility.isTokenValid(jwt, userDetails)){
-                // check if is_authority_admin and add that permission here
-                UsernamePasswordAuthenticationToken authenticationToken =
-                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                authenticationToken.setDetails( new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-            }
-        }
         } catch (ExpiredJwtException e) {
             var errorDetails = new OperationReturnObject(HttpStatus.UNAUTHORIZED.value(), "TOKEN EXPIRED", null);
             response.setStatus(HttpStatus.OK.value());
             response.setContentType(String.valueOf(MediaType.APPLICATION_JSON));
             mapper.writeValue(response.getWriter(), errorDetails);
             return;
-        } catch (Exception e){
+        } catch (Exception e) {
             response.setStatus(HttpStatus.OK.value());
             response.setContentType(String.valueOf(MediaType.APPLICATION_JSON));
             mapper.writeValue(response.getWriter(), new OperationReturnObject(HttpStatus.UNAUTHORIZED.value(), e.getMessage(), null));

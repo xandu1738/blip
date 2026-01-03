@@ -2,9 +2,7 @@
 spring:
   jackson:
     serialization:
-      write-dates-as-timestamps: false
       fail-on-empty-beans: false
-      write-null-map-values: false
     deserialization:
       fail-on-unknown-properties: false
       accept-empty-string-as-null-object: true
@@ -26,6 +24,7 @@ spring:
       ddl-auto: none
 
     show-sql: false
+    open-in-view: false
 
   liquibase:
     change-log: classpath:liquibase/db.changelog.xml
