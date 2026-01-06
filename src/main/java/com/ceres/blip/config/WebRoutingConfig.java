@@ -1,7 +1,12 @@
 package com.ceres.blip.config;
 
 import org.jspecify.annotations.NonNull;
+import org.springframework.boot.web.error.ErrorPage;
+import org.springframework.boot.web.server.WebServerFactoryCustomizer;
+import org.springframework.boot.web.server.servlet.ConfigurableServletWebServerFactory;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -14,7 +19,7 @@ import java.nio.file.Paths;
 public class WebRoutingConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(@NonNull ResourceHandlerRegistry registry) {
-        // Configure paths for uploaded files outside project build
+        // Configure a path for uploaded files outside the project build
         Path uploadPath = Paths.get(System.getProperty("user.dir"), "web", "upload");
         String uploadLocation = uploadPath.toUri().toString();
 
@@ -54,8 +59,8 @@ public class WebRoutingConfig implements WebMvcConfigurer {
     }
 
 
-//    @Bean
-//    public WebServerFactoryCustomizer<ConfigurableServletWebServerFactory> containerCustomizer() {
-//        return container -> container.addErrorPages(new ErrorPage(HttpStatus.NOT_FOUND, "/urlNotFound"));
-//    }
+    @Bean
+    public WebServerFactoryCustomizer<ConfigurableServletWebServerFactory> containerCustomizer() {
+        return container -> container.addErrorPages(new ErrorPage(HttpStatus.NOT_FOUND, "/urlNotFound"));
+    }
 }
