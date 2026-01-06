@@ -21,7 +21,6 @@ import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -79,7 +78,7 @@ public class AuditTrailFilter extends OncePerRequestFilter {
             Duration duration = Duration.between(startTime, Instant.now());
 
             // Log response
-            logResponse(wrappedRequest, wrappedResponse, duration, correlationId, accessLog);
+            logResponse(wrappedResponse, duration, accessLog);
 
             // CRITICAL: Copy body to actual response
             wrappedResponse.copyBodyToResponse();
@@ -108,50 +107,20 @@ public class AuditTrailFilter extends OncePerRequestFilter {
             accessLog.setRequest(queryString);
 
             Optional<SystemUserModel> loggedInUser = getLoggedInUser(request);
-            if (loggedInUser.isPresent()){
+            if (loggedInUser.isPresent()) {
                 accessLog.setPartnerCode(loggedInUser.get().getPartnerCode());
                 accessLog.setUsername(loggedInUser.get().getEmail());
             }
 
             accessLog.setUserAgent(userAgent);
 
-            StringBuilder logMessage = new StringBuilder();
-            logMessage.append("\n╔════════════════════════════════════════════════════════════════════════════════\n");
-            logMessage.append("║ INCOMING REQUEST\n");
-            logMessage.append("╠════════════════════════════════════════════════════════════════════════════════\n");
-            logMessage.append(String.format("║ Correlation ID : %s\n", correlationId));
-            logMessage.append(String.format("║ Method         : %s\n", request.getMethod()));
-            logMessage.append(String.format("║ URI            : %s\n", request.getRequestURI()));
-            if (queryString != null) {
-                logMessage.append(String.format("║ Query String   : %s\n", queryString));
-            }
-
-            logMessage.append(String.format("║ Remote Address : %s\n", clientIpAddress));
-            logMessage.append(String.format("║ User Agent     : %s\n", userAgent));
-
-            // Log headers (excluding sensitive ones)
-            logMessage.append("║ Headers        :\n");
-            Collections.list(request.getHeaderNames()).stream()
-                    .filter(this::shouldLogHeader)
-                    .forEach(headerName ->
-                            logMessage.append(String.format("║   %s: %s\n",
-                                    headerName,
-                                    maskSensitiveHeader(headerName, request.getHeader(headerName))))
-                    );
-
             // Log request body for POST/PUT/PATCH
             if (hasBody(request.getMethod())) {
                 String requestBody = getRequestBody(request);
                 if (requestBody != null && !requestBody.isEmpty()) {
-                    logMessage.append("║ Request Body   :\n");
-                    logMessage.append(formatJsonPayload(requestBody, "║   "));
+                    accessLog.setRequest(requestBody);
                 }
             }
-
-            logMessage.append("╚════════════════════════════════════════════════════════════════════════════════");
-
-            log.info(logMessage.toString());
-
         } catch (Exception e) {
             log.error("Error logging request", e);
         }
@@ -160,7 +129,7 @@ public class AuditTrailFilter extends OncePerRequestFilter {
     private Optional<SystemUserModel> getLoggedInUser(ContentCachingRequestWrapper request) {
         //Get Logged in user from Bearer token
         String authHeader = request.getHeader("Authorization");
-        if (StringUtils.isBlank(authHeader)){
+        if (StringUtils.isBlank(authHeader)) {
             return Optional.empty();
         }
         authHeader = authHeader.replace("Bearer ", "");
@@ -172,50 +141,22 @@ public class AuditTrailFilter extends OncePerRequestFilter {
     /**
      * Log outgoing response details
      */
-    private void logResponse(
-            ContentCachingRequestWrapper request,
-            ContentCachingResponseWrapper response,
-            Duration duration,
-            String correlationId, AccessLogModel accessLog) {
-
+    private void logResponse(ContentCachingResponseWrapper response, Duration duration, AccessLogModel accessLog) {
         try {
-            StringBuilder logMessage = new StringBuilder();
-            logMessage.append("\n╔════════════════════════════════════════════════════════════════════════════════\n");
-            logMessage.append("║ OUTGOING RESPONSE\n");
-            logMessage.append("╠════════════════════════════════════════════════════════════════════════════════\n");
-            logMessage.append(String.format("║ Correlation ID : %s\n", correlationId));
-            logMessage.append(String.format("║ Method         : %s\n", request.getMethod()));
-            logMessage.append(String.format("║ URI            : %s\n", request.getRequestURI()));
-            logMessage.append(String.format("║ Status Code    : %d\n", response.getStatus()));
-            logMessage.append(String.format("║ Duration       : %d ms\n", duration.toMillis()));
-            logMessage.append(String.format("║ Content Type   : %s\n", response.getContentType()));
-
-
 
             // Log response body for non-binary responses
             if (shouldLogResponseBody(response)) {
                 String responseBody = getResponseBody(response);
                 if (responseBody != null && !responseBody.isEmpty()) {
-                    logMessage.append("║ Response Body  :\n");
-                    logMessage.append(formatJsonPayload(responseBody, "║   "));
 
+                    log.info("Response took {}", duration);
                     accessLog.setResponse(responseBody);
+                    //FIXME: Include the duration in the access log data saved.
 
-                    if (response.getStatus() >= 400){
+                    if (response.getStatus() >= 400) {
                         accessLog.setIsError(true);
                     }
                 }
-            }
-
-            logMessage.append("╚════════════════════════════════════════════════════════════════════════════════");
-
-            // Use different log levels based on status code
-            if (response.getStatus() >= 500) {
-                log.error(logMessage.toString());
-            } else if (response.getStatus() >= 400) {
-                log.warn(logMessage.toString());
-            } else {
-                log.info(logMessage.toString());
             }
 
         } catch (Exception e) {
