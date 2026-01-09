@@ -2,6 +2,7 @@ package com.ceres.blip.models.database;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.jspecify.annotations.NonNull;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -35,9 +36,9 @@ public class SystemUserModel implements UserDetails {
     private String email;
 
     //We use userName because we do not want it to collide with the username column presented by implementing UserDetails
-    @Basic
-    @Column(name = "username")
-    private String userName;
+//    @Basic
+//    @Column(name = "username")
+//    private String userName;
     @Basic
     @Column(name = "role_code")
     private String roleCode;
@@ -63,13 +64,15 @@ public class SystemUserModel implements UserDetails {
     }
 
     @Override
+    @NonNull
     public String getUsername() {
         return email;
     }
 
     @Override
+    @NonNull
     public Collection<SimpleGrantedAuthority> getAuthorities() {
-        //  we shall be setting these up when we login but for
+        //  we shall be setting these up when we log in but for
         //  now let's just maintain an empty array
         return authorities;
     }

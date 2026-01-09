@@ -73,6 +73,11 @@ export class App implements OnInit {
         icon: 'pi pi-box',
         items:[
           {
+            label: 'Access Users',
+            icon: 'pi pi-users',
+            command: () =>{this.router.navigate(['/users'])}
+          },
+          {
             label: 'Bus Booking',
             icon: 'pi pi-ticket',
             command: () =>{this.router.navigate(['//dashboard'])}

@@ -1,0 +1,36 @@
+<p-table
+  [value]="usersList"
+  [paginator]="true"
+  showGridlines
+  [rows]="15"
+  lazy="true"
+  [totalRecords]="search.totalRecords"
+  (onLazyLoad)="loadLazy($event)"
+  [tableStyle]="{ 'min-width': '50rem' }"
+  [rowsPerPageOptions]="[15, 20,50,100]"
+>
+  <ng-template #header>
+    <tr>
+      <th id="fname">First Name</th>
+      <th id="lname">Last Name</th>
+      <th id="email">Email</th>
+      <th id="role">Role Code</th>
+      <th id="domain">Domain</th>
+      <th id="active">Active</th>
+      <th id="created">Created At</th>
+      <th id="last-login">Last Login</th>
+    </tr>
+  </ng-template>
+  <ng-template #body let-customer>
+    <tr>
+      <td>{{ customer?.firstName || '---' }}</td>
+      <td>{{ customer?.lastName || '---' }}</td>
+      <td>{{ customer?.email || '---' }}</td>
+      <td>{{ customer?.roleCode || '---' }}</td>
+      <td>{{ customer?.domain || '---' }}</td>
+      <td>{{ customer?.active || '---' }}</td>
+      <td>{{ customer?.createdAt || '---' }}</td>
+      <td>{{ customer?.lastLoggedInAt || 'NEVER' }}</td>
+    </tr>
+  </ng-template>
+</p-table>

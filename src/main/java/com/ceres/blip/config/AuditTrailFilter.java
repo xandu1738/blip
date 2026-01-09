@@ -68,7 +68,7 @@ public class AuditTrailFilter extends OncePerRequestFilter {
         accessLog.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         try {
             // Log incoming request
-            logRequest(wrappedRequest, correlationId, accessLog);
+            logRequest(wrappedRequest, accessLog);
 
             // Process the request
             filterChain.doFilter(wrappedRequest, wrappedResponse);
@@ -91,7 +91,7 @@ public class AuditTrailFilter extends OncePerRequestFilter {
     /**
      * Log incoming request details
      */
-    private void logRequest(ContentCachingRequestWrapper request, String correlationId, AccessLogModel accessLog) {
+    private void logRequest(ContentCachingRequestWrapper request, AccessLogModel accessLog) {
         try {
             String userAgent = request.getHeader("User-Agent");
             String queryString = request.getQueryString();

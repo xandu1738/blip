@@ -10,6 +10,7 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { authGuard } from './guards/auth.guard';
 import {Configuration} from './configuration/configuration';
+import {Users} from './UserManagement/users/users';
 
 export const routes: Routes = [
   {
@@ -38,6 +39,11 @@ export const routes: Routes = [
   {
     path: 'partners',
     component: ParcelsComponent,
+    canActivate: [authGuard]
+  },
+  {
+    path: 'users',
+    component: Users,
     canActivate: [authGuard]
   },
   {

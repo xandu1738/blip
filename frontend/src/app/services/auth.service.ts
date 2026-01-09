@@ -17,8 +17,8 @@ import {MessageService} from 'primeng/api';
   providedIn: 'root'
 })
 export class AuthService {
-  private _isLoggedIn = new BehaviorSubject<boolean>(this.hasValidToken());
-  private _currentUser = new BehaviorSubject<User | null>(this.getUserFromStorage());
+  private _isLoggedIn = new BehaviorSubject<boolean>(false);
+  private _currentUser = new BehaviorSubject<User | null>(null);
 
   isLoggedIn = this._isLoggedIn.asObservable();
   currentUser = this._currentUser.asObservable();
@@ -29,8 +29,10 @@ export class AuthService {
   private readonly USER_KEY = 'blip_user';
 
   constructor(private http: HttpClient, private messageService: MessageService) {
-    // Initialize with demo user for testing
+    // Initialize with a demo user for testing
     // this.initializeDemoMode();
+    this._isLoggedIn.next(this.hasValidToken());
+    this._currentUser.next(this.getUserFromStorage());
   }
 
   login(email: string, password: string): Observable<LoginResponse> {
