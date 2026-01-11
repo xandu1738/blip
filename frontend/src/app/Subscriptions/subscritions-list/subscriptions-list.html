@@ -1,0 +1,103 @@
+<div class="subscription-page">
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <h1 class="title">Choose Your Plan</h1>
+      <p class="subtitle">Scale your business with the perfect subscription</p>
+
+      <!-- Billing Toggle -->
+      <div class="billing-toggle">
+        <button
+          [class.active]="billingCycle === 'monthly'"
+          (click)="billingCycle = 'monthly'"
+          class="toggle-btn">
+          Monthly
+        </button>
+        <button
+          [class.active]="billingCycle === 'annual'"
+          (click)="billingCycle = 'annual'"
+          class="toggle-btn">
+          Annual
+          <span class="savings-badge">Save 15%</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Pricing Cards -->
+    <div class="pricing-grid">
+      @for ( plan of plans; track plan.id){
+        <div
+          class="pricing-card"
+          [class.popular]="plan.popular"
+          [class.hovered]="hoveredCard === plan.id"
+          (mouseenter)="hoveredCard = plan.id"
+          (mouseleave)="hoveredCard = null">
+
+          @if (plan.popular){
+            <div class="popular-badge">
+              Most Popular
+            </div>
+          }
+
+
+          <div class="card-content" [attr.data-color]="plan.color">
+            <div class="gradient-overlay" [attr.data-color]="plan.color"></div>
+
+            <div class="card-inner">
+              <!-- Icon -->
+              <div class="icon-wrapper" [attr.data-color]="plan.color">
+                <i [class]="plan.icon"></i>
+              </div>
+
+              <!-- Plan Name -->
+              <h3 class="plan-name">{{ plan.name }}</h3>
+              <p class="plan-description">{{ plan.description }}</p>
+
+              <!-- Price -->
+              <div class="price-section">
+                <div class="price-wrapper">
+                  <span class="price">${{ getPrice(plan) }}</span>
+                  <span class="period">/{{ billingCycle === 'monthly' ? 'mo' : 'yr' }}</span>
+                </div>
+                @if (billingCycle === 'annual'){
+                  <p class="savings-text">
+                    Save {{ getSavings(plan) }}% with annual billing
+                  </p>
+                }
+
+              </div>
+
+              <!-- CTA Button -->
+              <button
+                class="cta-button"
+                [class.popular-btn]="plan.popular"
+                [attr.data-color]="plan.color">
+                Get Started
+              </button>
+
+              <!-- Features -->
+              <div class="features-list">
+                @for (feature of plan.features; track feature){
+                  <div class="feature-item">
+                    <div class="check-icon" [attr.data-color]="plan.color">
+                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                        <path d="M10 3L4.5 8.5L2 6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </div>
+                    <span>{{ feature }}</span>
+                  </div>
+                }
+
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Footer Note -->
+    <div class="footer-note">
+      <p>All plans include a 14-day free trial. No credit card required.</p>
+    </div>
+  </div>
+</div>
