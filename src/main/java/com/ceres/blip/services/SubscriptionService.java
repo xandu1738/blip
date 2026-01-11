@@ -12,6 +12,9 @@ import com.ceres.blip.utils.OperationReturnObject;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,7 +22,6 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class SubscriptionService extends LocalUtilsService {
-
     private final SubscriptionPlanRepository subscriptionPlanRepository;
     private final SubscriptionsRepository subscriptionsRepository;
 
@@ -46,18 +48,20 @@ public class SubscriptionService extends LocalUtilsService {
         return new OperationReturnObject(200, "Subscription Plan successfully added.", null);
     }
 
-    private OperationReturnObject getSubscriptionPlans(JsonNode request) {
-        List<SubscriptionPlanModel> plans = subscriptionPlanRepository.findAll();
+    @Cacheable(value = "subscription-plans", key = "#pageNumber+#pageSize")
+    public OperationReturnObject getSubscriptionPlans(int pageNumber, int pageSize) {
+        List<SubscriptionPlanModel> plans = subscriptionPlanRepository.findAll(PageRequest.of(pageNumber, pageSize))
+                .toList();
         return new OperationReturnObject(200, null, plans);
     }
 
-    private OperationReturnObject saveSubscription(JsonNode request) {
+    public OperationReturnObject saveSubscription(JsonNode request) {
         requires(request, Constants.DATA.getValue());
         JsonNode data = getRequestData(request);
         return null;
     }
 
-    private OperationReturnObject getSubscriptions(JsonNode request) {
+    public OperationReturnObject getSubscriptions(JsonNode request) {
         List<PartnerSubscriptionModel> subscriptions = subscriptionsRepository.findAll();
         return new OperationReturnObject(200, null, subscriptions);
     }

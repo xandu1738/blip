@@ -41,13 +41,56 @@
 /*  --blue-nine: #CAF0F8;*/
 /*}*/
 :root {
-
   --text: #050316;
   --background: #fbfbfe;
   --primary: #236731;
   --secondary: #deffdb;
   --accent: #3dff98;
   --card: white;
+
+  --blue-icon-background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+  --green-icon-background: linear-gradient(
+    120deg,
+    hsl(131deg 100% 11%) 0%,
+    hsl(130deg 82% 15%) 7%,
+    hsl(126deg 67% 19%) 13%,
+    hsl(123deg 57% 23%) 20%,
+    hsl(120deg 51% 28%) 27%,
+    hsl(118deg 49% 31%) 33%,
+    hsl(116deg 47% 35%) 40%,
+    hsl(114deg 46% 39%) 47%,
+    hsl(112deg 45% 43%) 53%,
+    hsl(111deg 44% 46%) 60%,
+    hsl(109deg 44% 50%) 67%,
+    hsl(108deg 52% 54%) 73%,
+    hsl(106deg 60% 58%) 80%,
+    hsl(105deg 70% 62%) 87%,
+    hsl(103deg 83% 66%) 93%,
+    hsl(102deg 100% 70%) 100%
+  );
+  --orange-icon-background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+
+  --blue-icon-wrapper: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+  --green-icon-wrapper: linear-gradient(
+    120deg,
+    hsl(131deg 100% 11%) 0%,
+    hsl(130deg 82% 15%) 7%,
+    hsl(126deg 67% 19%) 13%,
+    hsl(123deg 57% 23%) 20%,
+    hsl(120deg 51% 28%) 27%,
+    hsl(118deg 49% 31%) 33%,
+    hsl(116deg 47% 35%) 40%,
+    hsl(114deg 46% 39%) 47%,
+    hsl(112deg 45% 43%) 53%,
+    hsl(111deg 44% 46%) 60%,
+    hsl(109deg 44% 50%) 67%,
+    hsl(108deg 52% 54%) 73%,
+    hsl(106deg 60% 58%) 80%,
+    hsl(105deg 70% 62%) 87%,
+    hsl(103deg 83% 66%) 93%,
+    hsl(102deg 100% 70%) 100%
+  );
+  --orange-icon-wrapper: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
 
   @media (prefers-color-scheme: dark) {
     --text: #eae9fc;
@@ -79,11 +122,11 @@
 /*  border-color: var(--primary);*/
 /*}*/
 
-.stat-card{
+.stat-card {
   background-color: var(--card);
 }
 
-.bg-background{
+.bg-background {
   background-color: var(--card);
 }
 
@@ -91,7 +134,7 @@
   background-color: white;
 }
 
-.text-secondary{
+.text-secondary {
   color: var(--text);
 }
 
@@ -115,11 +158,11 @@
 }
 
 
-.above{
+.above {
   z-index: 200 !important;
 }
 
-.below{
+.below {
   z-index: 0 !important;
 }
 
@@ -236,27 +279,6 @@ body {
   background-color: var(--background) !important;
   color: var(--text) !important;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 .p-button {

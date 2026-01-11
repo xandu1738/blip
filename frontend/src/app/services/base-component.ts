@@ -155,7 +155,7 @@ export abstract class BaseComponent implements OnInit {
     this.loaderService.display(false);
   }
 
-  protected sendRequestToServer(
+  protected sendGetOrPostRequestToServer(
     url: string,
     requestData: any,
     blockUi: boolean,
@@ -165,11 +165,18 @@ export abstract class BaseComponent implements OnInit {
     if (blockUi) {
       this.showLoading();
     }
-    let requestOperation: Observable<any> = this.helper.sendPostToServer(
-      this.BASE_URL + url,
-      requestData,
-      authenticated
-    );
+    let requestOperation: Observable<any>;
+    if (requestData){
+      requestOperation = this.helper.sendPostToServer(
+        this.BASE_URL + url,
+        requestData,
+        authenticated
+      );
+    }else {
+      requestOperation = this.helper.sendGetToServer(
+        this.BASE_URL + url,
+      )
+    }
 
     requestOperation.subscribe({
       next: (response: any) => {

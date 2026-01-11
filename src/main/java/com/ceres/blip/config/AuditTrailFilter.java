@@ -276,7 +276,7 @@ public class AuditTrailFilter extends OncePerRequestFilter {
     }
 
     /**
-     * Determine if request should be logged
+     * Determine if the request should be logged
      */
     private boolean shouldNotLog(HttpServletRequest request) {
         String uri = request.getRequestURI();
@@ -292,10 +292,6 @@ public class AuditTrailFilter extends OncePerRequestFilter {
         }
 
         // Skip health checks
-        if (uri.equals("/health") || uri.equals("/ping")) {
-            return true;
-        }
-
-        return false;
+        return uri.equals("/health") || uri.equals("/ping");
     }
 }

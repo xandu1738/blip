@@ -179,7 +179,7 @@ export class RegisterComponent extends BaseComponent implements OnInit {
 
   registerPartner(): void {
     // Example: just closes the dialog
-    this.sendRequestToServer(
+    this.sendGetOrPostRequestToServer(
       "partners/add-partner",
       {data: this.partnerDetails},
       true,

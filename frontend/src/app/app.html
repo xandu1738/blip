@@ -11,6 +11,10 @@
     <div class="">
       <app-login></app-login>
     </div>
+  } @else if (isLicensed) {
+    <div class="w-full">
+      <app-subscriptions-list></app-subscriptions-list>
+    </div>
   } @else {
     <div id="main-app" class="flex flex-col flex-1">
       <!-- Header -->

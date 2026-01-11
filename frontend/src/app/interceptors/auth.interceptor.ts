@@ -1,8 +1,8 @@
-import { HttpInterceptorFn, HttpRequest, HttpHandlerFn } from '@angular/common/http';
-import { inject } from '@angular/core';
-import { Router } from '@angular/router';
-import { catchError, switchMap, throwError } from 'rxjs';
-import { AuthService } from '../services/auth.service';
+import {HttpInterceptorFn, HttpRequest, HttpHandlerFn} from '@angular/common/http';
+import {inject} from '@angular/core';
+import {Router} from '@angular/router';
+import {catchError, EMPTY, switchMap, throwError} from 'rxjs';
+import {AuthService} from '../services/auth.service';
 
 export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, next: HttpHandlerFn) => {
   const authService = inject(AuthService);
@@ -14,7 +14,7 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, ne
   }
 
   const token = authService.getAccessToken();
-  
+
   // Add token to request if available
   let authReq = req;
   if (token) {
@@ -40,9 +40,14 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, ne
   return next(authReq).pipe(
     catchError((error) => {
       // Handle 401 errors - token expired or invalid
-      if (error.status === 401 && token) {
+      if (error.status === 401 && token && !req.headers.has('X-Skip-Auth')) {
+        let refreshToken = authService.refreshToken();
+        if (!refreshToken) {
+          router.navigate(['/login']);
+          return EMPTY;
+        }
         // Try to refresh the token
-        return authService.refreshToken().pipe(
+        return refreshToken.pipe(
           switchMap(() => {
             // Retry the original request with the new token
             const newToken = authService.getAccessToken();

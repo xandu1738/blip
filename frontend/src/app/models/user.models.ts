@@ -20,6 +20,7 @@ export interface LoginRequest {
 
 export interface LoginResponse {
   accessToken: string;
+  license: string;
   refreshToken: string;
   user: User;
   permissions: string[];

@@ -20,10 +20,9 @@ import org.thymeleaf.context.Context;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class MailService {
     private final JavaMailSender emailSender;
     private final TemplateEngine templateEngine;

@@ -17,7 +17,7 @@ public enum Constants {
     RECORDS("records"),
     DATA("data"),
     ADDED_BY("addedBy"),
-    USER_ID("userId"),
+    USER_ID("partnerCode"),
     CONTACT_NUMBER("contactNumber"),
     ID("id"),
     USERNAME("username"),

@@ -1,16 +1,18 @@
-import { Routes } from '@angular/router';
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { BusBookingComponent } from './bus-booking/bus-booking.component';
-import { ParcelsComponent } from './parcels/parcels.component';
-import { TrackingComponent } from './tracking/tracking.component';
-import { PaymentsComponent } from './payments/payments.component';
-import { ReportsComponent } from './reports/reports.component';
-import { SettingsComponent } from './settings/settings.component';
-import { LoginComponent } from './login/login.component';
-import { RegisterComponent } from './register/register.component';
-import { authGuard } from './guards/auth.guard';
+import {Routes} from '@angular/router';
+import {DashboardComponent} from './dashboard/dashboard.component';
+import {BusBookingComponent} from './bus-booking/bus-booking.component';
+import {ParcelsComponent} from './parcels/parcels.component';
+import {TrackingComponent} from './tracking/tracking.component';
+import {PaymentsComponent} from './payments/payments.component';
+import {ReportsComponent} from './reports/reports.component';
+import {SettingsComponent} from './settings/settings.component';
+import {LoginComponent} from './login/login.component';
+import {RegisterComponent} from './register/register.component';
+import {authGuard} from './guards/auth.guard';
 import {Configuration} from './configuration/configuration';
 import {Users} from './UserManagement/users/users';
+import {SubscriptionsList} from './Subscriptions/subscritions-list/subscriptions-list';
+import {licenseGuard} from './guards/license-guard';
 
 export const routes: Routes = [
   {
@@ -21,12 +23,12 @@ export const routes: Routes = [
   {
     path: 'bus_booking',
     component: BusBookingComponent,
-    canActivate: [authGuard]
+    canActivate: [authGuard, licenseGuard]
   },
   {
     path: 'dashboard',
     component: DashboardComponent,
-    canActivate: [authGuard]
+    canActivate: [authGuard, licenseGuard]
   },
   {
     path: 'login',
@@ -39,47 +41,51 @@ export const routes: Routes = [
   {
     path: 'partners',
     component: ParcelsComponent,
-    canActivate: [authGuard]
+    canActivate: [authGuard, licenseGuard]
   },
   {
     path: 'users',
     component: Users,
-    canActivate: [authGuard]
+    canActivate: [authGuard, licenseGuard]
   },
   {
     path: 'modules',
     component: ParcelsComponent,
-    canActivate: [authGuard]
+    canActivate: [authGuard, licenseGuard]
   },
   {
     path: 'parcels',
     component: ParcelsComponent,
-    canActivate: [authGuard]
+    canActivate: [authGuard, licenseGuard]
   },
   {
     path: 'payments',
     component: PaymentsComponent,
-    canActivate: [authGuard]
+    canActivate: [authGuard, licenseGuard]
   },
   {
     path: 'reports',
     component: ReportsComponent,
-    canActivate: [authGuard]
+    canActivate: [authGuard, licenseGuard]
   },
   {
     path: 'tracking',
     component: TrackingComponent,
-    canActivate: [authGuard]
+    canActivate: [authGuard, licenseGuard]
   },
   {
     path: 'settings',
     component: SettingsComponent,
-    canActivate: [authGuard]
+    canActivate: [authGuard, licenseGuard]
   },
   {
     path: 'configuration',
     component: Configuration,
-    canActivate: [authGuard]
+    canActivate: [authGuard, licenseGuard]
+  },
+  {
+    path: 'subscriptions',
+    component: SubscriptionsList
   },
   {
     path: '**',
