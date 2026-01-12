@@ -1,7 +1,7 @@
 package com.ceres.blip.api;
 
 import com.ceres.blip.services.TripService;
-import com.ceres.blip.utils.OperationReturnObject;
+import com.ceres.blip.dtos.OperationReturnObject;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

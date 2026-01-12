@@ -1,7 +1,7 @@
 package com.ceres.blip.api;
 
 import com.ceres.blip.services.SubscriptionService;
-import com.ceres.blip.utils.OperationReturnObject;
+import com.ceres.blip.dtos.OperationReturnObject;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

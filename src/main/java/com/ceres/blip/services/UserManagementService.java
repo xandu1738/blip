@@ -13,7 +13,7 @@ import com.ceres.blip.models.enums.DefaultRoles;
 import com.ceres.blip.repositories.SystemRolePermissionRepository;
 import com.ceres.blip.repositories.SystemUserRepository;
 import com.ceres.blip.utils.LocalUtilsService;
-import com.ceres.blip.utils.OperationReturnObject;
+import com.ceres.blip.dtos.OperationReturnObject;
 import com.ceres.blip.utils.events.UserRegistrationEvent;
 import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.servlet.http.HttpServletRequest;

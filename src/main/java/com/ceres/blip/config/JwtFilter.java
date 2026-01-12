@@ -2,7 +2,7 @@ package com.ceres.blip.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ceres.blip.models.database.SystemUserModel;
-import com.ceres.blip.utils.OperationReturnObject;
+import com.ceres.blip.dtos.OperationReturnObject;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

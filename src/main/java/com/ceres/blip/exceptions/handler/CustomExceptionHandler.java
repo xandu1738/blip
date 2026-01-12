@@ -1,6 +1,6 @@
 package com.ceres.blip.exceptions.handler;
 import com.ceres.blip.exceptions.ExpiredJwtException;
-import com.ceres.blip.utils.OperationReturnObject;
+import com.ceres.blip.dtos.OperationReturnObject;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.TypeMismatchException;
 import org.springframework.http.HttpStatus;
