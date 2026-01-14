@@ -1,4 +1,4 @@
-import {Component, signal, Input} from '@angular/core';
+import {Component, signal, Input, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {Header} from '../shared-components/Header/header/header';
 import {UIChart} from 'primeng/chart';
@@ -48,13 +48,7 @@ interface Expense {
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
-export class DashboardComponent {
-
-  avatar: string[] = [
-    "mike ross",
-    "jack hymnal"
-  ];
-  hater = signal("true");
+export class DashboardComponent implements OnInit{
   stats: Stat[] = [
     {
       label: 'Total Bookings',

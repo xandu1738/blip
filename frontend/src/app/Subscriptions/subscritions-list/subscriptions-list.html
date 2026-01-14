@@ -3,6 +3,15 @@
     <!-- Header -->
     <div class="header">
       <h1 class="title">Choose Your Plan</h1>
+      <div class="flex align-middle justify-around">
+        <p-button label="Enter product Key"
+                  size="small"
+                  icon="pi pi-arrow-right"
+                  (onClick)="enterProductKey()"
+                  iconPos="right" [rounded]="true"
+                  severity="secondary"></p-button>
+        <!--        <a>Activate 14 Day Trial</a>-->
+      </div>
       <p class="subtitle">Scale your business with the perfect subscription</p>
 
       <!-- Billing Toggle -->
@@ -25,7 +34,7 @@
 
     <!-- Pricing Cards -->
     <div class="pricing-grid">
-      @for ( plan of plans; track plan.id){
+      @for (plan of plans; track plan.id) {
         <div
           class="pricing-card"
           [class.popular]="plan.popular"
@@ -33,7 +42,7 @@
           (mouseenter)="hoveredCard = plan.id"
           (mouseleave)="hoveredCard = null">
 
-          @if (plan.popular){
+          @if (plan.popular) {
             <div class="popular-badge">
               Most Popular
             </div>
@@ -56,10 +65,10 @@
               <!-- Price -->
               <div class="price-section">
                 <div class="price-wrapper">
-                  <span class="price">${{ getPrice(plan) }}</span>
+                  <span class="price">{{ getPrice(plan) | currency:'UGX ' }}</span>
                   <span class="period">/{{ billingCycle === 'monthly' ? 'mo' : 'yr' }}</span>
                 </div>
-                @if (billingCycle === 'annual'){
+                @if (billingCycle === 'annual') {
                   <p class="savings-text">
                     Save {{ getSavings(plan) }}% with annual billing
                   </p>
@@ -70,6 +79,7 @@
               <!-- CTA Button -->
               <button
                 class="cta-button"
+                (click)="completeSubRequest(plan)"
                 [class.popular-btn]="plan.popular"
                 [attr.data-color]="plan.color">
                 Get Started
@@ -77,11 +87,12 @@
 
               <!-- Features -->
               <div class="features-list">
-                @for (feature of plan.features; track feature){
+                @for (feature of plan.features; track feature) {
                   <div class="feature-item">
                     <div class="check-icon" [attr.data-color]="plan.color">
                       <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                        <path d="M10 3L4.5 8.5L2 6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M10 3L4.5 8.5L2 6" stroke="white" stroke-width="2" stroke-linecap="round"
+                              stroke-linejoin="round"/>
                       </svg>
                     </div>
                     <span>{{ feature }}</span>
@@ -101,3 +112,21 @@
     </div>
   </div>
 </div>
+<p-dialog header="Activate License"
+          [modal]="true"
+          [(visible)]="productKeyForm">
+  <p class="text-muted-color block mb-8">Please enter the product key sent to your email.</p>
+  <textarea [(ngModel)]="productKey" class="w-100" pInputText rows="4" placeholder="Product Key">
+  </textarea>
+  <div class="flex justify-between mt-8 self-stretch">
+    <p-button label="Submit Key"/>
+  </div>
+</p-dialog>
+<p-dialog header="Success"
+          [modal]="true"
+          [(visible)]="showSubSuccess">
+  <div class="flex align-middle m-2">
+    <span class="pi pi-check-circle check-icon d-check"></span>
+    <div class="ml-3">Subscription Request successfully sent!</div>
+  </div>
+</p-dialog>

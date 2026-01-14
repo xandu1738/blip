@@ -1,5 +1,10 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, WritableSignal} from '@angular/core';
 import {BaseComponent} from '../../services/base-component';
+import {Button} from 'primeng/button';
+import {Dialog} from 'primeng/dialog';
+import {FormsModule} from '@angular/forms';
+import {InputText} from 'primeng/inputtext';
+import {CurrencyPipe} from '@angular/common';
 
 interface Plan {
   id: string;
@@ -14,7 +19,13 @@ interface Plan {
 
 @Component({
   selector: 'app-subscriptions-list',
-  imports: [],
+  imports: [
+    Button,
+    Dialog,
+    FormsModule,
+    InputText,
+    CurrencyPipe
+  ],
   templateUrl: './subscriptions-list.html',
   styleUrl: './subscriptions-list.css',
 })
@@ -26,67 +37,86 @@ export class SubscriptionsList extends BaseComponent implements OnInit {
 
   billingCycle: 'monthly' | 'annual' = 'monthly';
   hoveredCard: string | null = null;
+  productKeyForm: boolean = false;
 
-  plans: Plan[] = [
-    {
-      id: 'starter',
-      name: 'Starter',
-      icon: 'pi pi-cog',
-      price: { monthly: 9, annual: 90 },
-      description: 'Perfect for individuals getting started',
-      features: [
-        '5 Projects',
-        '10GB Storage'
-      ],
-      color: 'blue',
-      popular: false
-    },
-    {
-      id: 'pro',
-      name: 'Professional',
-      icon: 'pi pi-cog',
-      price: { monthly: 29, annual: 290 },
-      description: 'For professionals and small teams',
-      features: [
-        'Unlimited Projects',
-        '100GB Storage'
-      ],
-      color: 'purple',
-      popular: true
-    },
-    {
-      id: 'enterprise',
-      name: 'Enterprise',
-      icon: 'pi pi-cog',
-      price: { monthly: 99, annual: 990 },
-      description: 'Advanced features for large organizations',
-      features: [
-        'Unlimited Everything',
-        '1TB Storage'
-      ],
-      color: 'orange',
-      popular: false
-    }
-  ];
+  plans: Plan[] = [];
+  protected productKey: any;
+  protected showSubSuccess: boolean = false;
 
   getPrice(plan: Plan): number {
-    return this.billingCycle === 'monthly' ? plan.price.monthly : plan.price.annual;
+    return this.billingCycle === 'monthly' ? plan?.price?.monthly : plan?.price?.annual;
   }
 
   getSavings(plan: Plan): number {
     return Math.round(((plan.price.monthly * 12 - plan.price.annual) / (plan.price.monthly * 12)) * 100);
   }
 
-  fetchSubPlans(){
+  fetchSubPlans() {
     this.sendGetOrPostRequestToServer(
-      "subscriptions/list/0/15",
+      "subscriptions/plans/0/15",
       null,
       true,
-      (response:any)=>{
-        if(response?.returnCode !== 200) return;
+      (response: any) => {
+        if (response?.returnCode !== 200) return;
         this.plans = response?.returnObject;
       },
       false
     )
+  }
+
+  protected enterProductKey() {
+    this.productKeyForm = true;
+  }
+
+  protected completeSubRequest(plan: Plan) {
+    console.log(plan);
+    let dialogRequest = {
+      heading: 'Send Subscription Request',
+      message: 'You are about to subscribe to ' + plan?.name +
+        '. \n<b>Click "Yes" to confirm this action.</b>\n' +
+        'You will receive a reference via email.\n' +
+        'Please use this as \'COMMENT\' or \'REASON\' when transferring the subscription charge.\n' +
+        'Then notify admin to activate your subscription.' +
+        'Thanks for supporting us!',
+      onConfirm: () => {
+        this.sendGetOrPostRequestToServer(
+          "subscriptions/request",
+          {data: {subscription_id: plan?.id}},
+          true,
+          (response: any) => {
+            if (response?.returnCode !== 200) {
+              this.updateSubscriptionRequest(plan, response?.returnMessage);
+              return;
+            }
+            this.showSubSuccess = true;
+          },
+          false
+        );
+      }
+    };
+    this.confirmDialog(dialogRequest);
+  }
+
+  updateSubscriptionRequest(plan: any, message: string) {
+    let req = {
+      heading: 'Send Subscription Request',
+      message: message,
+      onConfirm: () => {
+        this.sendGetOrPostRequestToServer(
+          "subscriptions/request",
+          {data: {subscription_id: plan?.id, update_subscription: true}},
+          true,
+          (response: any) => {
+            if (response?.returnCode !== 200) {
+              this.showError(response?.returnMessage);
+              return;
+            }
+            this.showSubSuccess = true;
+          },
+          false
+        );
+      }
+    };
+    this.confirmDialog(req);
   }
 }

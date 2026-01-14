@@ -280,13 +280,8 @@ body {
   color: var(--text) !important;
 }
 
-
-.p-button {
-  background: #0096C7 !important;
-  color: white !important;
-  border: none !important;
-}
-
-
-
-
+/*.p-button {*/
+/*  background: #0096C7 !important;*/
+/*  color: white !important;*/
+/*  border: none !important;*/
+/*}*/

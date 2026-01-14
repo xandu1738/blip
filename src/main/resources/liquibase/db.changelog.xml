@@ -13,4 +13,5 @@
     <include file="/changes/tickets.sql" relativeToChangelogFile="true"/>
     <include file="/changes/subscriptions.sql" relativeToChangelogFile="true"/>
     <include file="/changes/file_management.sql" relativeToChangelogFile="true"/>
+    <include file="/changes/subs_impl.sql" relativeToChangelogFile="true"/>
 </databaseChangeLog>

@@ -14,10 +14,11 @@ import {ButtonDirective} from 'primeng/button';
 import {Ripple} from 'primeng/ripple';
 import {Events} from './services/events';
 import {SubscriptionsList} from './Subscriptions/subscritions-list/subscriptions-list';
+import {ConfirmDialog} from 'primeng/confirmdialog';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, MegaMenuModule, ToastModule, Menubar, TableModule, CommonModule, LoginComponent, ButtonDirective, Ripple, SubscriptionsList],
+  imports: [RouterOutlet, MegaMenuModule, ToastModule, Menubar, TableModule, CommonModule, LoginComponent, ButtonDirective, Ripple, SubscriptionsList, ConfirmDialog],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

@@ -13,10 +13,11 @@ import {Configuration} from './configuration/configuration';
 import {Users} from './UserManagement/users/users';
 import {SubscriptionsList} from './Subscriptions/subscritions-list/subscriptions-list';
 import {licenseGuard} from './guards/license-guard';
+import {subscriptionsGuard} from './guards/subscriptions-guard';
 
 export const routes: Routes = [
   {
-    path: 'dashboard',
+    path: '',
     redirectTo: 'dashboard',
     pathMatch: 'full'
   },
@@ -85,6 +86,7 @@ export const routes: Routes = [
   },
   {
     path: 'subscriptions',
+    canActivate: [authGuard, subscriptionsGuard],
     component: SubscriptionsList
   },
   {

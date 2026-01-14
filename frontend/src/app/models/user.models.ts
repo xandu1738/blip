@@ -4,6 +4,7 @@ export interface User {
   lastName: string;
   email: string;
   roleCode: string;
+  partnerCode: string;
   domain: string;
   createdAt: string;
   lastLoggedInAt: string;

@@ -28,10 +28,6 @@ public class SubscriptionPlanModel {
     @Column(name = "icon", length = Integer.MAX_VALUE)
     private String icon;
 
-    public String getColor() {
-        return color.getColor();
-    }
-
     @Enumerated(EnumType.STRING)
     @Column(name = "color")
     private SubscriptionColors color;
@@ -40,11 +36,11 @@ public class SubscriptionPlanModel {
     private Boolean popular;
 
     @JdbcTypeCode(SqlTypes.JSON)
-    @Column(name = "price",columnDefinition = "jsonb")
+    @Column(name = "price", columnDefinition = "jsonb")
     private ModulePrice price;
 
     @JdbcTypeCode(SqlTypes.ARRAY)
-    @Column(name = "features",columnDefinition = "text[]")
+    @Column(name = "features", columnDefinition = "text[]")
     private List<String> features;
 
     @Column(name = "description", length = Integer.MAX_VALUE)

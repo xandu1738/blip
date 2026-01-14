@@ -2,7 +2,6 @@ package com.ceres.blip.utils;
 
 import com.ceres.blip.models.database.LicenseActivationModel;
 import com.ceres.blip.models.database.LicenseKeyModel;
-import com.ceres.blip.services.LicenseValidationService;
 import lombok.*;
 
 @Getter

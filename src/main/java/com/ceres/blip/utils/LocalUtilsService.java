@@ -294,6 +294,8 @@ public abstract class LocalUtilsService {
         );
     }
 
+
+
     public ModuleModel getModule(String moduleCode) {
         return moduleRepository.findByCode(moduleCode).orElseThrow(
                 () -> new IllegalStateException(String.format("Module with code %s not found. Please contact admin.", moduleCode))

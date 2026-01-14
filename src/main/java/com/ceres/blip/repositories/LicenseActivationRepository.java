@@ -17,4 +17,6 @@ public interface LicenseActivationRepository extends JpaRepository<LicenseActiva
 
     @Query("SELECT COUNT(la) FROM LicenseActivationModel la WHERE la.licenseKey.id = :licenseKeyId AND la.isValid = true")
     int countActiveActivations(@Param("licenseKeyId") Long licenseKeyId);
+
+    //Find Activations older than one year
 }

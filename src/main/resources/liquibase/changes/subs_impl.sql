@@ -48,6 +48,11 @@ CREATE TABLE IF NOT EXISTS license_activations
 );
 
 -- Indexes
+DROP INDEX IF EXISTS idx_license_key;
+DROP INDEX IF EXISTS idx_license_user;
+DROP INDEX IF EXISTS idx_license_expiry;
+DROP INDEX IF EXISTS idx_license_activations;
+
 CREATE INDEX idx_license_key ON license_keys (license_key);
 CREATE INDEX idx_license_user ON license_keys (partner_code);
 CREATE INDEX idx_license_expiry ON license_keys (expiry_date);

@@ -1,4 +1,4 @@
-package com.ceres.blip.api;
+package com.ceres.blip.dtos;
 
 import java.sql.Timestamp;
 import java.util.Objects;

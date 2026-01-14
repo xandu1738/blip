@@ -49,9 +49,7 @@ export abstract class BaseComponent implements OnInit {
     //Update the heading and icon if passed
     this.confirmDialogSettings.header =
       confirmationRequest.heading ? confirmationRequest.heading : 'Confirm';
-    this.confirmDialogSettings.icon = confirmationRequest.icon
-      ? confirmationRequest.icon
-      : 'pi pi-exclamation-triangle';
+    this.confirmDialogSettings.icon = confirmationRequest.icon;
     if (confirmationRequest.icon) {
       this.confirmDialogSettings.icon = confirmationRequest.icon;
     }
