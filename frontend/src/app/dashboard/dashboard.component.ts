@@ -49,6 +49,10 @@ interface Expense {
   styleUrl: './dashboard.component.css'
 })
 export class DashboardComponent implements OnInit{
+  ngOnInit() {
+    this.initChart();
+  }
+
   stats: Stat[] = [
     {
       label: 'Total Bookings',
@@ -93,6 +97,7 @@ export class DashboardComponent implements OnInit{
       bgColor: 'bg-pink-50'
     }
   ];
+
   recentActivity: Activity[] = [
     {
       type: 'Bus Booking',
@@ -131,6 +136,7 @@ export class DashboardComponent implements OnInit{
       icon: 'bus'
     }
   ];
+
   notifications: Notification[] = [
     {
       id: 1,
@@ -173,6 +179,7 @@ export class DashboardComponent implements OnInit{
       color: 'text-purple-500'
     }
   ];
+
   expenses: Expense[] = [
     {
       id: 1,
@@ -245,15 +252,9 @@ export class DashboardComponent implements OnInit{
     return `UGX ${amount.toLocaleString()}`;
   }
 
-
   basicData: any;
 
   basicOptions: any;
-
-  ngOnInit() {
-    this.initChart();
-  }
-
   initChart() {
       const documentStyle = getComputedStyle(document.documentElement);
       const textColor = documentStyle.getPropertyValue('--p-text-color');
@@ -307,7 +308,4 @@ export class DashboardComponent implements OnInit{
         },
       };
     }
-
-
-
 }

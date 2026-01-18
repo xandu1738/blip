@@ -11,9 +11,10 @@ import {RegisterComponent} from './register/register.component';
 import {authGuard} from './guards/auth.guard';
 import {Configuration} from './configuration/configuration';
 import {Users} from './UserManagement/users/users';
-import {SubscriptionsList} from './Subscriptions/subscritions-list/subscriptions-list';
+import {SubscriptionsList} from './Subscriptions/subscriptions-list/subscriptions-list';
 import {licenseGuard} from './guards/license-guard';
 import {subscriptionsGuard} from './guards/subscriptions-guard';
+import {Subscriptions} from './Subscriptions/subscriptions/subscriptions';
 
 export const routes: Routes = [
   {
@@ -88,6 +89,11 @@ export const routes: Routes = [
     path: 'subscriptions',
     canActivate: [authGuard, subscriptionsGuard],
     component: SubscriptionsList
+  },
+  {
+    path: 'manage-subscriptions',
+    canActivate: [authGuard],
+    component: Subscriptions
   },
   {
     path: '**',

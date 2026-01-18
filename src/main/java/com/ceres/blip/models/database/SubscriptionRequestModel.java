@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 @Getter
@@ -28,8 +29,20 @@ public class SubscriptionRequestModel {
     @Column(name = "user_id")
     private Long userId;
 
+    @Column(name = "payment_amount")
+    private BigDecimal paymentAmount;
+
+    @Column(name = "amount_paid")
+    private BigDecimal amountPaid;
+
     @Column(name = "subscription_plan")
     private Long subscriptionPlan;
+
+    @Column(name = "payment_confirmed")
+    private Boolean paymentConfirmed;
+
+    @Column(name = "confirmed_by")
+    private Long confirmedBy;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", length = 30)

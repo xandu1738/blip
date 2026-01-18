@@ -11,6 +11,18 @@ create table if not exists subscription_requests
 alter table subscription_requests
     add column if not exists subscription_reference varchar;
 
+alter table subscription_requests
+    add column if not exists payment_amount numeric;
+
+alter table subscription_requests
+    add column if not exists amount_paid numeric;
+
+alter table subscription_requests
+    add column if not exists payment_confirmed boolean default false;
+
+alter table subscription_requests
+    add column if not exists confirmed_by int8;
+
 drop index if exists idx_subscription_requests_id;
 
 create index idx_subscription_requests_id on subscription_requests (id);

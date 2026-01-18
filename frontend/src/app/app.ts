@@ -13,7 +13,7 @@ import {TableModule} from 'primeng/table';
 import {ButtonDirective} from 'primeng/button';
 import {Ripple} from 'primeng/ripple';
 import {Events} from './services/events';
-import {SubscriptionsList} from './Subscriptions/subscritions-list/subscriptions-list';
+import {SubscriptionsList} from './Subscriptions/subscriptions-list/subscriptions-list';
 import {ConfirmDialog} from 'primeng/confirmdialog';
 
 @Component({
@@ -30,10 +30,10 @@ export class App implements OnInit {
 
   constructor(
     protected commonService: CommonService,
-    private eventService: Events,
-    private router: Router,
+    protected eventService: Events,
+    protected router: Router,
     protected authService: AuthService,
-    private loaderService: LoaderService
+    protected loaderService: LoaderService
   ) { // Inject Router and AuthService
   }
 
@@ -129,6 +129,13 @@ export class App implements OnInit {
             icon: 'pi pi-megaphone',
             command: () => {
               this.router.navigate(['/dashboard'])
+            }
+          },
+          {
+            label: 'Subscriptions & Licenses',
+            icon: 'pi pi-check-circle',
+            command: () => {
+              this.router.navigate(['/manage-subscriptions'])
             }
           },
         ]

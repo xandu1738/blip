@@ -1,4 +1,4 @@
-import {Component, OnInit, WritableSignal} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {BaseComponent} from '../../services/base-component';
 import {Button} from 'primeng/button';
 import {Dialog} from 'primeng/dialog';

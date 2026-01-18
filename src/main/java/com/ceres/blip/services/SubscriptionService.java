@@ -3,6 +3,7 @@ package com.ceres.blip.services;
 import com.ceres.blip.models.database.*;
 import com.ceres.blip.models.enums.AppDomains;
 import com.ceres.blip.models.enums.Constants;
+import com.ceres.blip.models.enums.SubscriptionPeriods;
 import com.ceres.blip.models.enums.SubscriptionRequestStatus;
 import com.ceres.blip.repositories.SubscriptionPlanRepository;
 import com.ceres.blip.repositories.SubscriptionRequestRepository;
@@ -11,9 +12,9 @@ import com.ceres.blip.utils.LocalUtilsService;
 import com.ceres.blip.dtos.OperationReturnObject;
 import com.ceres.blip.utils.mail.MessagingService;
 import com.fasterxml.jackson.databind.JsonNode;
-import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
@@ -21,8 +22,9 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
@@ -71,20 +73,33 @@ public class SubscriptionService extends LocalUtilsService {
         SystemUserModel authenticatedUser = authenticatedUser();
         JsonNode data = getRequestData(request);
 
-        requires(data, Constants.SUBSCRIPTION_ID.getValue());
+        requires(data, Constants.SUBSCRIPTION_ID.getValue(), Constants.SUBSCRIPTION_PERIOD.name());
         PartnerModel partnerModel = validatePartner(authenticatedUser.getPartnerCode());
 
         Long subscription = data.get(Constants.SUBSCRIPTION_ID.getValue()).asLong();
         var updateSubscriptionNode = data.get(Constants.UPDATE_SUBSCRIPTION.getValue());
         boolean updateSubscription = false;
-        if (updateSubscriptionNode != null){
+        if (updateSubscriptionNode != null) {
             updateSubscription = updateSubscriptionNode.asBoolean();
         }
+
+        String subscriptionPeriod = SubscriptionPeriods.MONTHLY.name();
+        JsonNode subscriptionPeriodNode = data.get(Constants.SUBSCRIPTION_PERIOD.getValue());
+        if (subscriptionPeriodNode != null) {
+            subscriptionPeriod = subscriptionPeriodNode.asText();
+
+            if (!EnumUtils.isValidEnum(SubscriptionPeriods.class,subscriptionPeriod)){
+                throw new IllegalStateException("Invalid Subscription Period Specified.");
+            }
+        }
+
+        SubscriptionPlanModel subscriptionPlan = subscriptionPlanRepository.findById(subscription)
+                .orElseThrow(() -> new IllegalStateException("Invalid Subscription Plan!"));
 
         Optional<SubscriptionRequestModel> existingPending = subscriptionRequestRepository.findByPartnerCodeAndStatus(partnerModel.getPartnerCode(), SubscriptionRequestStatus.PAYMENT_PENDING);
         if (existingPending.isPresent()) {
             if (updateSubscription) {
-                existingPending.get().setSubscriptionPlan(subscription);
+                existingPending.get().setSubscriptionPlan(subscriptionPlan.getId());
                 existingPending.get().setRequestedOn(getCurrentTimestamp());
 
                 subscriptionRequestRepository.save(existingPending.get());
@@ -93,14 +108,22 @@ public class SubscriptionService extends LocalUtilsService {
             throw new IllegalStateException("You have an existing pending subscription request. Would you like to update?");
         }
 
+        BigDecimal amountToPay = subscriptionPlan.getPrice().monthly();
+        //Wapi. Ignore this warning
+        if (Objects.equals(subscriptionPeriod,SubscriptionPeriods.ANNUAL)){
+            amountToPay = subscriptionPlan.getPrice().annual();
+        }
+
         SubscriptionRequestModel subscriptionRequest = new SubscriptionRequestModel();
         subscriptionRequest.setPartnerCode(partnerModel.getPartnerCode());
-        subscriptionRequest.setSubscriptionPlan(subscription);
+        subscriptionRequest.setSubscriptionPlan(subscriptionPlan.getId());
         subscriptionRequest.setStatus(SubscriptionRequestStatus.PAYMENT_PENDING);
         subscriptionRequest.setUserId(authenticatedUser().getId());
+        subscriptionRequest.setPaymentAmount(amountToPay);
+        subscriptionRequest.setAmountPaid(BigDecimal.ZERO);
         subscriptionRequest.setRequestedOn(getCurrentTimestamp());
 
-        String reference = generateSubscriptionRequest(partnerModel.getPartnerCode());
+        String reference = generateSubscriptionRequestReference(partnerModel.getPartnerCode());
         subscriptionRequest.setSubscriptionReference(reference);
         subscriptionRequestRepository.save(subscriptionRequest);
 
@@ -123,7 +146,7 @@ public class SubscriptionService extends LocalUtilsService {
         return new OperationReturnObject(200, "Subscription Plan successfully added.", null);
     }
 
-    private String generateSubscriptionRequest(String partnerCode) {
+    private String generateSubscriptionRequestReference(String partnerCode) {
         if (StringUtils.isBlank(partnerCode)) {
             throw new IllegalStateException("Please provide partner code");
         }
@@ -148,8 +171,9 @@ public class SubscriptionService extends LocalUtilsService {
 
     @Cacheable(value = "subscription-requests", key = "#pageNumber+#pageSize")
     public OperationReturnObject getSubscriptionRequests(int pageNumber, int pageSize) {
-        List<SubscriptionRequestModel> planRequests = subscriptionRequestRepository.findAll(PageRequest.of(pageNumber, pageSize))
-                .toList();
+//        List<SubscriptionRequestModel> planRequests = subscriptionRequestRepository.findAll(PageRequest.of(pageNumber, pageSize))
+//                .toList();
+        var planRequests = subscriptionRequestRepository.fetchSubscriptionRequests(pageNumber, pageSize);
         return new OperationReturnObject(200, null, planRequests);
     }
 

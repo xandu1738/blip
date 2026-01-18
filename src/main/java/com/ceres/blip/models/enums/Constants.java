@@ -50,6 +50,7 @@ public enum Constants {
     REVIEW_COUNT("reviewCount"),
     SUBSCRIPTION_ID("subscription_id"),
     UPDATE_SUBSCRIPTION("update_subscription"),
+    SUBSCRIPTION_PERIOD("subscription_period"),
 
     PARTNER_NAME("partner_name"),
     PARTNER_CODE("partner_code"),

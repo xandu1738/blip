@@ -43,7 +43,7 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, ne
       if (error.status === 401 && token && !req.headers.has('X-Skip-Auth')) {
         let refreshToken = authService.refreshToken();
         if (!refreshToken) {
-          router.navigate(['/login']);
+          router.navigate(['/login']).catch(err => console.error(err));
           return EMPTY;
         }
         // Try to refresh the token
@@ -61,9 +61,9 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, ne
             return next(retryReq);
           }),
           catchError((refreshError) => {
-            // Refresh failed, redirect to login
+            // Refresh failed, redirect to log in url
             authService.logout();
-            router.navigate(['/login']);
+            router.navigate(['/login']).catch(err => console.error(err));
             return throwError(() => refreshError);
           })
         );
@@ -72,7 +72,7 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, ne
       // For other errors or if no token, just pass through
       if (error.status === 401) {
         authService.logout();
-        router.navigate(['/login']);
+        router.navigate(['/login']).catch(err => console.error(err));
       }
 
       return throwError(() => error);

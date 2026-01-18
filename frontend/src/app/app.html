@@ -4,7 +4,7 @@
     <div class="">
       <app-login></app-login>
     </div>
-  } @else if (isLicensed) {
+  } @else if (isLoggedIn && !isLicensed) {
     <div class="w-full">
       <app-subscriptions-list></app-subscriptions-list>
     </div>
