@@ -50,20 +50,27 @@ export class SubscriptionRequestPayment extends BaseComponent implements OnInit 
     super(helper, loaderService, dialogService, confirmationService, messageService);
     this.details = this.config?.data?.details;
     this.onSubmit = this.config?.data?.onComplete;
+
+    this.confirmationRequest.reference = this.details?.subscriptionReference;
+    this.confirmationRequest.partner_code = this.details?.partnerCode;
   }
 
   protected confirmPayment() {
     console.log(this.confirmationRequest);
-    // this.sendGetOrPostRequestToServer(
-    //   "subscriptions/request/confirm-payment",
-    //   {data: this.confirmationRequest},
-    //   true,
-    //   (response: any) => {
-    //     if (response?.returnCode !== 200) {
-    //       this.showError(response?.returnMessage);
-    //       return;
-    //     }
-    //   }
-    // )
+    this.sendGetOrPostRequestToServer(
+      "subscriptions/request/confirm-payment",
+      {data: this.confirmationRequest},
+      true,
+      (response: any) => {
+        if (response?.returnCode !== 200) {
+          this.showError(response?.returnMessage);
+          return;
+        }
+        this.showSuccess(response?.returnMessage);
+        this.onSubmit();
+
+        this.ref.close();
+      }
+    )
   }
 }

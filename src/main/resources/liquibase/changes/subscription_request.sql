@@ -23,6 +23,9 @@ alter table subscription_requests
 alter table subscription_requests
     add column if not exists confirmed_by int8;
 
+alter table subscription_requests
+    add column if not exists period varchar;
+
 drop index if exists idx_subscription_requests_id;
 
 create index idx_subscription_requests_id on subscription_requests (id);

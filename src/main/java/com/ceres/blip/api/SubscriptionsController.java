@@ -4,12 +4,9 @@ import com.ceres.blip.services.SubscriptionService;
 import com.ceres.blip.dtos.OperationReturnObject;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.io.UnsupportedEncodingException;
 
 @Tag(name = "subscriptions")
 @RestController
@@ -34,7 +31,12 @@ public class SubscriptionsController {
     }
 
     @PostMapping("/request")
-    public ResponseEntity<OperationReturnObject> subscriptionRequest(@RequestBody JsonNode request) throws MessagingException, UnsupportedEncodingException {
+    public ResponseEntity<OperationReturnObject> subscriptionRequest(@RequestBody JsonNode request) {
         return ResponseEntity.ok(subscriptionService.saveSubscriptionRequest(request));
+    }
+
+    @PostMapping("/request/confirm-payment")
+    public ResponseEntity<OperationReturnObject> approveSubscriptionRequest(@RequestBody JsonNode request) {
+        return ResponseEntity.ok(subscriptionService.approveSubscriptionRequest(request));
     }
 }

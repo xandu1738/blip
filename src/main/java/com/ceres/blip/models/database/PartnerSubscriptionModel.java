@@ -1,5 +1,6 @@
 package com.ceres.blip.models.database;
 
+import com.ceres.blip.models.enums.SubscriptionStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,8 +32,9 @@ public class PartnerSubscriptionModel {
     @Column(name = "end_date")
     private Timestamp endDate;
 
-    @Column(name = "status", length = Integer.MAX_VALUE)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private SubscriptionStatus status;
 
     @Column(name = "renewal_type", length = Integer.MAX_VALUE)
     private String renewalType;

@@ -1,10 +1,7 @@
 package com.ceres.blip.services;
 
 import com.ceres.blip.models.database.*;
-import com.ceres.blip.models.enums.AppDomains;
-import com.ceres.blip.models.enums.Constants;
-import com.ceres.blip.models.enums.SubscriptionPeriods;
-import com.ceres.blip.models.enums.SubscriptionRequestStatus;
+import com.ceres.blip.models.enums.*;
 import com.ceres.blip.repositories.SubscriptionPlanRepository;
 import com.ceres.blip.repositories.SubscriptionRequestRepository;
 import com.ceres.blip.repositories.SubscriptionsRepository;
@@ -23,6 +20,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -88,7 +86,7 @@ public class SubscriptionService extends LocalUtilsService {
         if (subscriptionPeriodNode != null) {
             subscriptionPeriod = subscriptionPeriodNode.asText();
 
-            if (!EnumUtils.isValidEnum(SubscriptionPeriods.class,subscriptionPeriod)){
+            if (!EnumUtils.isValidEnum(SubscriptionPeriods.class, subscriptionPeriod)) {
                 throw new IllegalStateException("Invalid Subscription Period Specified.");
             }
         }
@@ -110,13 +108,14 @@ public class SubscriptionService extends LocalUtilsService {
 
         BigDecimal amountToPay = subscriptionPlan.getPrice().monthly();
         //Wapi. Ignore this warning
-        if (Objects.equals(subscriptionPeriod,SubscriptionPeriods.ANNUAL)){
+        if (Objects.equals(subscriptionPeriod, SubscriptionPeriods.ANNUAL)) {
             amountToPay = subscriptionPlan.getPrice().annual();
         }
 
         SubscriptionRequestModel subscriptionRequest = new SubscriptionRequestModel();
         subscriptionRequest.setPartnerCode(partnerModel.getPartnerCode());
         subscriptionRequest.setSubscriptionPlan(subscriptionPlan.getId());
+        subscriptionRequest.setPeriod(SubscriptionPeriods.valueOf(subscriptionPeriod));
         subscriptionRequest.setStatus(SubscriptionRequestStatus.PAYMENT_PENDING);
         subscriptionRequest.setUserId(authenticatedUser().getId());
         subscriptionRequest.setPaymentAmount(amountToPay);
@@ -136,7 +135,7 @@ public class SubscriptionService extends LocalUtilsService {
                     <li><strong>Airtel:</strong> %s</li>
                 </ul>
                 <p>Use the reference <strong>%s</strong> as reason/narration for the transaction.</p>
-                <p>In case the subscription delays to effect, please contact us.</p>
+                <p>In case the subscription delays to take effect, please contact us.</p>
                 <p>Best regards,<br/>
                 The Blip Team</p>
                 """.formatted(authenticatedUser.getFirstName(), authenticatedUser.getLastName(), mtnContact, airtelContact, reference);
@@ -144,6 +143,74 @@ public class SubscriptionService extends LocalUtilsService {
         messagingService.sendTemplateMail(authenticatedUser, "Account Created Successfully", mailBody, "email-template");
 
         return new OperationReturnObject(200, "Subscription Plan successfully added.", null);
+    }
+
+    @CacheEvict(value = "subscription-requests", allEntries = true)
+    public OperationReturnObject approveSubscriptionRequest(JsonNode request) {
+        JsonNode requestData = getRequestData(request);
+        requires(requestData, Constants.PARTNER_CODE.getValue(), Constants.AMOUNT.getValue(), Constants.CONFIRM.getValue());
+
+        boolean confirm = requestData.get(Constants.CONFIRM.getValue()).asBoolean();
+        if (!confirm) {
+            throw new IllegalStateException("Please confirm responsibility for this action!");
+        }
+        String partnerCode = requestData.get(Constants.PARTNER_CODE.getValue()).asText();
+        if (StringUtils.isBlank(partnerCode)) {
+            throw new IllegalStateException("Partner code cannot be blank.");
+        }
+        double amt = requestData.get(Constants.AMOUNT.getValue()).asDouble();
+        if (amt <= 0) {
+            throw new IllegalStateException("Amount cannot be less than or equal to zero.");
+        }
+        BigDecimal amountPaid = BigDecimal.valueOf(amt);
+
+        SubscriptionRequestModel pendingRequest = subscriptionRequestRepository.findByPartnerCodeAndStatus(partnerCode, SubscriptionRequestStatus.PAYMENT_PENDING)
+                .orElseThrow(() -> new IllegalStateException("No pending subscription request found."));
+        if (amountPaid.compareTo(pendingRequest.getPaymentAmount()) != 0) {
+            throw new IllegalStateException("Could not activate subscription! Amount paid does not match the payment amount.");
+        }
+
+        pendingRequest.setAmountPaid(amountPaid);
+
+        PartnerModel partner = validatePartner(pendingRequest.getPartnerCode());
+
+        PartnerSubscriptionModel subscription = new PartnerSubscriptionModel();
+        subscription.setPartnerId(partner.getId());
+        subscription.setStatus(SubscriptionStatus.ACTIVE);
+        subscription.setPlanId(pendingRequest.getSubscriptionPlan());
+        subscription.setStartDate(getCurrentTimestamp());
+
+        SubscriptionPeriods period = Optional.ofNullable(pendingRequest.getPeriod()).orElse(SubscriptionPeriods.MONTHLY);
+        Timestamp endDate = timestampPlusDays(subscription.getStartDate(), 30);
+        if (Objects.equals(period, SubscriptionPeriods.ANNUAL)) {
+            endDate = timestampPlusDays(subscription.getStartDate(), 365);
+        }
+
+        subscription.setEndDate(endDate);
+
+        subscriptionsRepository.save(subscription);
+        subscriptionRequestRepository.save(pendingRequest);
+        SystemUserModel subRequestUser = getUserById(pendingRequest.getUserId());
+        String mailBody = """
+                <p>Dear %s %s,</p>
+                <p>
+                Your subscription request has been activated for %s.
+                
+                Access has been granted to users under your organization from
+                %s to %s.
+                
+                Proceed to log in to your organization account to do any
+                configurations.
+                </p>
+                <p>Best regards,<br/>
+                The Blip Team</p>
+                """.formatted(subRequestUser.getFirstName(),
+                subRequestUser.getLastName(),
+                partner.getPartnerName(),
+                subscription.getStartDate(),
+                subscription.getEndDate());
+        messagingService.sendTemplateMail(subRequestUser, "Subscription Request Approved", mailBody, "email-template");
+        return new OperationReturnObject(200, "Subscription Request Approved Successfully", null);
     }
 
     private String generateSubscriptionRequestReference(String partnerCode) {

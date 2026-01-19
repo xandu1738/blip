@@ -1,5 +1,6 @@
 package com.ceres.blip.models.enums;
 
+import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -10,6 +11,8 @@ public enum Constants {
     SEARCH_VALUE("searchValue"),
     SORT_FIELD("sortField"),
     ORDER("order"),
+    AMOUNT("amount"),
+    CONFIRM("confirm"),
     ADDRESS("address"),
     PAGE("page"),
     SIZE("size"),
@@ -51,6 +54,7 @@ public enum Constants {
     SUBSCRIPTION_ID("subscription_id"),
     UPDATE_SUBSCRIPTION("update_subscription"),
     SUBSCRIPTION_PERIOD("subscription_period"),
+    SUBSCRIPTION_REFERENCE("subscription_reference"),
 
     PARTNER_NAME("partner_name"),
     PARTNER_CODE("partner_code"),
@@ -62,7 +66,6 @@ public enum Constants {
     ACTIVE("active"),
     USER_NOT_FOUND("User not found"),
     PACKAGE("package");
-
 
     private final String value;
 }

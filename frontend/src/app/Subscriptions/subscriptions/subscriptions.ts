@@ -6,6 +6,7 @@ import {TableModule} from 'primeng/table';
 import {Tooltip} from 'primeng/tooltip';
 import {Button} from 'primeng/button';
 import {SubscriptionRequestPayment} from '../subscription-request-payment/subscription-request-payment';
+import {Tab, TabList, TabPanel, TabPanels, Tabs} from 'primeng/tabs';
 
 @Component({
   selector: 'app-subscriptions',
@@ -15,7 +16,12 @@ import {SubscriptionRequestPayment} from '../subscription-request-payment/subscr
     TableModule,
     FormsModule,
     Tooltip,
-    Button
+    Button,
+    Tabs,
+    TabList,
+    Tab,
+    TabPanels,
+    TabPanel
   ],
   templateUrl: './subscriptions.html',
   styleUrl: './subscriptions.css',

@@ -311,5 +311,12 @@ public abstract class LocalUtilsService {
         requires(request, DATA);
         return request.get(DATA);
     }
+
+    protected Timestamp timestampPlusDays(Timestamp timestamp, int days) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(timestamp);
+        calendar.add(Calendar.DATE, days);
+        return new Timestamp(calendar.getTimeInMillis());
+    }
 }
 

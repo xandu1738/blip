@@ -1,5 +1,6 @@
 package com.ceres.blip.models.database;
 
+import com.ceres.blip.models.enums.SubscriptionPeriods;
 import com.ceres.blip.models.enums.SubscriptionRequestStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
@@ -45,8 +46,12 @@ public class SubscriptionRequestModel {
     private Long confirmedBy;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", length = 30)
+    @Column(name = "status")
     private SubscriptionRequestStatus status;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "period")
+    private SubscriptionPeriods period;
 
     @ColumnDefault("now()")
     @Column(name = "requested_on")
