@@ -2,6 +2,7 @@ package com.ceres.blip.services;
 
 import com.ceres.blip.config.ApplicationConf;
 import com.ceres.blip.config.JwtUtility;
+import com.ceres.blip.dtos.ListResponseDto;
 import com.ceres.blip.dtos.UserDto;
 import com.ceres.blip.dtos.UserDtoMapper;
 import com.ceres.blip.exceptions.AuthorizationRequiredException;
@@ -12,7 +13,7 @@ import com.ceres.blip.models.enums.DefaultRoles;
 import com.ceres.blip.repositories.SystemRolePermissionRepository;
 import com.ceres.blip.repositories.SystemUserRepository;
 import com.ceres.blip.utils.LocalUtilsService;
-import com.ceres.blip.utils.OperationReturnObject;
+import com.ceres.blip.dtos.OperationReturnObject;
 import com.ceres.blip.utils.events.UserRegistrationEvent;
 import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.servlet.http.HttpServletRequest;
@@ -93,7 +94,6 @@ public class UserManagementService extends LocalUtilsService {
         requiresAuth();
         requires(request, "data");
 
-
         try {
             JsonNode data = getRequestData(request);
             requires(data, REFRESH_TOKEN);
@@ -168,12 +168,20 @@ public class UserManagementService extends LocalUtilsService {
     public OperationReturnObject usersList(int pageNumber, int pageSize) throws AuthorizationRequiredException {
         requiresAuth();
 
+        Optional<Map<String, Object>> userCount = systemUserRepository.userCount();
+
         List<UserDto> users = systemUserRepository.findAll(PageRequest.of(pageNumber, pageSize))
                 .stream()
                 .map(userDtoMapper)
                 .toList();
 
-        return new OperationReturnObject(200, "Users list successfully", users);
+        Long count = 10L;
+        if (userCount.isPresent()) {
+            count = (Long) userCount.get().get("count");
+        }
+        ListResponseDto listResponseDto = new ListResponseDto(count, users);
+
+        return new OperationReturnObject(200, "Users list successfully", listResponseDto);
     }
 
     @Cacheable(value = "user", key = "#id")

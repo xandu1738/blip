@@ -1,0 +1,57 @@
+<div class="flex justify-items-start flex-wrap">
+  <div class="attribute flex flex-col justify-items-start w-1/4">
+    <div class="key">Partner Code</div>
+    <div class="value">{{ details?.partnerCode || '***' }}</div>
+  </div>
+  <div class="attribute flex flex-col justify-items-start w-1/4">
+    <div class="key">Plan Name</div>
+    <div class="value">{{ details?.planName || '***' }}</div>
+  </div>
+  <div class="attribute flex flex-col justify-items-start w-1/4">
+    <div class="key">Reference code</div>
+    <div class="value">{{ details?.subscriptionReference || '***' }}</div>
+  </div>
+  <div class="attribute flex flex-col justify-items-start w-1/4">
+    <div class="key">Status</div>
+    <div class="value">{{ details?.status || '***' }}</div>
+  </div>
+  <div class="attribute flex flex-col justify-items-start w-1/4">
+    <div class="key">Requested By</div>
+    <div class="value">{{ details?.requestedBy || '***' }}</div>
+  </div>
+  <div class="attribute flex flex-col justify-items-start w-1/2">
+    <div class="key">Requested On</div>
+    <div class="value">{{ details?.requestedOn || '***' }}</div>
+  </div>
+</div>
+
+<div class="pmt my-3.5">
+  <div class="pmt-intro">
+    Please Confirm amount of payment Received to activate this subscription.
+  </div>
+  <div class="disclaimer">
+    <p-message severity="warn">
+      This activation will bear your signature. Please make sure the payment has been made and confirmed before clearing
+      this request!
+    </p-message>
+  </div>
+  <div class="my-3.5 flex items-center">
+    <p-checkbox [(ngModel)]="confirmationRequest.confirm" value="I confirm" [binary]="true" id="confirm" name="confirm"/>
+    <label class="ml-3" for="confirm">I Confirm</label>
+  </div>
+  <div class="pmt-confirmation my-7.5">
+    <p-floatlabel class="w-full">
+      <label for="amount">Amount Received</label>
+      <input type="number" [(ngModel)]="confirmationRequest.amount" pInputText id="amount" class="w-full"/>
+    </p-floatlabel>
+  </div>
+  <div class="flex justify-end">
+    <p-button label="Confirm"
+              [disabled]="!confirmationRequest.confirm"
+              icon="pi pi-check-circle"
+              iconPos="right"
+              size="small"
+              (onClick)="confirmPayment()"
+    />
+  </div>
+</div>

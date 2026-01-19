@@ -4,6 +4,7 @@ export interface User {
   lastName: string;
   email: string;
   roleCode: string;
+  partnerCode: string;
   domain: string;
   createdAt: string;
   lastLoggedInAt: string;
@@ -20,6 +21,7 @@ export interface LoginRequest {
 
 export interface LoginResponse {
   accessToken: string;
+  license: string;
   refreshToken: string;
   user: User;
   permissions: string[];

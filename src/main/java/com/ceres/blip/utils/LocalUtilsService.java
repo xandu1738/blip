@@ -294,6 +294,8 @@ public abstract class LocalUtilsService {
         );
     }
 
+
+
     public ModuleModel getModule(String moduleCode) {
         return moduleRepository.findByCode(moduleCode).orElseThrow(
                 () -> new IllegalStateException(String.format("Module with code %s not found. Please contact admin.", moduleCode))
@@ -308,6 +310,13 @@ public abstract class LocalUtilsService {
     protected JsonNode getRequestData(JsonNode request) {
         requires(request, DATA);
         return request.get(DATA);
+    }
+
+    protected Timestamp timestampPlusDays(Timestamp timestamp, int days) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(timestamp);
+        calendar.add(Calendar.DATE, days);
+        return new Timestamp(calendar.getTimeInMillis());
     }
 }
 

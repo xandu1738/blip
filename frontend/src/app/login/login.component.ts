@@ -39,8 +39,15 @@ export class LoginComponent {
 
     this.authService.login(this.username, this.password).subscribe({
       next: (response) => {
+        console.log(response);
         if (!response) return;
-        this.router.navigate(['/dashboard']).catch(err => console.error('Login redirect error:', err));
+        if (response?.user?.partnerCode && response?.license !== 'ACTIVE'){
+          this.router.navigate(['/subscriptions'])
+            .catch(err => console.error('Login redirect error:', err));
+          return;
+        }
+        this.router.navigate(['/dashboard'])
+          .catch(err => console.error('Login redirect error:', err));
       },
       error: (error) => {
         console.log("error found")

@@ -26,7 +26,7 @@ public class ApplicationConf implements UserDetailsService {
     @Override
     @NullMarked
     public SystemUserModel loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<SystemUserModel> usersModel = userRepository.findByUserNameOrEmail(username, username);
+        Optional<SystemUserModel> usersModel = userRepository.findByEmail(username);
         if (usersModel.isEmpty()) {
             throw new IllegalStateException("User not found");
         }

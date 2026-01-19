@@ -1,0 +1,112 @@
+<div class="w-full">
+  <div class="sticky top-0 above">
+    <p-tabs value="0">
+      <p-tablist>
+        <p-tab value="0">Active Subscriptions</p-tab>
+        <p-tab value="1">Subscription Requests</p-tab>
+      </p-tablist>
+      <p-tabpanels>
+        <p-tabpanel value="0">
+          <div class="relative shadow-sm border border-gray-200 max-h-[70vh] overflow-y-auto below">
+            <p-table [value]="filteredPartners"
+                     styleClass="small-word-grid"
+                     [rows]="15"
+                     [paginator]="true"
+                     [pageLinks]="5"
+                     [lazy]="true"
+                     [rowsPerPageOptions]="[15, 20, 50, 100]"
+                     (onLazyLoad)="loadLazy($event)"
+                     [totalRecords]="search.totalRecords"
+                     [resizableColumns]="true"
+                     [tableStyle]="{ 'min-width': '100%' }">
+              <ng-template pTemplate="header">
+                <tr class="">
+                  <th id="partnerCode" style="width: 8%">Partner Code</th>
+                  <th id="planName" style="width: 15%">Plan Name</th>
+                  <th id="requestedBy" style="width: 10%">Requested By</th>
+                  <th id="requestedOn" style="width: 12%">Requested On</th>
+                  <th id="status" style="width: 10%">Status</th>
+                  <th id="subscriptionReference" style="width: 10%">Reference</th>
+                  <th id="act" style="width: 15%">Actions</th>
+                </tr>
+              </ng-template>
+
+              <ng-template pTemplate="body" let-req>
+                <tr class="">
+                  <td class="truncate">{{ req?.partnerCode || '---' }}</td>
+                  <td class="truncate">{{ req?.planName || '---' }}</td>
+                  <td class="truncate">{{ req?.requestedBy || '---' }}</td>
+                  <td class="truncate">{{ req?.requestedOn || '---' }}</td>
+                  <td class="truncate">{{ req?.status || '---' }}</td>
+                  <td class="truncate">{{ req?.subscriptionReference || '---' }}</td>
+                  <td class="truncate">
+                    <div class="flex gap-2">
+                      <p-button pTooltip="confirmPayment"
+                                size="small"
+                                [rounded]="true"
+                                severity="success"
+                                (onClick)="confirmPayment(req)"
+                                title="View">
+                        <i class="pi pi-money-bill text-sm"></i>
+                      </p-button>
+                    </div>
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+        </p-tabpanel>
+        <p-tabpanel value="1">
+          <div class="relative shadow-sm border border-gray-200 max-h-[70vh] overflow-y-auto below">
+            <p-table [value]="filteredPartners"
+                     styleClass="small-word-grid"
+                     [rows]="15"
+                     [paginator]="true"
+                     [pageLinks]="5"
+                     [lazy]="true"
+                     [rowsPerPageOptions]="[15, 20, 50, 100]"
+                     (onLazyLoad)="loadLazy($event)"
+                     [totalRecords]="search.totalRecords"
+                     [resizableColumns]="true"
+                     [tableStyle]="{ 'min-width': '100%' }">
+              <ng-template pTemplate="header">
+                <tr class="">
+                  <th id="partnerCode" style="width: 8%">Partner Code</th>
+                  <th id="planName" style="width: 15%">Plan Name</th>
+                  <th id="requestedBy" style="width: 10%">Requested By</th>
+                  <th id="requestedOn" style="width: 12%">Requested On</th>
+                  <th id="status" style="width: 10%">Status</th>
+                  <th id="subscriptionReference" style="width: 10%">Reference</th>
+                  <th id="act" style="width: 15%">Actions</th>
+                </tr>
+              </ng-template>
+
+              <ng-template pTemplate="body" let-req>
+                <tr class="">
+                  <td class="truncate">{{ req?.partnerCode || '---' }}</td>
+                  <td class="truncate">{{ req?.planName || '---' }}</td>
+                  <td class="truncate">{{ req?.requestedBy || '---' }}</td>
+                  <td class="truncate">{{ req?.requestedOn || '---' }}</td>
+                  <td class="truncate">{{ req?.status || '---' }}</td>
+                  <td class="truncate">{{ req?.subscriptionReference || '---' }}</td>
+                  <td class="truncate">
+                    <div class="flex gap-2">
+                      <p-button pTooltip="confirmPayment"
+                                size="small"
+                                [rounded]="true"
+                                severity="success"
+                                (onClick)="confirmPayment(req)"
+                                title="View">
+                        <i class="pi pi-money-bill text-sm"></i>
+                      </p-button>
+                    </div>
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+        </p-tabpanel>
+      </p-tabpanels>
+    </p-tabs>
+  </div>
+</div>

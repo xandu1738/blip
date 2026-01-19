@@ -17,10 +17,12 @@ import {MessageService} from 'primeng/api';
   providedIn: 'root'
 })
 export class AuthService {
-  private _isLoggedIn = new BehaviorSubject<boolean>(this.hasValidToken());
-  private _currentUser = new BehaviorSubject<User | null>(this.getUserFromStorage());
+  private _isLoggedIn = new BehaviorSubject<boolean>(false);
+  private _license = new BehaviorSubject<string>('EXPIRED');
+  private _currentUser = new BehaviorSubject<User | null>(null);
 
   isLoggedIn = this._isLoggedIn.asObservable();
+  licensed = this._license.asObservable();
   currentUser = this._currentUser.asObservable();
 
   readonly apiUrl = environment.apiUrl;
@@ -29,8 +31,10 @@ export class AuthService {
   private readonly USER_KEY = 'blip_user';
 
   constructor(private http: HttpClient, private messageService: MessageService) {
-    // Initialize with demo user for testing
+    // Initialize with a demo user for testing
     // this.initializeDemoMode();
+    this._isLoggedIn.next(this.hasValidToken());
+    this._currentUser.next(this.getUserFromStorage());
   }
 
   login(email: string, password: string): Observable<LoginResponse> {
@@ -49,6 +53,8 @@ export class AuthService {
 
           this.setTokens(returnObject?.accessToken, returnObject?.refreshToken);
           this.setUser(returnObject?.user);
+
+          this._license.next(returnObject?.licensed || 'EXPIRED')
           this._isLoggedIn.next(true);
           this._currentUser.next(returnObject?.user);
         }),
@@ -64,17 +70,22 @@ export class AuthService {
       );
   }
 
-  refreshToken(): Observable<string> {
+  refreshToken(): Observable<string> | undefined {
     const refreshToken = this.getRefreshToken();
     if (!refreshToken) {
-      return throwError(() => new Error('No refresh token available'));
+      console.log('No refresh token available');
+      this.logout();
+      return;
     }
 
     const refreshData: RefreshTokenRequest = {
       data: {refreshToken}
     };
 
-    return this.http.post<ApiResponse<string>>(`${this.apiUrl}/user-management/refresh-token`, refreshData)
+    return this.http.post<ApiResponse<string>>(
+      `${this.apiUrl}/user-management/refresh-token`,
+      refreshData,
+      {headers: {'Request-Origin': 'BLIP-PORTAL', 'X-Skip-Auth': 'true'}})
       .pipe(
         map(response => response?.returnObject),
         tap(newToken => {

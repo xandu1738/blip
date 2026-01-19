@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable} from 'rxjs';
+import {environment} from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,7 @@ export class RemoteService {
   }
 
   sendPostToServer(url: string, data: any, authenticated: boolean = true): Observable<any> {
-    console.log("Will use url " + url)
+    this.logDevMode("Will use url " + url)
     this.logDevMode("Sending to server " + data)
     let requestHeaders: any = {
       'Content-Type': 'application/json',
@@ -29,7 +30,7 @@ export class RemoteService {
   }
 
   sendPutToServer(url: string, data: string): Observable<any> {
-    console.log("Will use url " + url)
+    this.logDevMode("Will use url " + url)
     this.logDevMode("Sending to server " + data)
     let options = {
       headers: new HttpHeaders({
@@ -41,7 +42,7 @@ export class RemoteService {
   }
 
   sendDeleteToServer(url: string, data: string): Observable<any> {
-    console.log("Will use url " + url)
+    this.logDevMode("Will use url " + url)
     this.logDevMode("Sending to server " + data)
     let options = {
       headers: new HttpHeaders({
@@ -53,9 +54,8 @@ export class RemoteService {
   }
 
   sendGetToServer(url: string): Observable<any> {
-    console.log("Will use url " + url);
-    const accessToken = localStorage.getItem("access_token");
-    console.log("your auth token:", accessToken);
+    this.logDevMode("Will use url " + url);
+    const accessToken = localStorage.getItem("blip_access_token");
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Request-Origin': 'BLIP-PORTAL',
@@ -67,7 +67,6 @@ export class RemoteService {
 
 
   logDevMode(event: string) {
-    // if (!environment.production) console.log(event);
-    console.log(event);
+    if (!environment.production) console.log(event);
   }
 }

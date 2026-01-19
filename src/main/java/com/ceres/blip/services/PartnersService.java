@@ -9,7 +9,7 @@ import com.ceres.blip.models.enums.FileCategories;
 import com.ceres.blip.repositories.PartnersRepository;
 import com.ceres.blip.utils.LocalUtilsService;
 import com.ceres.blip.utils.LocalFileManager;
-import com.ceres.blip.utils.OperationReturnObject;
+import com.ceres.blip.dtos.OperationReturnObject;
 import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;

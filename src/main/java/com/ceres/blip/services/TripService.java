@@ -9,7 +9,7 @@ import com.ceres.blip.repositories.TripRepository;
 import com.ceres.blip.repositories.TripSeatRepository;
 import com.ceres.blip.repositories.VehicleRepository;
 import com.ceres.blip.utils.LocalUtilsService;
-import com.ceres.blip.utils.OperationReturnObject;
+import com.ceres.blip.dtos.OperationReturnObject;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;

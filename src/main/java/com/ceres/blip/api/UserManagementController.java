@@ -2,7 +2,7 @@ package com.ceres.blip.api;
 
 import com.ceres.blip.exceptions.AuthorizationRequiredException;
 import com.ceres.blip.services.UserManagementService;
-import com.ceres.blip.utils.OperationReturnObject;
+import com.ceres.blip.dtos.OperationReturnObject;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;

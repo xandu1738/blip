@@ -1,4 +1,4 @@
-import {Component, signal, Input} from '@angular/core';
+import {Component, signal, Input, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {Header} from '../shared-components/Header/header/header';
 import {UIChart} from 'primeng/chart';
@@ -48,13 +48,11 @@ interface Expense {
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit{
+  ngOnInit() {
+    this.initChart();
+  }
 
-  avatar: string[] = [
-    "mike ross",
-    "jack hymnal"
-  ];
-  hater = signal("true");
   stats: Stat[] = [
     {
       label: 'Total Bookings',
@@ -99,6 +97,7 @@ export class DashboardComponent {
       bgColor: 'bg-pink-50'
     }
   ];
+
   recentActivity: Activity[] = [
     {
       type: 'Bus Booking',
@@ -137,6 +136,7 @@ export class DashboardComponent {
       icon: 'bus'
     }
   ];
+
   notifications: Notification[] = [
     {
       id: 1,
@@ -179,6 +179,7 @@ export class DashboardComponent {
       color: 'text-purple-500'
     }
   ];
+
   expenses: Expense[] = [
     {
       id: 1,
@@ -251,15 +252,9 @@ export class DashboardComponent {
     return `UGX ${amount.toLocaleString()}`;
   }
 
-
   basicData: any;
 
   basicOptions: any;
-
-  ngOnInit() {
-    this.initChart();
-  }
-
   initChart() {
       const documentStyle = getComputedStyle(document.documentElement);
       const textColor = documentStyle.getPropertyValue('--p-text-color');
@@ -313,7 +308,4 @@ export class DashboardComponent {
         },
       };
     }
-
-
-
 }
