@@ -1,3 +1,39 @@
+::ng-deep .custom-table .p-datatable-table {
+  background: transparent !important;
+}
+
+::ng-deep .custom-table .p-datatable-thead,
+::ng-deep .custom-table .p-datatable-tbody {
+  background: transparent !important;
+}
+
+::ng-deep .p-tag {
+  font-size: 0.75rem !important;
+  padding: 0.25rem 0.75rem !important;
+  font-weight: 500 !important;
+}
+
+.grid-pattern::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, #2A2A3A 1px, transparent 1px),
+    linear-gradient(to bottom, #2A2A3A 1px, transparent 1px);
+  background-size: 20px 20px;
+  opacity: 0.3;
+}
+
+.home-screen{
+  background-color: var(--background);
+  color: var(--text);
+
+  .home-header{
+    /*background-color: var(--background);*/
+    /*color: var(--text);*/
+  }
+}
+
 .navigation {
   background-color: #1e1e1e;
 

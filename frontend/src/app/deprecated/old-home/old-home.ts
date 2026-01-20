@@ -1,29 +1,38 @@
-import {Component, OnInit} from '@angular/core';
-import {TableModule} from 'primeng/table';
-import {OverlayBadge} from 'primeng/overlaybadge';
-import {Avatar} from 'primeng/avatar';
-import {Router, RouterOutlet} from '@angular/router';
+import {Component, OnInit, signal, WritableSignal} from '@angular/core';
+import {ButtonDirective} from "primeng/button";
+import {ConfirmDialog} from "primeng/confirmdialog";
+import {LoginComponent} from "../../login/login.component";
+import {Menubar} from "primeng/menubar";
+import {Ripple} from "primeng/ripple";
+import {Router, RouterOutlet} from "@angular/router";
+import {SubscriptionsList} from "../../Subscriptions/subscriptions-list/subscriptions-list";
+import {Toast} from "primeng/toast";
 import {MenuItem} from 'primeng/api';
-import {CommonService} from './services/commonService';
-import {Events} from './services/events';
-import {AuthService} from './services/auth.service';
-import {LoaderService} from './services/loader.service';
-import {NgClass} from '@angular/common';
+import {CommonService} from '../../services/commonService';
+import {Events} from '../../services/events';
+import {AuthService} from '../../services/auth.service';
+import {LoaderService} from '../../services/loader.service';
 
 @Component({
-  selector: 'app-root',
-  imports: [
-    TableModule,
-    OverlayBadge,
-    Avatar,
-    RouterOutlet,
-    NgClass
-  ],
-  templateUrl: './app.html',
-  styleUrl: './app.css'
+  selector: 'app-old-home',
+    imports: [
+        ButtonDirective,
+        ConfirmDialog,
+        LoginComponent,
+        Menubar,
+        Ripple,
+        RouterOutlet,
+        SubscriptionsList,
+        Toast
+    ],
+  templateUrl: './old-home.html',
+  styleUrl: './old-home.css',
 })
-export class App implements OnInit {
+export class OldHome implements OnInit{
+  isLoggedIn: boolean = false; // Add login state
+  isLicensed: boolean = false; // Add login state
   items: MenuItem[] | undefined;
+  showLoader: boolean = false;
 
   constructor(
     protected commonService: CommonService,
@@ -35,6 +44,25 @@ export class App implements OnInit {
   }
 
   ngOnInit() {
+    // Subscribe to loader service
+    this.loaderService.status.subscribe((isLoading: boolean) => {
+      this.showLoader = isLoading;
+    });
+
+    // Subscribe to authentication state
+    this.authService.isLoggedIn.subscribe((loggedIn: boolean) => {
+      console.log('App component: Login state changed to:', loggedIn);
+      this.isLoggedIn = loggedIn;
+    });
+
+    this.authService.licensed.subscribe((license: string) => {
+      if (license !== 'ACTIVE') {
+        this.isLicensed = true;
+        return;
+      }
+      this.isLicensed = false;
+    });
+
     this.items = [
       {
         label: 'Dashboard',
@@ -187,7 +215,31 @@ export class App implements OnInit {
         }
       }
     ];
+
+    this.eventService.connect();
+
+    this.eventService.events$.subscribe((event) => {
+      console.log("Received event from Redis:", event);
+    });
   }
 
+  protected currentTheme: WritableSignal<string> = signal('light');
 
+  toggleDarkMode() {
+    const element = document.querySelector('html')!;
+    element.classList.toggle('dark-mode');
+    this.currentTheme.set(element.classList.contains('dark-mode') ? 'dark' : 'light');
+  }
+
+  handleLogout() {
+    this.authService.logout();
+    this.isMobileMenuOpen = false;
+    this.router.navigate(['/login']);
+  }
+
+  isMobileMenuOpen: boolean = false;
+
+  toggleMobileMenu() {
+    this.isMobileMenuOpen = !this.isMobileMenuOpen;
+  }
 }
