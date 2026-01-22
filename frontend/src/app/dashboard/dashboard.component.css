@@ -20,5 +20,10 @@
   background-color: #e9ecef; /* Slightly darker background for content */
 }
 
+.base-card{
+  background-color: var(--card);
+}
 
-
+.chart-card{
+  border: 1px solid rgba(128, 128, 128, 0.38);
+}

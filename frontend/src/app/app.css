@@ -27,11 +27,71 @@
 .home-screen{
   background-color: var(--background);
   color: var(--text);
+  position: fixed;
 
   .home-header{
     /*background-color: var(--background);*/
     /*color: var(--text);*/
   }
+
+  .side-panel{
+    position: relative;
+    overflow: hidden;
+    overflow-y: auto;
+    width: clamp(230px, 25vw, 260px);
+
+    /* Thin scrollbar for Firefox */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(102, 126, 234, 0.6) transparent;
+  }
+
+  .side-panel::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .side-panel::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 10px;
+  }
+
+  .side-panel::-webkit-scrollbar-thumb {
+    background: rgba(102, 126, 234, 0.6);
+    border-radius: 10px;
+    transition: background 0.3s ease;
+  }
+
+  .side-panel::-webkit-scrollbar-thumb:hover {
+    background: rgba(102, 126, 234, 0.9);
+  }
+}
+
+.main-content{
+  padding: 1rem;
+  background: rgba(154, 154, 154, 0.11);
+  border-radius: 1rem;
+
+  /* Thin scrollbar for Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(102, 126, 234, 0.6) transparent;
+}
+
+.main-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.main-content::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 10px;
+}
+
+.main-content::-webkit-scrollbar-thumb {
+  background: rgba(102, 126, 234, 0.6);
+  border-radius: 10px;
+  transition: background 0.3s ease;
+}
+
+.main-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(102, 126, 234, 0.9);
 }
 
 .navigation {

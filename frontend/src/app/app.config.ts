@@ -8,7 +8,7 @@ import {provideHttpClient, withInterceptors} from '@angular/common/http';
 import {provideAnimationsAsync} from '@angular/platform-browser/animations/async';
 
 import {routes} from './app.routes';
-import Nora from '@primeuix/themes/nora';
+import Lara from '@primeuix/themes/lara';
 import {providePrimeNG} from 'primeng/config';
 import {definePreset} from '@primeuix/themes';
 import {DialogService} from 'primeng/dynamicdialog';
@@ -16,7 +16,7 @@ import {ConfirmationService, MessageService} from 'primeng/api';
 import {authInterceptor} from './interceptors/auth.interceptor';
 
 
-const CustomPreset = definePreset(Nora, {
+const CustomPreset = definePreset(Lara, {
   primitive: {
     // override primitive colors
     blue: {

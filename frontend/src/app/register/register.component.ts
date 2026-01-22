@@ -19,6 +19,7 @@ import {BaseComponent} from '../services/base-component';
 import {DialogService} from 'primeng/dynamicdialog';
 import {ConfirmationService, MessageService} from 'primeng/api';
 import {ApiResponse} from '../models/user.models';
+import {Tooltip} from 'primeng/tooltip';
 
 interface Partner {
   // "partner_name", "account_number", "contact_person", "contact_phone", "account_id", "business_reference", "active", "package"
@@ -50,7 +51,8 @@ interface Partner {
     DatePickerModule,
     AutoComplete,
     Button,
-    FileUpload
+    FileUpload,
+    Tooltip
   ],
   templateUrl: './register.html',
   styleUrls: ['./register.css']

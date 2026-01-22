@@ -9,6 +9,8 @@ import {Events} from './services/events';
 import {AuthService} from './services/auth.service';
 import {LoaderService} from './services/loader.service';
 import {NgClass} from '@angular/common';
+import {Accordion, AccordionContent, AccordionHeader, AccordionPanel} from 'primeng/accordion';
+import {Tooltip} from 'primeng/tooltip';
 
 @Component({
   selector: 'app-root',
@@ -17,7 +19,12 @@ import {NgClass} from '@angular/common';
     OverlayBadge,
     Avatar,
     RouterOutlet,
-    NgClass
+    NgClass,
+    Accordion,
+    AccordionPanel,
+    AccordionHeader,
+    AccordionContent,
+    Tooltip
   ],
   templateUrl: './app.html',
   styleUrl: './app.css'
@@ -50,6 +57,7 @@ export class App implements OnInit {
           {
             label: 'Partners',
             icon: 'pi pi-ticket',
+            value:0,
             command: () => {
               this.router.navigate(['/register'])
             }
@@ -57,6 +65,7 @@ export class App implements OnInit {
           {
             label: 'Modules & Subscriptions',
             icon: 'pi pi-verified',
+            value:1,
             command: () => {
               this.router.navigate(['/configuration'])
             }
@@ -70,6 +79,7 @@ export class App implements OnInit {
           {
             label: 'Access Users',
             icon: 'pi pi-users',
+            value:0,
             command: () => {
               this.router.navigate(['/users'])
             }
@@ -77,6 +87,7 @@ export class App implements OnInit {
           {
             label: 'Bus Booking',
             icon: 'pi pi-ticket',
+            value:1,
             command: () => {
               this.router.navigate(['//dashboard'])
             }
@@ -84,6 +95,7 @@ export class App implements OnInit {
           {
             label: 'Drivers',
             icon: 'pi pi-user',
+            value:2,
             command: () => {
               this.router.navigate(['/dashboard'])
             }

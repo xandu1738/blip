@@ -214,17 +214,17 @@
 }
 
 .p-accordionpanel:not(.p-disabled).p-accordionpanel-active > .p-accordionheader {
-  background: #031738 !important;
+  /*background: #031738 !important;*/
   color: var(--text) !important;
 }
 
 .p-accordionpanel:not(.p-accordionpanel-active):not(.p-disabled) > .p-accordionheader:hover {
-  background: #031738 !important;
+  /*background: #031738 !important;*/
   color: var(--text) !important;
 }
 
 .p-accordionpanel:not(.p-accordionpanel-active):not(.p-disabled) > .p-accordionheader {
-  background: #031738 !important;
+  /*background: #031738 !important;*/
   color: var(--text) !important;
 }
 
