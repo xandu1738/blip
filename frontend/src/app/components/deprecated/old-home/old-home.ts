@@ -1,38 +1,39 @@
-import {Component, OnInit} from '@angular/core';
-import {TableModule} from 'primeng/table';
-import {Avatar} from 'primeng/avatar';
-import {Router, RouterOutlet} from '@angular/router';
+import {Component, OnInit, signal, WritableSignal} from '@angular/core';
+import {ButtonDirective} from "primeng/button";
+import {ConfirmDialog} from "primeng/confirmdialog";
+import {LoginComponent} from "../../login/login.component";
+import {Menubar} from "primeng/menubar";
+import {Ripple} from "primeng/ripple";
+import {Router, RouterOutlet} from "@angular/router";
+import {SubscriptionsList} from "../../Subscriptions/subscriptions-list/subscriptions-list";
+import {Toast} from "primeng/toast";
 import {MenuItem} from 'primeng/api';
-import {CommonService} from './components/services/commonService';
-import {Events} from './components/services/events';
-import {AuthService} from './components/services/auth.service';
-import {LoaderService} from './components/services/loader.service';
-import {NgClass} from '@angular/common';
-import {Button} from 'primeng/button';
-import {SubscriptionsList} from './components/Subscriptions/subscriptions-list/subscriptions-list';
-import {LandingComponent} from './components/common/landing/landing.component';
+import {CommonService} from '../../services/commonService';
+import {Events} from '../../services/events';
+import {AuthService} from '../../services/auth.service';
+import {LoaderService} from '../../services/loader.service';
 
 @Component({
-  selector: 'app-root',
+  selector: 'app-old-home',
   standalone: true,
   imports: [
-    TableModule,
-    Avatar,
+    ButtonDirective,
+    ConfirmDialog,
+    LoginComponent,
+    Menubar,
+    Ripple,
     RouterOutlet,
-    NgClass,
-    Button,
     SubscriptionsList,
-    LandingComponent
+    Toast
   ],
-  templateUrl: './app.html',
-  styleUrl: './app.css'
+  templateUrl: './old-home.html',
+  styleUrl: './old-home.css',
 })
-export class App implements OnInit {
+export class OldHome implements OnInit {
   isLoggedIn: boolean = false; // Add login state
-  isLicensed: boolean = false; // Add licensed state
-  showLogin: boolean = false;
-  showLoader: boolean = false;
+  isLicensed: boolean = false; // Add login state
   items: MenuItem[] | undefined;
+  showLoader: boolean = false;
 
   constructor(
     protected commonService: CommonService,
@@ -78,7 +79,6 @@ export class App implements OnInit {
           {
             label: 'Partners',
             icon: 'pi pi-ticket',
-            value: 0,
             command: () => {
               this.router.navigate(['/register'])
             }
@@ -86,7 +86,6 @@ export class App implements OnInit {
           {
             label: 'Modules & Subscriptions',
             icon: 'pi pi-verified',
-            value: 1,
             command: () => {
               this.router.navigate(['/configuration'])
             }
@@ -100,7 +99,6 @@ export class App implements OnInit {
           {
             label: 'Access Users',
             icon: 'pi pi-users',
-            value: 0,
             command: () => {
               this.router.navigate(['/users'])
             }
@@ -108,7 +106,6 @@ export class App implements OnInit {
           {
             label: 'Bus Booking',
             icon: 'pi pi-ticket',
-            value: 1,
             command: () => {
               this.router.navigate(['//dashboard'])
             }
@@ -116,7 +113,6 @@ export class App implements OnInit {
           {
             label: 'Drivers',
             icon: 'pi pi-user',
-            value: 2,
             command: () => {
               this.router.navigate(['/dashboard'])
             }
@@ -228,5 +224,23 @@ export class App implements OnInit {
     });
   }
 
+  protected currentTheme: WritableSignal<string> = signal('light');
 
+  toggleDarkMode() {
+    const element = document.querySelector('html')!;
+    element.classList.toggle('dark-mode');
+    this.currentTheme.set(element.classList.contains('dark-mode') ? 'dark' : 'light');
+  }
+
+  handleLogout() {
+    this.authService.logout();
+    this.isMobileMenuOpen = false;
+    this.router.navigate(['/login']);
+  }
+
+  isMobileMenuOpen: boolean = false;
+
+  toggleMobileMenu() {
+    this.isMobileMenuOpen = !this.isMobileMenuOpen;
+  }
 }

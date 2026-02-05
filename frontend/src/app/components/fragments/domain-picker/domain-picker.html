@@ -1,0 +1,12 @@
+<p-floatlabel class="w-full">
+  <p-autoComplete id="domain"
+                  [(ngModel)]="selectedDomain"
+                  optionValue="optionValue"
+                  optionLabel="optionLabel"
+                  (ngModelChange)="onSelectedDomain($event)"
+                  [dropdown]="true"
+                  [style]="{width: '100%'}"
+                  [suggestions]="filteredDomains"
+                  (completeMethod)="search($event)" />
+  <label for="domain">Select Role</label>
+</p-floatlabel>

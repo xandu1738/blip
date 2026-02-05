@@ -8,7 +8,17 @@ package com.ceres.blip.models.enums;
  * After Changing, remember to re-run the project for these changes to be reflected in your database
  */
 public enum AppDomains {
-    BACK_OFFICE,
-    CLIENT_ADMIN,
-    PUBLIC
+    BACK_OFFICE("Back Office"),
+    CLIENT_ADMIN("Client Admin"),
+    PUBLIC("Public");
+
+    private final String domainName;
+
+    AppDomains(String domainName) {
+        this.domainName = domainName;
+    }
+
+    public String getDomainName() {
+        return domainName;
+    }
 }

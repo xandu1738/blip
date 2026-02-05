@@ -1,5 +1,14 @@
 <!--<app-old-home></app-old-home>-->
-
+@if (!isLoggedIn) {
+  <div class="">
+<!--    <app-login></app-login>-->
+    <app-landing></app-landing>
+  </div>
+} @else if (isLoggedIn && !isLicensed) {
+  <div class="w-full">
+    <app-subscriptions-list></app-subscriptions-list>
+  </div>
+} @else {
 <div class="min-h-screen w-full home-screen">
   <!-- Header -->
   <header class="flex items-center gap-8 px-6 home-header">
@@ -16,15 +25,21 @@
     </div>
 
     <div class="flex items-center gap-4 ml-auto">
-      <p-overlayBadge pTooltip="Notifications" tooltipPosition="bottom" value="2">
-        <i class="pi pi-bell" style="font-size: 1.5rem;cursor: pointer"></i>
-      </p-overlayBadge>
+      <p-button
+        label="Notifications"
+        icon="pi pi-bell"
+        badge="2"
+        severity="secondary"
+        />
+<!--      <p-overlayBadge pTooltip="Notifications" tooltipPosition="bottom" value="2">-->
+<!--        <i class="pi pi-bell" style="font-size: 1.5rem;cursor: pointer"></i>-->
+<!--      </p-overlayBadge>-->
       <div class="flex items-center gap-3 px-4 py-2 rounded-lg cursor-pointer">
-        <p-avatar icon="pi pi-user" shape="circle" size="xlarge"/>
         <div>
           <div class="text-sm font-semibold">Operator</div>
           <div class="text-xs opacity-70">Level 5 Access</div>
         </div>
+        <p-avatar icon="pi pi-user" shape="circle" size="xlarge"/>
       </div>
     </div>
   </header>
@@ -102,3 +117,4 @@
     </main>
   </div>
 </div>
+}

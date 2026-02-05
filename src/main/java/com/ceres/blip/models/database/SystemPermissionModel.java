@@ -17,7 +17,7 @@ public class SystemPermissionModel {
     @Column(name = "id")
     private Long id;
     @Basic
-    @Column(name = "permission_code")
+    @Column(name = "permission_code", nullable = false)
     private String permissionCode;
     @Basic
     @Column(name = "permission_name")

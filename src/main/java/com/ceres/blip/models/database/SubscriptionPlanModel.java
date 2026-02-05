@@ -25,7 +25,7 @@ public class SubscriptionPlanModel {
     @Column(name = "name", length = Integer.MAX_VALUE)
     private String name;
 
-    @Column(name = "icon", length = Integer.MAX_VALUE)
+    @Column(name = "icon", length = Integer.MAX_VALUE, nullable = false)
     private String icon;
 
     @Enumerated(EnumType.STRING)

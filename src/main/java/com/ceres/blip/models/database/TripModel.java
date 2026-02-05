@@ -18,10 +18,10 @@ public class TripModel {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "route_id")
+    @Column(name = "route_id",nullable = false)
     private Long routeId;
 
-    @Column(name = "bus_id")
+    @Column(name = "bus_id", nullable = false)
     private Long busId;
 
     @Column(name = "driver_id")

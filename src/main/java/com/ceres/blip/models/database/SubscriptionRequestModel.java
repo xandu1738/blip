@@ -3,7 +3,6 @@ package com.ceres.blip.models.database;
 import com.ceres.blip.models.enums.SubscriptionPeriods;
 import com.ceres.blip.models.enums.SubscriptionRequestStatus;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;

@@ -1,20 +1,20 @@
 import {Routes} from '@angular/router';
-import {DashboardComponent} from './dashboard/dashboard.component';
-import {BusBookingComponent} from './bus-booking/bus-booking.component';
-import {ParcelsComponent} from './parcels/parcels.component';
-import {TrackingComponent} from './tracking/tracking.component';
-import {PaymentsComponent} from './payments/payments.component';
-import {ReportsComponent} from './reports/reports.component';
-import {SettingsComponent} from './settings/settings.component';
-import {LoginComponent} from './login/login.component';
-import {RegisterComponent} from './register/register.component';
+import {DashboardComponent} from './components/dashboard/dashboard.component';
+import {BusBookingComponent} from './components/bus-booking/bus-booking.component';
+import {ParcelsComponent} from './components/parcels/parcels.component';
+import {TrackingComponent} from './components/tracking/tracking.component';
+import {PaymentsComponent} from './components/payments/payments.component';
+import {ReportsComponent} from './components/reports/reports.component';
+import {SettingsComponent} from './components/settings/settings.component';
+import {LoginComponent} from './components/login/login.component';
+import {RegisterComponent} from './components/register/register.component';
 import {authGuard} from './guards/auth.guard';
-import {Configuration} from './configuration/configuration';
-import {Users} from './UserManagement/users/users';
-import {SubscriptionsList} from './Subscriptions/subscriptions-list/subscriptions-list';
+import {Configuration} from './components/configuration/configuration';
+import {Users} from './components/UserManagement/users/users';
+import {SubscriptionsList} from './components/Subscriptions/subscriptions-list/subscriptions-list';
 import {licenseGuard} from './guards/license-guard';
 import {subscriptionsGuard} from './guards/subscriptions-guard';
-import {Subscriptions} from './Subscriptions/subscriptions/subscriptions';
+import {Subscriptions} from './components/Subscriptions/subscriptions/subscriptions';
 
 export const routes: Routes = [
   {

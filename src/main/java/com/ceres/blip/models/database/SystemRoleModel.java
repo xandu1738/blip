@@ -20,10 +20,10 @@ public class SystemRoleModel {
     @Column(name = "id")
     private Long id;
     @Basic
-    @Column(name = "role_name")
+    @Column(name = "role_name", nullable = false)
     private String roleName;
     @Basic
-    @Column(name = "role_code")
+    @Column(name = "role_code", nullable = false)
     private String roleCode;
     @Basic
     @Column(name = "created_at")

@@ -16,9 +16,9 @@ public class SystemRolePermissionAssignmentModel {
     @Column(name = "id")
     private Long id;
     @Basic
-    @Column(name = "permission_code")
+    @Column(name = "permission_code", nullable = false)
     private String permissionCode;
     @Basic
-    @Column(name = "role_code")
+    @Column(name = "role_code", nullable = false)
     private String roleCode;
 }

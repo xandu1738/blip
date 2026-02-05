@@ -64,7 +64,7 @@ public class SetUp {
 
             if (existingRole.isEmpty()) {
                 SystemRoleModel role = SystemRoleModel.builder()
-                        .roleName(value.name().replaceAll("_"," "))
+                        .roleName(value.name().replace("_"," "))
                         .roleCode(value.name())
                         .roleDomain(value.getDomain())
                         .build();
