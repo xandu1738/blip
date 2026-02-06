@@ -83,7 +83,8 @@ export class Users extends BaseComponent implements OnInit {
   }
 
   protected addUser() {
-    this.showAddDialog = true;
+    // this.showAddDialog = true;
+    this.router.navigate(['/user-form']).catch(err => console.log(err));
   }
 
   protected filterUsers() {

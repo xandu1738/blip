@@ -84,7 +84,7 @@ export class App implements OnInit {
             }
           },
           {
-            label: 'Modules & Subscriptions',
+            label: 'Modules',
             icon: 'pi pi-verified',
             value: 1,
             command: () => {
@@ -98,11 +98,11 @@ export class App implements OnInit {
         icon: 'pi pi-box',
         items: [
           {
-            label: 'Access Users',
+            label: 'Access Management',
             icon: 'pi pi-users',
             value: 0,
             command: () => {
-              this.router.navigate(['/users'])
+              this.router.navigate(['/access'])
             }
           },
           {
@@ -143,7 +143,7 @@ export class App implements OnInit {
             }
           },
           {
-            label: 'Subscriptions & Licenses',
+            label: 'Licenses',
             icon: 'pi pi-check-circle',
             command: () => {
               this.router.navigate(['/manage-subscriptions'])

@@ -7,12 +7,20 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
+import java.util.HashMap;
+import java.util.Map;
 import java.io.UnsupportedEncodingException;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class RegistrationEventListener implements ApplicationListener<UserRegistrationEvent> {
     private final MessagingService mailService;
+    private final RedisTemplate<String, Object> redisTemplate;
+    private final ObjectMapper objectMapper;
 
     @Override
     public void onApplicationEvent(UserRegistrationEvent event) {
@@ -20,6 +28,22 @@ public class RegistrationEventListener implements ApplicationListener<UserRegist
         SystemUserModel user = event.getUser();
         String password = event.getPassword();
         String applicationUrl = event.getApplicationUrl();
+
+        // Publish to Redis
+        try {
+            Map<String, String> message = new HashMap<>();
+            message.put("type", "USER_REGISTRATION");
+            message.put("email", user.getEmail());
+            message.put("firstName", user.getFirstName());
+            message.put("lastName", user.getLastName());
+            message.put("timestamp", String.valueOf(System.currentTimeMillis()));
+
+            String jsonMessage = objectMapper.writeValueAsString(message);
+            redisTemplate.convertAndSend("notification-channel", jsonMessage);
+            log.info("Published user registration event to Redis: {}", user.getEmail());
+        } catch (Exception e) {
+            log.error("Failed to publish registration event to Redis", e);
+        }
 
         String mailBody = """
                 <p>Dear %s %s,</p>

@@ -112,7 +112,7 @@ springdoc:
     path: /api-docs
 
 cors:
-  allowed-origins: http://localhost:4200,https://*.sakisofts.com,http://192.168.30.231:4200
+  allowed-origins: http://localhost:4200,http://localhost:7071,https://*.sakisofts.com,http://192.168.30.231:4200
 
 contacts:
   phone:

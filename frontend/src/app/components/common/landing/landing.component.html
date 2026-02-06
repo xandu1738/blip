@@ -1,550 +1,611 @@
-<body class="font-sans overflow-x-hidden bg-darker text-slate-100">
-<!-- Navigation -->
-<nav id="navbar" class="fixed top-0 w-full px-6 md:px-12 lg:px-20 py-4 md:py-6 flex justify-between items-center z-50 transition-all duration-300">
-  <div class="text-2xl md:text-3xl font-bold gradient-text tracking-tight">Blip</div>
+@if (loginVisible){
+  <app-login></app-login>
+} @else {
+  <div class="font-sans overflow-x-hidden bg-darker text-slate-100">
+    <!-- Navigation -->
+    <nav id="navbar"
+         class="fixed top-0 w-full px-6 md:px-12 lg:px-20 py-4 md:py-6 flex justify-between items-center z-50 transition-all duration-300">
+      <div class="text-2xl md:text-3xl font-bold gradient-text tracking-tight">Blip</div>
 
-  <!-- Desktop Menu -->
-  <ul class="hidden md:flex gap-6 lg:gap-10 list-none">
-    <li><a href="#features" class="text-slate-200 hover:text-indigo-400 transition-colors duration-300 font-medium">Features</a></li>
-    <li><a href="#how-it-works" class="text-slate-200 hover:text-indigo-400 transition-colors duration-300 font-medium">How It Works</a></li>
-    <li><a href="#pricing" class="text-slate-200 hover:text-indigo-400 transition-colors duration-300 font-medium">Pricing</a></li>
-    <li><a href="#contact" class="text-slate-200 hover:text-indigo-400 transition-colors duration-300 font-medium">Contact</a></li>
-  </ul>
+      <!-- Desktop Menu -->
+      <ul class="hidden md:flex gap-6 lg:gap-10 list-none">
+        <li><a href="#features" class="text-slate-200 hover:text-indigo-400 transition-colors duration-300 font-medium">Features</a>
+        </li>
+        <li><a href="#how-it-works"
+               class="text-slate-200 hover:text-indigo-400 transition-colors duration-300 font-medium">How It Works</a>
+        </li>
+        <li><a href="#pricing" class="text-slate-200 hover:text-indigo-400 transition-colors duration-300 font-medium">Pricing</a>
+        </li>
+        <li><a href="#contact" class="text-slate-200 hover:text-indigo-400 transition-colors duration-300 font-medium">Contact</a>
+        </li>
+      </ul>
 
-  <a routerLink="/login" class="hidden md:inline-block gradient-primary text-white px-6 lg:px-8 py-2.5 lg:py-3 rounded-full font-bold transition-all duration-300 hover:shadow-lg hover:shadow-indigo-500/50 hover:-translate-y-0.5">
-    Book Now
-  </a>
-
-  <!-- Mobile Menu Button -->
-  <button id="mobile-menu-btn" class="md:hidden text-white text-2xl">
-    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-    </svg>
-  </button>
-</nav>
-
-<!-- Mobile Menu -->
-<div id="mobile-menu" class="mobile-menu fixed top-20 left-0 right-0 bg-slate-900/95 backdrop-blur-lg z-40 p-6">
-  <ul class="flex flex-col gap-4">
-    <li><a href="#features" class="block text-slate-200 hover:text-indigo-400 transition-colors py-2">Features</a></li>
-    <li><a href="#how-it-works" class="block text-slate-200 hover:text-indigo-400 transition-colors py-2">How It Works</a></li>
-    <li><a href="#pricing" class="block text-slate-200 hover:text-indigo-400 transition-colors py-2">Pricing</a></li>
-    <li><a href="#contact" class="block text-slate-200 hover:text-indigo-400 transition-colors py-2">Contact</a></li>
-    <li><a href="#book" class="block gradient-primary text-white px-6 py-3 rounded-full font-bold text-center mt-2">Book Now</a></li>
-  </ul>
-</div>
-
-<!-- Hero Section -->
-<section class="relative min-h-screen flex items-center justify-center overflow-hidden">
-  <div class="hero-bg absolute inset-0 z-0"></div>
-
-  <div class="absolute inset-0 z-[1]">
-    <div class="shape shape-1"></div>
-    <div class="shape shape-2"></div>
-    <div class="shape shape-3"></div>
-  </div>
-
-  <div class="relative z-10 text-center max-w-5xl px-6 md:px-8 animate-fade-up">
-    <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-extrabold leading-tight mb-6 gradient-text">
-      Travel Smarter,<br class="hidden sm:block">Ship Faster
-    </h1>
-    <p class="text-lg sm:text-xl md:text-2xl text-slate-300 mb-8 md:mb-12 max-w-3xl mx-auto" style="animation-delay: 0.2s;">
-      Next-generation bus booking and logistics platform. Book your journey or ship your goods with confidence.
-    </p>
-    <div class="flex flex-col sm:flex-row gap-4 justify-center items-center" style="animation-delay: 0.4s;">
-      <a href="#book" class="w-full sm:w-auto gradient-primary text-white px-8 md:px-12 py-3.5 md:py-4 rounded-full font-bold text-base md:text-lg transition-all duration-300 hover:shadow-xl hover:shadow-indigo-500/50 hover:-translate-y-1">
-        Book Your Ride
+      <a (click)="gotoLogin()"
+         class="hidden md:inline-block gradient-primary text-white px-6 lg:px-8 py-2.5 lg:py-3 rounded-full font-bold transition-all duration-300 hover:shadow-lg hover:shadow-indigo-500/50 hover:-translate-y-0.5">
+        Login
       </a>
-      <a href="#logistics" class="w-full sm:w-auto bg-transparent text-slate-100 border-2 border-slate-100 px-8 md:px-12 py-3.5 md:py-4 rounded-full font-bold text-base md:text-lg transition-all duration-300 hover:bg-slate-100 hover:text-slate-900 hover:-translate-y-1">
-        Ship Cargo
-      </a>
+
+      <!-- Mobile Menu Button -->
+      <button id="mobile-menu-btn" class="md:hidden text-white text-2xl">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </button>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="mobile-menu fixed top-20 left-0 right-0 bg-slate-900/95 backdrop-blur-lg z-40 p-6">
+      <ul class="flex flex-col gap-4">
+        <li><a href="#features" class="block text-slate-200 hover:text-indigo-400 transition-colors py-2">Features</a>
+        </li>
+        <li><a href="#how-it-works" class="block text-slate-200 hover:text-indigo-400 transition-colors py-2">How It
+          Works</a></li>
+        <li><a href="#pricing" class="block text-slate-200 hover:text-indigo-400 transition-colors py-2">Pricing</a></li>
+        <li><a href="#contact" class="block text-slate-200 hover:text-indigo-400 transition-colors py-2">Contact</a></li>
+        <li><a href="#book" class="block gradient-primary text-white px-6 py-3 rounded-full font-bold text-center mt-2">Book
+          Now</a></li>
+      </ul>
     </div>
-  </div>
 
-  <div class="absolute bottom-12 left-1/2 -translate-x-1/2 z-10 animate-bounce-slow">
-    <svg class="w-8 h-8 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
-    </svg>
-  </div>
-</section>
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex items-center justify-center overflow-hidden">
+      <div class="hero-bg absolute inset-0 z-0"></div>
 
-<!-- Features Section -->
-<section id="features" class="relative py-16 md:py-24 lg:py-32 px-6 md:px-12 lg:px-20 bg-gradient-to-b from-darker to-dark">
-  <div class="max-w-7xl mx-auto">
-    <div class="text-center mb-12 md:mb-20">
-                <span class="inline-block bg-indigo-500/10 text-indigo-400 px-6 py-2 rounded-full font-semibold text-sm uppercase tracking-wider mb-4">
+      <div class="absolute inset-0 z-[1]">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+      </div>
+
+      <div class="relative z-10 text-center max-w-5xl px-6 md:px-8 animate-fade-up">
+        <h1
+          class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-extrabold leading-tight mb-6 gradient-text">
+          Travel Smarter,<br class="hidden sm:block">Ship Faster
+        </h1>
+        <p class="text-lg sm:text-xl md:text-2xl text-slate-300 mb-8 md:mb-12 max-w-3xl mx-auto"
+           style="animation-delay: 0.2s;">
+          Next-generation bus booking and logistics platform. Book your journey or ship your goods with confidence.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center items-center" style="animation-delay: 0.4s;">
+          <a href="#book"
+             class="w-full sm:w-auto gradient-primary text-white px-8 md:px-12 py-3.5 md:py-4 rounded-full font-bold text-base md:text-lg transition-all duration-300 hover:shadow-xl hover:shadow-indigo-500/50 hover:-translate-y-1">
+            Book Your Ride
+          </a>
+          <a href="#logistics"
+             class="w-full sm:w-auto bg-transparent text-slate-100 border-2 border-slate-100 px-8 md:px-12 py-3.5 md:py-4 rounded-full font-bold text-base md:text-lg transition-all duration-300 hover:bg-slate-100 hover:text-slate-900 hover:-translate-y-1">
+            Ship Cargo
+          </a>
+        </div>
+      </div>
+
+      <div class="absolute bottom-12 left-1/2 -translate-x-1/2 z-10 animate-bounce-slow">
+        <svg class="w-8 h-8 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+        </svg>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features"
+             class="relative py-16 md:py-24 lg:py-32 px-6 md:px-12 lg:px-20 bg-gradient-to-b from-darker to-dark">
+      <div class="max-w-7xl mx-auto">
+        <div class="text-center mb-12 md:mb-20">
+                <span
+                  class="inline-block bg-indigo-500/10 text-indigo-400 px-6 py-2 rounded-full font-semibold text-sm uppercase tracking-wider mb-4">
                     Why Choose Us
                 </span>
-      <h2 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 md:mb-6 gradient-text">
-        Premium Features
-      </h2>
-      <p class="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto">
-        Everything you need for seamless travel and logistics management in one platform
-      </p>
-    </div>
-
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-      <div class="feature-card group bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl md:rounded-3xl p-6 md:p-10 transition-all duration-500 hover:-translate-y-2 hover:border-indigo-500 hover:shadow-2xl hover:shadow-indigo-500/20">
-        <div class="w-16 h-16 md:w-20 md:h-20 gradient-primary rounded-xl md:rounded-2xl flex items-center justify-center text-3xl md:text-4xl mb-4 md:mb-6">
-          🚌
+          <h2 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 md:mb-6 gradient-text">
+            Premium Features
+          </h2>
+          <p class="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto">
+            Everything you need for seamless travel and logistics management in one platform
+          </p>
         </div>
-        <h3 class="text-xl md:text-2xl font-bold mb-3 md:mb-4">Real-Time Tracking</h3>
-        <p class="text-slate-400 leading-relaxed">
-          Track your bus or shipment in real-time with GPS precision. Know exactly where you are and when you'll arrive.
-        </p>
-      </div>
 
-      <div class="feature-card group bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl md:rounded-3xl p-6 md:p-10 transition-all duration-500 hover:-translate-y-2 hover:border-indigo-500 hover:shadow-2xl hover:shadow-indigo-500/20">
-        <div class="w-16 h-16 md:w-20 md:h-20 gradient-primary rounded-xl md:rounded-2xl flex items-center justify-center text-3xl md:text-4xl mb-4 md:mb-6">
-          💳
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+          <div
+            class="feature-card group bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl md:rounded-3xl p-6 md:p-10 transition-all duration-500 hover:-translate-y-2 hover:border-indigo-500 hover:shadow-2xl hover:shadow-indigo-500/20">
+            <div
+              class="w-16 h-16 md:w-20 md:h-20 gradient-primary rounded-xl md:rounded-2xl flex items-center justify-center text-3xl md:text-4xl mb-4 md:mb-6">
+              🚌
+            </div>
+            <h3 class="text-xl md:text-2xl font-bold mb-3 md:mb-4">Real-Time Tracking</h3>
+            <p class="text-slate-400 leading-relaxed">
+              Track your bus or shipment in real-time with GPS precision. Know exactly where you are and when you'll
+              arrive.
+            </p>
+          </div>
+
+          <div
+            class="feature-card group bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl md:rounded-3xl p-6 md:p-10 transition-all duration-500 hover:-translate-y-2 hover:border-indigo-500 hover:shadow-2xl hover:shadow-indigo-500/20">
+            <div
+              class="w-16 h-16 md:w-20 md:h-20 gradient-primary rounded-xl md:rounded-2xl flex items-center justify-center text-3xl md:text-4xl mb-4 md:mb-6">
+              💳
+            </div>
+            <h3 class="text-xl md:text-2xl font-bold mb-3 md:mb-4">Instant Booking</h3>
+            <p class="text-slate-400 leading-relaxed">
+              Book tickets or schedule cargo pickup in seconds. Multiple payment options with instant confirmation.
+            </p>
+          </div>
+
+          <div
+            class="feature-card group bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl md:rounded-3xl p-6 md:p-10 transition-all duration-500 hover:-translate-y-2 hover:border-indigo-500 hover:shadow-2xl hover:shadow-indigo-500/20">
+            <div
+              class="w-16 h-16 md:w-20 md:h-20 gradient-primary rounded-xl md:rounded-2xl flex items-center justify-center text-3xl md:text-4xl mb-4 md:mb-6">
+              🎫
+            </div>
+            <h3 class="text-xl md:text-2xl font-bold mb-3 md:mb-4">Digital Tickets</h3>
+            <p class="text-slate-400 leading-relaxed">
+              Paperless travel with QR code tickets. Access everything from your smartphone, anywhere, anytime.
+            </p>
+          </div>
+
+          <div
+            class="feature-card group bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl md:rounded-3xl p-6 md:p-10 transition-all duration-500 hover:-translate-y-2 hover:border-indigo-500 hover:shadow-2xl hover:shadow-indigo-500/20">
+            <div
+              class="w-16 h-16 md:w-20 md:h-20 gradient-primary rounded-xl md:rounded-2xl flex items-center justify-center text-3xl md:text-4xl mb-4 md:mb-6">
+              📦
+            </div>
+            <h3 class="text-xl md:text-2xl font-bold mb-3 md:mb-4">Cargo Management</h3>
+            <p class="text-slate-400 leading-relaxed">
+              Advanced logistics tracking and management. Handle packages from pickup to delivery with ease.
+            </p>
+          </div>
+
+          <div
+            class="feature-card group bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl md:rounded-3xl p-6 md:p-10 transition-all duration-500 hover:-translate-y-2 hover:border-indigo-500 hover:shadow-2xl hover:shadow-indigo-500/20">
+            <div
+              class="w-16 h-16 md:w-20 md:h-20 gradient-primary rounded-xl md:rounded-2xl flex items-center justify-center text-3xl md:text-4xl mb-4 md:mb-6">
+              🔒
+            </div>
+            <h3 class="text-xl md:text-2xl font-bold mb-3 md:mb-4">Secure Payments</h3>
+            <p class="text-slate-400 leading-relaxed">
+              Bank-level encryption for all transactions. Multiple payment methods with fraud protection included.
+            </p>
+          </div>
+
+          <div
+            class="feature-card group bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl md:rounded-3xl p-6 md:p-10 transition-all duration-500 hover:-translate-y-2 hover:border-indigo-500 hover:shadow-2xl hover:shadow-indigo-500/20">
+            <div
+              class="w-16 h-16 md:w-20 md:h-20 gradient-primary rounded-xl md:rounded-2xl flex items-center justify-center text-3xl md:text-4xl mb-4 md:mb-6">
+              ⭐
+            </div>
+            <h3 class="text-xl md:text-2xl font-bold mb-3 md:mb-4">Premium Support</h3>
+            <p class="text-slate-400 leading-relaxed">
+              24/7 customer support team ready to help. Live chat, phone, and email support available always.
+            </p>
+          </div>
         </div>
-        <h3 class="text-xl md:text-2xl font-bold mb-3 md:mb-4">Instant Booking</h3>
-        <p class="text-slate-400 leading-relaxed">
-          Book tickets or schedule cargo pickup in seconds. Multiple payment options with instant confirmation.
-        </p>
       </div>
+    </section>
 
-      <div class="feature-card group bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl md:rounded-3xl p-6 md:p-10 transition-all duration-500 hover:-translate-y-2 hover:border-indigo-500 hover:shadow-2xl hover:shadow-indigo-500/20">
-        <div class="w-16 h-16 md:w-20 md:h-20 gradient-primary rounded-xl md:rounded-2xl flex items-center justify-center text-3xl md:text-4xl mb-4 md:mb-6">
-          🎫
-        </div>
-        <h3 class="text-xl md:text-2xl font-bold mb-3 md:mb-4">Digital Tickets</h3>
-        <p class="text-slate-400 leading-relaxed">
-          Paperless travel with QR code tickets. Access everything from your smartphone, anywhere, anytime.
-        </p>
-      </div>
-
-      <div class="feature-card group bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl md:rounded-3xl p-6 md:p-10 transition-all duration-500 hover:-translate-y-2 hover:border-indigo-500 hover:shadow-2xl hover:shadow-indigo-500/20">
-        <div class="w-16 h-16 md:w-20 md:h-20 gradient-primary rounded-xl md:rounded-2xl flex items-center justify-center text-3xl md:text-4xl mb-4 md:mb-6">
-          📦
-        </div>
-        <h3 class="text-xl md:text-2xl font-bold mb-3 md:mb-4">Cargo Management</h3>
-        <p class="text-slate-400 leading-relaxed">
-          Advanced logistics tracking and management. Handle packages from pickup to delivery with ease.
-        </p>
-      </div>
-
-      <div class="feature-card group bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl md:rounded-3xl p-6 md:p-10 transition-all duration-500 hover:-translate-y-2 hover:border-indigo-500 hover:shadow-2xl hover:shadow-indigo-500/20">
-        <div class="w-16 h-16 md:w-20 md:h-20 gradient-primary rounded-xl md:rounded-2xl flex items-center justify-center text-3xl md:text-4xl mb-4 md:mb-6">
-          🔒
-        </div>
-        <h3 class="text-xl md:text-2xl font-bold mb-3 md:mb-4">Secure Payments</h3>
-        <p class="text-slate-400 leading-relaxed">
-          Bank-level encryption for all transactions. Multiple payment methods with fraud protection included.
-        </p>
-      </div>
-
-      <div class="feature-card group bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl md:rounded-3xl p-6 md:p-10 transition-all duration-500 hover:-translate-y-2 hover:border-indigo-500 hover:shadow-2xl hover:shadow-indigo-500/20">
-        <div class="w-16 h-16 md:w-20 md:h-20 gradient-primary rounded-xl md:rounded-2xl flex items-center justify-center text-3xl md:text-4xl mb-4 md:mb-6">
-          ⭐
-        </div>
-        <h3 class="text-xl md:text-2xl font-bold mb-3 md:mb-4">Premium Support</h3>
-        <p class="text-slate-400 leading-relaxed">
-          24/7 customer support team ready to help. Live chat, phone, and email support available always.
-        </p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- How It Works Section -->
-<section id="how-it-works" class="relative py-16 md:py-24 lg:py-32 px-6 md:px-12 lg:px-20 bg-dark overflow-hidden">
-  <div class="max-w-6xl mx-auto">
-    <div class="text-center mb-12 md:mb-20">
-                <span class="inline-block bg-indigo-500/10 text-indigo-400 px-6 py-2 rounded-full font-semibold text-sm uppercase tracking-wider mb-4">
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="relative py-16 md:py-24 lg:py-32 px-6 md:px-12 lg:px-20 bg-dark overflow-hidden">
+      <div class="max-w-6xl mx-auto">
+        <div class="text-center mb-12 md:mb-20">
+                <span
+                  class="inline-block bg-indigo-500/10 text-indigo-400 px-6 py-2 rounded-full font-semibold text-sm uppercase tracking-wider mb-4">
                     Simple Process
                 </span>
-      <h2 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 md:mb-6 gradient-text">
-        How It Works
-      </h2>
-      <p class="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto">
-        Four simple steps to your destination or delivery
-      </p>
-    </div>
-
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10">
-      <div class="step text-center">
-        <div class="w-20 h-20 md:w-24 md:h-24 gradient-primary rounded-full flex items-center justify-center mx-auto mb-4 md:mb-6 text-2xl md:text-3xl font-extrabold font-mono shadow-lg shadow-indigo-500/30">
-          01
+          <h2 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 md:mb-6 gradient-text">
+            How It Works
+          </h2>
+          <p class="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto">
+            Four simple steps to your destination or delivery
+          </p>
         </div>
-        <h3 class="text-lg md:text-xl font-bold mb-2 md:mb-3">Choose Route</h3>
-        <p class="text-slate-400 leading-relaxed text-sm md:text-base">
-          Select your destination or delivery location from our extensive network
-        </p>
-      </div>
 
-      <div class="step text-center">
-        <div class="w-20 h-20 md:w-24 md:h-24 gradient-primary rounded-full flex items-center justify-center mx-auto mb-4 md:mb-6 text-2xl md:text-3xl font-extrabold font-mono shadow-lg shadow-indigo-500/30">
-          02
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10">
+          <div class="step text-center">
+            <div
+              class="w-20 h-20 md:w-24 md:h-24 gradient-primary rounded-full flex items-center justify-center mx-auto mb-4 md:mb-6 text-2xl md:text-3xl font-extrabold font-mono shadow-lg shadow-indigo-500/30">
+              01
+            </div>
+            <h3 class="text-lg md:text-xl font-bold mb-2 md:mb-3">Choose Route</h3>
+            <p class="text-slate-400 leading-relaxed text-sm md:text-base">
+              Select your destination or delivery location from our extensive network
+            </p>
+          </div>
+
+          <div class="step text-center">
+            <div
+              class="w-20 h-20 md:w-24 md:h-24 gradient-primary rounded-full flex items-center justify-center mx-auto mb-4 md:mb-6 text-2xl md:text-3xl font-extrabold font-mono shadow-lg shadow-indigo-500/30">
+              02
+            </div>
+            <h3 class="text-lg md:text-xl font-bold mb-2 md:mb-3">Pick Schedule</h3>
+            <p class="text-slate-400 leading-relaxed text-sm md:text-base">
+              Choose your preferred departure time or pickup window
+            </p>
+          </div>
+
+          <div class="step text-center">
+            <div
+              class="w-20 h-20 md:w-24 md:h-24 gradient-primary rounded-full flex items-center justify-center mx-auto mb-4 md:mb-6 text-2xl md:text-3xl font-extrabold font-mono shadow-lg shadow-indigo-500/30">
+              03
+            </div>
+            <h3 class="text-lg md:text-xl font-bold mb-2 md:mb-3">Book & Pay</h3>
+            <p class="text-slate-400 leading-relaxed text-sm md:text-base">
+              Secure your reservation with instant payment confirmation
+            </p>
+          </div>
+
+          <div class="step text-center">
+            <div
+              class="w-20 h-20 md:w-24 md:h-24 gradient-primary rounded-full flex items-center justify-center mx-auto mb-4 md:mb-6 text-2xl md:text-3xl font-extrabold font-mono shadow-lg shadow-indigo-500/30">
+              04
+            </div>
+            <h3 class="text-lg md:text-xl font-bold mb-2 md:mb-3">Travel or Ship</h3>
+            <p class="text-slate-400 leading-relaxed text-sm md:text-base">
+              Enjoy your journey or track your shipment in real-time
+            </p>
+          </div>
         </div>
-        <h3 class="text-lg md:text-xl font-bold mb-2 md:mb-3">Pick Schedule</h3>
-        <p class="text-slate-400 leading-relaxed text-sm md:text-base">
-          Choose your preferred departure time or pickup window
-        </p>
       </div>
+    </section>
 
-      <div class="step text-center">
-        <div class="w-20 h-20 md:w-24 md:h-24 gradient-primary rounded-full flex items-center justify-center mx-auto mb-4 md:mb-6 text-2xl md:text-3xl font-extrabold font-mono shadow-lg shadow-indigo-500/30">
-          03
-        </div>
-        <h3 class="text-lg md:text-xl font-bold mb-2 md:mb-3">Book & Pay</h3>
-        <p class="text-slate-400 leading-relaxed text-sm md:text-base">
-          Secure your reservation with instant payment confirmation
-        </p>
-      </div>
-
-      <div class="step text-center">
-        <div class="w-20 h-20 md:w-24 md:h-24 gradient-primary rounded-full flex items-center justify-center mx-auto mb-4 md:mb-6 text-2xl md:text-3xl font-extrabold font-mono shadow-lg shadow-indigo-500/30">
-          04
-        </div>
-        <h3 class="text-lg md:text-xl font-bold mb-2 md:mb-3">Travel or Ship</h3>
-        <p class="text-slate-400 leading-relaxed text-sm md:text-base">
-          Enjoy your journey or track your shipment in real-time
-        </p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Pricing Section -->
-<section id="pricing" class="relative py-16 md:py-24 lg:py-32 px-6 md:px-12 lg:px-20 bg-gradient-to-b from-dark to-darker">
-  <div class="max-w-7xl mx-auto">
-    <div class="text-center mb-12 md:mb-20">
-                <span class="inline-block bg-indigo-500/10 text-indigo-400 px-6 py-2 rounded-full font-semibold text-sm uppercase tracking-wider mb-4">
+    <!-- Pricing Section -->
+    <section id="pricing"
+             class="relative py-16 md:py-24 lg:py-32 px-6 md:px-12 lg:px-20 bg-gradient-to-b from-dark to-darker">
+      <div class="max-w-7xl mx-auto">
+        <div class="text-center mb-12 md:mb-20">
+                <span
+                  class="inline-block bg-indigo-500/10 text-indigo-400 px-6 py-2 rounded-full font-semibold text-sm uppercase tracking-wider mb-4">
                     Flexible Plans
                 </span>
-      <h2 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 md:mb-6 gradient-text">
-        Choose Your Plan
-      </h2>
-      <p class="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto">
-        Transparent pricing for every need
-      </p>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-      <!-- Basic Plan -->
-      <div class="pricing-card bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl md:rounded-3xl p-6 md:p-10 text-center transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl">
-        <h3 class="text-2xl md:text-3xl font-bold mb-4">Basic</h3>
-        <div class="text-4xl md:text-6xl font-extrabold font-mono gradient-text mb-2">$15</div>
-        <div class="text-slate-500 mb-6 md:mb-8">per trip</div>
-        <ul class="text-left space-y-3 md:space-y-4 mb-6 md:mb-8">
-          <li class="flex items-start text-slate-300">
-            <span class="text-indigo-400 font-bold mr-3">✓</span>
-            <span>Standard seating</span>
-          </li>
-          <li class="flex items-start text-slate-300">
-            <span class="text-indigo-400 font-bold mr-3">✓</span>
-            <span>1 checked bag</span>
-          </li>
-          <li class="flex items-start text-slate-300">
-            <span class="text-indigo-400 font-bold mr-3">✓</span>
-            <span>Digital ticket</span>
-          </li>
-          <li class="flex items-start text-slate-300">
-            <span class="text-indigo-400 font-bold mr-3">✓</span>
-            <span>Basic support</span>
-          </li>
-          <li class="flex items-start text-slate-300">
-            <span class="text-indigo-400 font-bold mr-3">✓</span>
-            <span>Trip tracking</span>
-          </li>
-        </ul>
-        <a href="#book" class="block gradient-primary text-white px-8 py-3.5 rounded-full font-bold transition-all duration-300 hover:shadow-xl hover:shadow-indigo-500/50 hover:-translate-y-1">
-          Book Now
-        </a>
-      </div>
-
-      <!-- Premium Plan (Featured) -->
-      <div class="pricing-card bg-gradient-to-br from-indigo-500/10 to-indigo-900/10 border-2 border-indigo-500 rounded-2xl md:rounded-3xl p-6 md:p-10 text-center transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-indigo-500/30 lg:scale-105">
-        <div class="gradient-primary text-white px-6 py-2 rounded-full font-bold text-xs uppercase tracking-wider inline-block mb-4 md:mb-6">
-          Most Popular
+          <h2 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 md:mb-6 gradient-text">
+            Choose Your Plan
+          </h2>
+          <p class="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto">
+            Transparent pricing for every need
+          </p>
         </div>
-        <h3 class="text-2xl md:text-3xl font-bold mb-4">Premium</h3>
-        <div class="text-4xl md:text-6xl font-extrabold font-mono gradient-text mb-2">$29</div>
-        <div class="text-slate-500 mb-6 md:mb-8">per trip</div>
-        <ul class="text-left space-y-3 md:space-y-4 mb-6 md:mb-8">
-          <li class="flex items-start text-slate-300">
-            <span class="text-indigo-400 font-bold mr-3">✓</span>
-            <span>Priority seating</span>
-          </li>
-          <li class="flex items-start text-slate-300">
-            <span class="text-indigo-400 font-bold mr-3">✓</span>
-            <span>2 checked bags</span>
-          </li>
-          <li class="flex items-start text-slate-300">
-            <span class="text-indigo-400 font-bold mr-3">✓</span>
-            <span>Free Wi-Fi</span>
-          </li>
-          <li class="flex items-start text-slate-300">
-            <span class="text-indigo-400 font-bold mr-3">✓</span>
-            <span>Priority support</span>
-          </li>
-          <li class="flex items-start text-slate-300">
-            <span class="text-indigo-400 font-bold mr-3">✓</span>
-            <span>Real-time tracking</span>
-          </li>
-          <li class="flex items-start text-slate-300">
-            <span class="text-indigo-400 font-bold mr-3">✓</span>
-            <span>Free cancellation</span>
-          </li>
-        </ul>
-        <a href="#book" class="block gradient-primary text-white px-8 py-3.5 rounded-full font-bold transition-all duration-300 hover:shadow-xl hover:shadow-indigo-500/50 hover:-translate-y-1">
-          Book Now
-        </a>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+          <!-- Basic Plan -->
+          <div
+            class="pricing-card bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl md:rounded-3xl p-6 md:p-10 text-center transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl">
+            <h3 class="text-2xl md:text-3xl font-bold mb-4">Basic</h3>
+            <div class="text-4xl md:text-6xl font-extrabold font-mono gradient-text mb-2">$15</div>
+            <div class="text-slate-500 mb-6 md:mb-8">per trip</div>
+            <ul class="text-left space-y-3 md:space-y-4 mb-6 md:mb-8">
+              <li class="flex items-start text-slate-300">
+                <span class="text-indigo-400 font-bold mr-3">✓</span>
+                <span>Standard seating</span>
+              </li>
+              <li class="flex items-start text-slate-300">
+                <span class="text-indigo-400 font-bold mr-3">✓</span>
+                <span>1 checked bag</span>
+              </li>
+              <li class="flex items-start text-slate-300">
+                <span class="text-indigo-400 font-bold mr-3">✓</span>
+                <span>Digital ticket</span>
+              </li>
+              <li class="flex items-start text-slate-300">
+                <span class="text-indigo-400 font-bold mr-3">✓</span>
+                <span>Basic support</span>
+              </li>
+              <li class="flex items-start text-slate-300">
+                <span class="text-indigo-400 font-bold mr-3">✓</span>
+                <span>Trip tracking</span>
+              </li>
+            </ul>
+            <a href="#book"
+               class="block gradient-primary text-white px-8 py-3.5 rounded-full font-bold transition-all duration-300 hover:shadow-xl hover:shadow-indigo-500/50 hover:-translate-y-1">
+              Book Now
+            </a>
+          </div>
+
+          <!-- Premium Plan (Featured) -->
+          <div
+            class="pricing-card bg-gradient-to-br from-indigo-500/10 to-indigo-900/10 border-2 border-indigo-500 rounded-2xl md:rounded-3xl p-6 md:p-10 text-center transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-indigo-500/30 lg:scale-105">
+            <div
+              class="gradient-primary text-white px-6 py-2 rounded-full font-bold text-xs uppercase tracking-wider inline-block mb-4 md:mb-6">
+              Most Popular
+            </div>
+            <h3 class="text-2xl md:text-3xl font-bold mb-4">Premium</h3>
+            <div class="text-4xl md:text-6xl font-extrabold font-mono gradient-text mb-2">$29</div>
+            <div class="text-slate-500 mb-6 md:mb-8">per trip</div>
+            <ul class="text-left space-y-3 md:space-y-4 mb-6 md:mb-8">
+              <li class="flex items-start text-slate-300">
+                <span class="text-indigo-400 font-bold mr-3">✓</span>
+                <span>Priority seating</span>
+              </li>
+              <li class="flex items-start text-slate-300">
+                <span class="text-indigo-400 font-bold mr-3">✓</span>
+                <span>2 checked bags</span>
+              </li>
+              <li class="flex items-start text-slate-300">
+                <span class="text-indigo-400 font-bold mr-3">✓</span>
+                <span>Free Wi-Fi</span>
+              </li>
+              <li class="flex items-start text-slate-300">
+                <span class="text-indigo-400 font-bold mr-3">✓</span>
+                <span>Priority support</span>
+              </li>
+              <li class="flex items-start text-slate-300">
+                <span class="text-indigo-400 font-bold mr-3">✓</span>
+                <span>Real-time tracking</span>
+              </li>
+              <li class="flex items-start text-slate-300">
+                <span class="text-indigo-400 font-bold mr-3">✓</span>
+                <span>Free cancellation</span>
+              </li>
+            </ul>
+            <a href="#book"
+               class="block gradient-primary text-white px-8 py-3.5 rounded-full font-bold transition-all duration-300 hover:shadow-xl hover:shadow-indigo-500/50 hover:-translate-y-1">
+              Book Now
+            </a>
+          </div>
+
+          <!-- Business Plan -->
+          <div
+            class="pricing-card bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl md:rounded-3xl p-6 md:p-10 text-center transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl md:col-span-2 lg:col-span-1">
+            <h3 class="text-2xl md:text-3xl font-bold mb-4">Business</h3>
+            <div class="text-4xl md:text-6xl font-extrabold font-mono gradient-text mb-2">$99</div>
+            <div class="text-slate-500 mb-6 md:mb-8">per month</div>
+            <ul class="text-left space-y-3 md:space-y-4 mb-6 md:mb-8">
+              <li class="flex items-start text-slate-300">
+                <span class="text-indigo-400 font-bold mr-3">✓</span>
+                <span>Unlimited trips</span>
+              </li>
+              <li class="flex items-start text-slate-300">
+                <span class="text-indigo-400 font-bold mr-3">✓</span>
+                <span>Cargo shipping</span>
+              </li>
+              <li class="flex items-start text-slate-300">
+                <span class="text-indigo-400 font-bold mr-3">✓</span>
+                <span>Dedicated support</span>
+              </li>
+              <li class="flex items-start text-slate-300">
+                <span class="text-indigo-400 font-bold mr-3">✓</span>
+                <span>Fleet management</span>
+              </li>
+              <li class="flex items-start text-slate-300">
+                <span class="text-indigo-400 font-bold mr-3">✓</span>
+                <span>Analytics dashboard</span>
+              </li>
+              <li class="flex items-start text-slate-300">
+                <span class="text-indigo-400 font-bold mr-3">✓</span>
+                <span>API access</span>
+              </li>
+            </ul>
+            <a href="#book"
+               class="block gradient-primary text-white px-8 py-3.5 rounded-full font-bold transition-all duration-300 hover:shadow-xl hover:shadow-indigo-500/50 hover:-translate-y-1">
+              Book Now
+            </a>
+          </div>
+        </div>
       </div>
+    </section>
 
-      <!-- Business Plan -->
-      <div class="pricing-card bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl md:rounded-3xl p-6 md:p-10 text-center transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl md:col-span-2 lg:col-span-1">
-        <h3 class="text-2xl md:text-3xl font-bold mb-4">Business</h3>
-        <div class="text-4xl md:text-6xl font-extrabold font-mono gradient-text mb-2">$99</div>
-        <div class="text-slate-500 mb-6 md:mb-8">per month</div>
-        <ul class="text-left space-y-3 md:space-y-4 mb-6 md:mb-8">
-          <li class="flex items-start text-slate-300">
-            <span class="text-indigo-400 font-bold mr-3">✓</span>
-            <span>Unlimited trips</span>
-          </li>
-          <li class="flex items-start text-slate-300">
-            <span class="text-indigo-400 font-bold mr-3">✓</span>
-            <span>Cargo shipping</span>
-          </li>
-          <li class="flex items-start text-slate-300">
-            <span class="text-indigo-400 font-bold mr-3">✓</span>
-            <span>Dedicated support</span>
-          </li>
-          <li class="flex items-start text-slate-300">
-            <span class="text-indigo-400 font-bold mr-3">✓</span>
-            <span>Fleet management</span>
-          </li>
-          <li class="flex items-start text-slate-300">
-            <span class="text-indigo-400 font-bold mr-3">✓</span>
-            <span>Analytics dashboard</span>
-          </li>
-          <li class="flex items-start text-slate-300">
-            <span class="text-indigo-400 font-bold mr-3">✓</span>
-            <span>API access</span>
-          </li>
-        </ul>
-        <a href="#book" class="block gradient-primary text-white px-8 py-3.5 rounded-full font-bold transition-all duration-300 hover:shadow-xl hover:shadow-indigo-500/50 hover:-translate-y-1">
-          Book Now
-        </a>
+    <!-- Stats Section -->
+    <section class="relative py-12 md:py-20 px-6 md:px-12 lg:px-20 bg-indigo-500/5">
+      <div class="max-w-6xl mx-auto">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12">
+          <div class="text-center">
+            <div class="stat-number text-4xl md:text-6xl font-extrabold font-mono gradient-text mb-2">50K+</div>
+            <div class="text-slate-400 text-sm md:text-lg font-medium">Happy Travelers</div>
+          </div>
+          <div class="text-center">
+            <div class="stat-number text-4xl md:text-6xl font-extrabold font-mono gradient-text mb-2">200+</div>
+            <div class="text-slate-400 text-sm md:text-lg font-medium">Routes Covered</div>
+          </div>
+          <div class="text-center">
+            <div class="stat-number text-4xl md:text-6xl font-extrabold font-mono gradient-text mb-2">99.8%</div>
+            <div class="text-slate-400 text-sm md:text-lg font-medium">On-Time Rate</div>
+          </div>
+          <div class="text-center col-span-2 lg:col-span-1">
+            <div class="stat-number text-4xl md:text-6xl font-extrabold font-mono gradient-text mb-2">24/7</div>
+            <div class="text-slate-400 text-sm md:text-lg font-medium">Support Available</div>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-</section>
+    </section>
 
-<!-- Stats Section -->
-<section class="relative py-12 md:py-20 px-6 md:px-12 lg:px-20 bg-indigo-500/5">
-  <div class="max-w-6xl mx-auto">
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12">
-      <div class="text-center">
-        <div class="stat-number text-4xl md:text-6xl font-extrabold font-mono gradient-text mb-2">50K+</div>
-        <div class="text-slate-400 text-sm md:text-lg font-medium">Happy Travelers</div>
+    <!-- Footer -->
+    <footer class="bg-darker py-12 md:py-16 px-6 md:px-12 lg:px-20">
+      <div class="max-w-7xl mx-auto">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 mb-8 md:mb-12">
+          <div>
+            <h3 class="text-xl md:text-2xl font-bold gradient-text mb-4 md:mb-6">RideFlow</h3>
+            <p class="text-slate-400 text-sm md:text-base">Your trusted partner for bus travel and logistics
+              solutions.</p>
+          </div>
+          <div>
+            <h3 class="text-lg md:text-xl font-bold mb-4 md:mb-6 text-indigo-400">Quick Links</h3>
+            <ul class="space-y-2 md:space-y-3">
+              <li><a href="#features" class="text-slate-400 hover:text-indigo-400 transition-colors text-sm md:text-base">Features</a>
+              </li>
+              <li><a href="#pricing" class="text-slate-400 hover:text-indigo-400 transition-colors text-sm md:text-base">Pricing</a>
+              </li>
+              <li><a href="#how-it-works"
+                     class="text-slate-400 hover:text-indigo-400 transition-colors text-sm md:text-base">How It Works</a>
+              </li>
+              <li><a href="#contact" class="text-slate-400 hover:text-indigo-400 transition-colors text-sm md:text-base">Contact</a>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-lg md:text-xl font-bold mb-4 md:mb-6 text-indigo-400">Services</h3>
+            <ul class="space-y-2 md:space-y-3">
+              <li><a href="#" class="text-slate-400 hover:text-indigo-400 transition-colors text-sm md:text-base">Bus
+                Booking</a></li>
+              <li><a href="#" class="text-slate-400 hover:text-indigo-400 transition-colors text-sm md:text-base">Cargo
+                Shipping</a></li>
+              <li><a href="#" class="text-slate-400 hover:text-indigo-400 transition-colors text-sm md:text-base">Fleet
+                Management</a></li>
+              <li><a href="#" class="text-slate-400 hover:text-indigo-400 transition-colors text-sm md:text-base">Route
+                Planning</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-lg md:text-xl font-bold mb-4 md:mb-6 text-indigo-400">Support</h3>
+            <ul class="space-y-2 md:space-y-3">
+              <li><a href="#" class="text-slate-400 hover:text-indigo-400 transition-colors text-sm md:text-base">Help
+                Center</a></li>
+              <li><a href="#" class="text-slate-400 hover:text-indigo-400 transition-colors text-sm md:text-base">Privacy
+                Policy</a></li>
+              <li><a href="#" class="text-slate-400 hover:text-indigo-400 transition-colors text-sm md:text-base">Terms of
+                Service</a></li>
+              <li><a href="#" class="text-slate-400 hover:text-indigo-400 transition-colors text-sm md:text-base">Contact
+                Us</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="text-center pt-8 border-t border-white/10">
+          <p class="text-slate-500 text-sm md:text-base">&copy; 2026 RideFlow. All rights reserved. Designed with passion
+            for better travel.</p>
+        </div>
       </div>
-      <div class="text-center">
-        <div class="stat-number text-4xl md:text-6xl font-extrabold font-mono gradient-text mb-2">200+</div>
-        <div class="text-slate-400 text-sm md:text-lg font-medium">Routes Covered</div>
-      </div>
-      <div class="text-center">
-        <div class="stat-number text-4xl md:text-6xl font-extrabold font-mono gradient-text mb-2">99.8%</div>
-        <div class="text-slate-400 text-sm md:text-lg font-medium">On-Time Rate</div>
-      </div>
-      <div class="text-center col-span-2 lg:col-span-1">
-        <div class="stat-number text-4xl md:text-6xl font-extrabold font-mono gradient-text mb-2">24/7</div>
-        <div class="text-slate-400 text-sm md:text-lg font-medium">Support Available</div>
-      </div>
-    </div>
-  </div>
-</section>
+    </footer>
 
-<!-- Footer -->
-<footer class="bg-darker py-12 md:py-16 px-6 md:px-12 lg:px-20">
-  <div class="max-w-7xl mx-auto">
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 mb-8 md:mb-12">
-      <div>
-        <h3 class="text-xl md:text-2xl font-bold gradient-text mb-4 md:mb-6">RideFlow</h3>
-        <p class="text-slate-400 text-sm md:text-base">Your trusted partner for bus travel and logistics solutions.</p>
-      </div>
-      <div>
-        <h3 class="text-lg md:text-xl font-bold mb-4 md:mb-6 text-indigo-400">Quick Links</h3>
-        <ul class="space-y-2 md:space-y-3">
-          <li><a href="#features" class="text-slate-400 hover:text-indigo-400 transition-colors text-sm md:text-base">Features</a></li>
-          <li><a href="#pricing" class="text-slate-400 hover:text-indigo-400 transition-colors text-sm md:text-base">Pricing</a></li>
-          <li><a href="#how-it-works" class="text-slate-400 hover:text-indigo-400 transition-colors text-sm md:text-base">How It Works</a></li>
-          <li><a href="#contact" class="text-slate-400 hover:text-indigo-400 transition-colors text-sm md:text-base">Contact</a></li>
-        </ul>
-      </div>
-      <div>
-        <h3 class="text-lg md:text-xl font-bold mb-4 md:mb-6 text-indigo-400">Services</h3>
-        <ul class="space-y-2 md:space-y-3">
-          <li><a href="#" class="text-slate-400 hover:text-indigo-400 transition-colors text-sm md:text-base">Bus Booking</a></li>
-          <li><a href="#" class="text-slate-400 hover:text-indigo-400 transition-colors text-sm md:text-base">Cargo Shipping</a></li>
-          <li><a href="#" class="text-slate-400 hover:text-indigo-400 transition-colors text-sm md:text-base">Fleet Management</a></li>
-          <li><a href="#" class="text-slate-400 hover:text-indigo-400 transition-colors text-sm md:text-base">Route Planning</a></li>
-        </ul>
-      </div>
-      <div>
-        <h3 class="text-lg md:text-xl font-bold mb-4 md:mb-6 text-indigo-400">Support</h3>
-        <ul class="space-y-2 md:space-y-3">
-          <li><a href="#" class="text-slate-400 hover:text-indigo-400 transition-colors text-sm md:text-base">Help Center</a></li>
-          <li><a href="#" class="text-slate-400 hover:text-indigo-400 transition-colors text-sm md:text-base">Privacy Policy</a></li>
-          <li><a href="#" class="text-slate-400 hover:text-indigo-400 transition-colors text-sm md:text-base">Terms of Service</a></li>
-          <li><a href="#" class="text-slate-400 hover:text-indigo-400 transition-colors text-sm md:text-base">Contact Us</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="text-center pt-8 border-t border-white/10">
-      <p class="text-slate-500 text-sm md:text-base">&copy; 2026 RideFlow. All rights reserved. Designed with passion for better travel.</p>
-    </div>
-  </div>
-</footer>
+    <script>
+      // Mobile menu toggle
+      const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+      const mobileMenu = document.getElementById('mobile-menu');
 
+      mobileMenuBtn.addEventListener('click', () => {
+        mobileMenu.classList.toggle('active');
+      });
 
-<script>
-  // Mobile menu toggle
-  const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-  const mobileMenu = document.getElementById('mobile-menu');
-
-  mobileMenuBtn.addEventListener('click', () => {
-    mobileMenu.classList.toggle('active');
-  });
-
-  // Close mobile menu when clicking a link
-  document.querySelectorAll('#mobile-menu a').forEach(link => {
-    link.addEventListener('click', () => {
-      mobileMenu.classList.remove('active');
-    });
-  });
-
-  // Navbar scroll effect
-  const navbar = document.getElementById('navbar');
-  let lastScroll = 0;
-
-  window.addEventListener('scroll', () => {
-    const currentScroll = window.pageYOffset;
-
-    if (currentScroll > 100) {
-      navbar.classList.add('bg-slate-900/95', 'backdrop-blur-xl', 'shadow-xl', 'shadow-indigo-500/10');
-    } else {
-      navbar.classList.remove('bg-slate-900/95', 'backdrop-blur-xl', 'shadow-xl', 'shadow-indigo-500/10');
-    }
-
-    lastScroll = currentScroll;
-  });
-
-  // Smooth scroll for anchor links
-  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-      e.preventDefault();
-      const target = document.querySelector(this.getAttribute('href'));
-      if (target) {
-        target.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start'
+      // Close mobile menu when clicking a link
+      document.querySelectorAll('#mobile-menu a').forEach(link => {
+        link.addEventListener('click', () => {
+          mobileMenu.classList.remove('active');
         });
-      }
-    });
-  });
+      });
 
-  // Parallax effect on scroll
-  window.addEventListener('scroll', () => {
-    const scrolled = window.pageYOffset;
-    const shapes = document.querySelectorAll('.shape');
-    shapes.forEach((shape, index) => {
-      const speed = (index + 1) * 0.5;
-      shape.style.transform = `translateY(${scrolled * speed}px) rotate(${scrolled * 0.1}deg)`;
-    });
-  });
+      // Navbar scroll effect
+      const navbar = document.getElementById('navbar');
+      let lastScroll = 0;
 
-  // Intersection Observer for fade-in animations
-  const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
-  };
+      window.addEventListener('scroll', () => {
+        const currentScroll = window.pageYOffset;
 
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.style.opacity = '1';
-        entry.target.style.transform = 'translateY(0)';
-      }
-    });
-  }, observerOptions);
-
-  // Observe all cards
-  document.querySelectorAll('.feature-card, .step, .pricing-card').forEach(el => {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(30px)';
-    el.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
-    observer.observe(el);
-  });
-
-  // Counter animation for stats
-  const animateCounter = (element, target) => {
-    const text = element.textContent;
-    const isPercentage = text.includes('%');
-    const hasPlus = text.includes('+');
-    const hasSlash = text.includes('/');
-
-    let current = 0;
-    const increment = target / 100;
-    const timer = setInterval(() => {
-      current += increment;
-      if (current >= target) {
-        if (isPercentage) {
-          element.textContent = target + '%';
-        } else if (hasSlash) {
-          element.textContent = '24/7';
-        } else if (hasPlus) {
-          element.textContent = Math.floor(target).toLocaleString() + '+';
+        if (currentScroll > 100) {
+          navbar.classList.add('bg-slate-900/95', 'backdrop-blur-xl', 'shadow-xl', 'shadow-indigo-500/10');
         } else {
-          element.textContent = Math.floor(target).toLocaleString();
-        }
-        clearInterval(timer);
-      } else {
-        if (hasSlash) {
-          element.textContent = '24/7';
-        } else {
-          element.textContent = Math.floor(current).toLocaleString();
-        }
-      }
-    }, 20);
-  };
-
-  const statsObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const number = entry.target;
-        const text = number.textContent;
-
-        // Extract numeric value
-        let value;
-        if (text.includes('24/7')) {
-          return; // Skip the 24/7 stat
-        } else if (text.includes('K')) {
-          value = parseFloat(text) * 1000;
-        } else {
-          value = parseFloat(text.replace(/[^0-9.]/g, ''));
+          navbar.classList.remove('bg-slate-900/95', 'backdrop-blur-xl', 'shadow-xl', 'shadow-indigo-500/10');
         }
 
-        animateCounter(number, value);
-        statsObserver.unobserve(number);
-      }
-    });
-  }, { threshold: 0.5 });
+        lastScroll = currentScroll;
+      });
 
-  document.querySelectorAll('.stat-number').forEach(stat => {
-    statsObserver.observe(stat);
-  });
+      // Smooth scroll for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute('href'));
+          if (target) {
+            target.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start'
+            });
+          }
+        });
+      });
 
-  // Add subtle parallax to sections on scroll
-  window.addEventListener('scroll', () => {
-    const scrolled = window.pageYOffset;
-    const parallaxElements = document.querySelectorAll('section');
+      // Parallax effect on scroll
+      window.addEventListener('scroll', () => {
+        const scrolled = window.pageYOffset;
+        const shapes = document.querySelectorAll('.shape');
+        shapes.forEach((shape, index) => {
+          const speed = (index + 1) * 0.5;
+          shape.style.transform = `translateY(${scrolled * speed}px) rotate(${scrolled * 0.1}deg)`;
+        });
+      });
 
-    parallaxElements.forEach((element, index) => {
-      const speed = index * 0.05;
-      element.style.transform = `translateY(${scrolled * speed}px)`;
-    });
-  });
-</script>
-</body>
+      // Intersection Observer for fade-in animations
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+          }
+        });
+      }, observerOptions);
+
+      // Observe all cards
+      document.querySelectorAll('.feature-card, .step, .pricing-card').forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(30px)';
+        el.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+        observer.observe(el);
+      });
+
+      // Counter animation for stats
+      const animateCounter = (element, target) => {
+        const text = element.textContent;
+        const isPercentage = text.includes('%');
+        const hasPlus = text.includes('+');
+        const hasSlash = text.includes('/');
+
+        let current = 0;
+        const increment = target / 100;
+        const timer = setInterval(() => {
+          current += increment;
+          if (current >= target) {
+            if (isPercentage) {
+              element.textContent = target + '%';
+            } else if (hasSlash) {
+              element.textContent = '24/7';
+            } else if (hasPlus) {
+              element.textContent = Math.floor(target).toLocaleString() + '+';
+            } else {
+              element.textContent = Math.floor(target).toLocaleString();
+            }
+            clearInterval(timer);
+          } else {
+            if (hasSlash) {
+              element.textContent = '24/7';
+            } else {
+              element.textContent = Math.floor(current).toLocaleString();
+            }
+          }
+        }, 20);
+      };
+
+      const statsObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const number = entry.target;
+            const text = number.textContent;
+
+            // Extract numeric value
+            let value;
+            if (text.includes('24/7')) {
+              return; // Skip the 24/7 stat
+            } else if (text.includes('K')) {
+              value = parseFloat(text) * 1000;
+            } else {
+              value = parseFloat(text.replace(/[^0-9.]/g, ''));
+            }
+
+            animateCounter(number, value);
+            statsObserver.unobserve(number);
+          }
+        });
+      }, {threshold: 0.5});
+
+      document.querySelectorAll('.stat-number').forEach(stat => {
+        statsObserver.observe(stat);
+      });
+
+      // Add subtle parallax to sections on scroll
+      window.addEventListener('scroll', () => {
+        const scrolled = window.pageYOffset;
+        const parallaxElements = document.querySelectorAll('section');
+
+        parallaxElements.forEach((element, index) => {
+          const speed = index * 0.05;
+          element.style.transform = `translateY(${scrolled * speed}px)`;
+        });
+      });
+    </script>
+  </div>
+}

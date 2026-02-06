@@ -1,14 +1,26 @@
 import {Component, OnInit} from '@angular/core';
-import {RouterLink} from '@angular/router';
 import {BaseComponent} from '../../services/base-component';
+import {LoginComponent} from '../../login/login.component';
 
 @Component({
   selector: 'app-landing',
   imports: [
-    RouterLink
+    LoginComponent
   ],
   templateUrl: './landing.component.html',
   styleUrl: './landing.component.css',
 })
-export class LandingComponent extends BaseComponent implements OnInit{
+export class LandingComponent extends BaseComponent implements OnInit {
+  override ngOnInit() {
+    super.ngOnInit();
+  }
+
+  loginVisible: boolean = false;
+
+  protected gotoLogin() {
+    this.loginVisible = true;
+  }
+  protected toLanding() {
+    this.loginVisible = false;
+  }
 }

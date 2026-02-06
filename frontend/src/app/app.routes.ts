@@ -15,6 +15,8 @@ import {SubscriptionsList} from './components/Subscriptions/subscriptions-list/s
 import {licenseGuard} from './guards/license-guard';
 import {subscriptionsGuard} from './guards/subscriptions-guard';
 import {Subscriptions} from './components/Subscriptions/subscriptions/subscriptions';
+import {AccessManagement} from './components/common/access-management/access-management';
+import {UserForm} from './components/UserManagement/user-form/user-form';
 
 export const routes: Routes = [
   {
@@ -35,6 +37,14 @@ export const routes: Routes = [
   {
     path: 'login',
     component: LoginComponent
+  },
+  {
+    path: 'access',
+    component: AccessManagement
+  },
+  {
+    path: 'user-form',
+    component: UserForm
   },
   {
     path: 'register',

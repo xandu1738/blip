@@ -61,9 +61,14 @@ export class AuthService {
         catchError(this.handleError)
       );
   }
-
   createUser(userData: CreateUserRequest): Observable<any> {
-    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/user-management/create-user`, userData)
+    const accessToken = localStorage.getItem("blip_access_token");
+    let requestHeaders: any = {
+      'Content-Type': 'application/json',
+      'Request-Origin': 'BLIP-PORTAL',
+      'Authorization': `Bearer ${accessToken}`
+    }
+    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/user-management/create-user`, userData,{headers: requestHeaders})
       .pipe(
         map(response => response?.returnObject),
         catchError(this.handleError)
