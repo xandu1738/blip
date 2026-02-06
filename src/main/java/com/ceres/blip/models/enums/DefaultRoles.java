@@ -9,6 +9,8 @@ import java.util.List;
 @Getter
 public enum DefaultRoles {
     SUPER_ADMIN("SUPER_ADMIN", "Super Admin", AppDomains.BACK_OFFICE,
+            List.of(DefaultPermissions.ASSIGNS_PERMISSIONS, DefaultPermissions.ADMINISTRATOR)),
+    PARTNER_ADMIN("PARTNER_ADMIN", "Partner Admin", AppDomains.BACK_OFFICE,
             List.of(DefaultPermissions.ASSIGNS_PERMISSIONS, DefaultPermissions.ADMINISTRATOR));
 
     final String code;

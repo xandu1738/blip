@@ -38,6 +38,9 @@ public class SystemUserModel implements UserDetails {
     @Column(name = "role_code")
     private String roleCode;
     @Basic
+    @Column(name = "phone_number")
+    private String phoneNumber;
+    @Basic
     @Column(name = "partner_code")
     private String partnerCode;
     @Basic

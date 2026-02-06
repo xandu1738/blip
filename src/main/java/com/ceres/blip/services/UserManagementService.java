@@ -2,9 +2,7 @@ package com.ceres.blip.services;
 
 import com.ceres.blip.config.ApplicationConf;
 import com.ceres.blip.config.JwtUtility;
-import com.ceres.blip.dtos.ListResponseDto;
-import com.ceres.blip.dtos.UserDto;
-import com.ceres.blip.dtos.UserDtoMapper;
+import com.ceres.blip.dtos.*;
 import com.ceres.blip.exceptions.AuthorizationRequiredException;
 import com.ceres.blip.models.database.PartnerModel;
 import com.ceres.blip.models.database.SystemRolePermissionAssignmentModel;
@@ -13,7 +11,6 @@ import com.ceres.blip.models.enums.DefaultRoles;
 import com.ceres.blip.repositories.SystemRolePermissionRepository;
 import com.ceres.blip.repositories.SystemUserRepository;
 import com.ceres.blip.utils.LocalUtilsService;
-import com.ceres.blip.dtos.OperationReturnObject;
 import com.ceres.blip.utils.events.UserRegistrationEvent;
 import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.PageRequest;
@@ -39,6 +37,7 @@ public class UserManagementService extends LocalUtilsService {
     private static final String ACCESS_TOKEN = "accessToken";
     private static final String REFRESH_TOKEN = "refreshToken";
     private static final String USER_EMAIL = "email";
+    private static final String PHONE_NUMBER = "phone_number";
     private static final String USER_PASSWORD = "password";
 
     @Value("${application.url}")
@@ -115,16 +114,25 @@ public class UserManagementService extends LocalUtilsService {
         }
     }
 
+    @CacheEvict(value = "users", allEntries = true)
     public OperationReturnObject signUp(JsonNode request) {
         SystemUserModel authenticatedUser = authenticatedUser();
         requires(request, "data");
         JsonNode data = getRequestData(request);
-        requires(data, "role", "first_name", "last_name", USER_EMAIL, USER_PASSWORD);
+        requires(data, "role", "first_name", "last_name", PHONE_NUMBER,USER_EMAIL, USER_PASSWORD);
         String role = data.get("role").asText();
         String firstName = data.get("first_name").asText();
         String lastName = data.get("last_name").asText();
         String email = data.get(USER_EMAIL).asText();
         String password = data.get(USER_PASSWORD).asText();
+
+        String phoneNumber = data.get(PHONE_NUMBER).asText();
+        OperationReturn operationReturn = correctMSISDN(phoneNumber);
+        if (operationReturn.returnCode() != 200) {
+            throw new IllegalArgumentException(operationReturn.returnMessage());
+        }
+
+        phoneNumber = operationReturn.returnMessage();
 
         SystemUserModel user = new SystemUserModel();
         if (!Objects.equals(role, DefaultRoles.SUPER_ADMIN.name()) || !Objects.equals(authenticatedUser.getRoleCode(), DefaultRoles.SUPER_ADMIN.name())) {
@@ -146,8 +154,13 @@ public class UserManagementService extends LocalUtilsService {
             throw new IllegalArgumentException("Password is required");
         }
 
+        systemUserRepository.findByEmail(email).ifPresent(u -> {
+            throw new IllegalArgumentException("Oops! User with email " + email + " already exists.");
+        });
+
         user.setFirstName(firstName);
         user.setLastName(lastName);
+        user.setPhoneNumber(phoneNumber);
         user.setEmail(email);
         user.setRoleCode(role);
         user.setPassword(passwordEncoder.encode(password));

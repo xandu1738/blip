@@ -1,9 +1,9 @@
 <div class="px-4 flex justify-between">
   <div>
     <h1 class="text-3xl font-bold mb-2">User Management</h1>
-    <p class="my-4">Manage Account Information Information</p>
+    <p class="my-4">Manage Account Information</p>
   </div>
-  <p-button (onClick)="addUser()" icon="pi pi-plus" size="small" label="Add User">
+  <p-button (onClick)="addUser()" icon="pi pi-plus" size="small" label="Add Role">
   </p-button>
 </div>
 
@@ -63,6 +63,8 @@
         <th id="fname">First Name</th>
         <th id="lname">Last Name</th>
         <th id="email">Email</th>
+        <th id="phoneNumber">Phone Number</th>
+        <th id="partnerCode">Partner Code</th>
         <th id="role">Role Code</th>
         <th id="domain">Domain</th>
         <th id="active">Active</th>
@@ -75,6 +77,8 @@
         <td>{{ customer?.firstName || '---' }}</td>
         <td>{{ customer?.lastName || '---' }}</td>
         <td>{{ customer?.email || '---' }}</td>
+        <td>{{ customer?.phoneNumber || '---' }}</td>
+        <td>{{ customer?.partnerCode || '---' }}</td>
         <td>{{ customer?.roleCode || '---' }}</td>
         <td>{{ customer?.domain || '---' }}</td>
         <td>{{ customer?.active || '---' }}</td>

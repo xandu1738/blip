@@ -48,7 +48,9 @@
       <label for="em" class="block font-medium mb-2 text-sm text-[var(--text)] opacity-80">Email Address</label>
       <p-iconfield iconPosition="left" class="w-full">
         <p-inputicon styleClass="pi pi-envelope" />
-        <input pInputText id="em" type="email" placeholder="john.doe@example.com" [(ngModel)]="userDetails.email"
+        <input pInputText id="em" type="email"
+               autocomplete="off"
+               placeholder="john.doe@example.com" [(ngModel)]="userDetails.email"
           class="w-full" />
       </p-iconfield>
     </div>
@@ -58,7 +60,9 @@
       <label for="ph" class="block font-medium mb-2 text-sm text-[var(--text)] opacity-80">Phone Number</label>
       <p-iconfield iconPosition="left" class="w-full">
         <p-inputicon styleClass="pi pi-phone" />
-        <input pInputText id="ph" type="tel" placeholder="+1 (555) 000-0000" [(ngModel)]="userDetails.phone_number"
+        <input pInputText id="ph" type="tel" placeholder="07********"
+               autocomplete="off" pattern="[0-9]{10}"
+               [(ngModel)]="userDetails.phone_number"
           class="w-full" />
       </p-iconfield>
     </div>
@@ -68,7 +72,7 @@
       <label for="pwd" class="block font-medium mb-2 text-sm text-[var(--text)] opacity-80">Password</label>
       <p-iconfield iconPosition="left" class="w-full">
         <p-inputicon styleClass="pi pi-lock" />
-        <input pInputText id="pwd" type="password" placeholder="••••••••" [(ngModel)]="userDetails.password"
+        <input pInputText id="pwd" type="password" autocomplete="new-password" placeholder="••••••••" [(ngModel)]="userDetails.password"
           class="w-full" />
       </p-iconfield>
     </div>
@@ -78,7 +82,7 @@
       <label for="pwd1" class="block font-medium mb-2 text-sm text-[var(--text)] opacity-80">Confirm Password</label>
       <p-iconfield iconPosition="left" class="w-full">
         <p-inputicon styleClass="pi pi-lock" />
-        <input pInputText id="pwd1" type="password" placeholder="••••••••" [(ngModel)]="userDetails.password1"
+        <input pInputText id="pwd1" type="password" autocomplete="new-password" placeholder="••••••••" [(ngModel)]="userDetails.password1"
           class="w-full" />
       </p-iconfield>
     </div>
@@ -88,9 +92,12 @@
       <p-button label="Cancel" styleClass="p-button-text p-button-secondary" size="small">
       </p-button>
       <p-button label="Create Account" icon="pi pi-check" size="small" styleClass="primary-button"
+                [disabled]="!this.userDetails.password || (this.userDetails.password !== this.userDetails.password1)"
         (onClick)="registerUser()">
       </p-button>
     </div>
 
   </div>
 </div>
+
+<p-toast position="bottom-right"></p-toast>

@@ -15,6 +15,8 @@ import { RemoteService } from '../../services/remoteService';
 import { LoaderService } from '../../services/loader.service';
 import { DialogService } from 'primeng/dynamicdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import {Router} from '@angular/router';
+import {Toast} from 'primeng/toast';
 
 @Component({
   selector: 'app-user-form',
@@ -25,7 +27,8 @@ import { ConfirmationService, MessageService } from 'primeng/api';
     PartnerPicker,
     RolePicker,
     IconField,
-    InputIcon
+    InputIcon,
+    Toast
   ],
   templateUrl: './user-form.html',
   styleUrl: './user-form.css',
@@ -35,6 +38,7 @@ export class UserForm extends BaseComponent implements OnInit, OnDestroy {
   private socketSubscription: Subscription | undefined;
 
   constructor(
+    protected router:Router,
     helper: RemoteService,
     loaderService: LoaderService,
     dialogService: DialogService,
@@ -69,13 +73,24 @@ export class UserForm extends BaseComponent implements OnInit, OnDestroy {
   }
 
   protected registerUser() {
-    this.authService.createUser({ data: this.userDetails }).subscribe(res => {
-      if (res) {
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'User Created Successfully' });
-        // reset form or close dialog
-        this.userDetails = {};
+    let confirmationRequest = {
+      header: "Confirm Registration",
+      message: "You are about to register a new user to the blip system.\nAre you sure you want to proceed?",
+      onConfirm: () => {
+        this.authService.createUser({ data: this.userDetails })
+          .subscribe(res => {
+              if (res?.returnCode !== 200) {
+                this.showError(res?.returnMessage);
+                return;
+              }
+              this.showSuccess(res?.returnMessage);
+              this.userDetails = {};
+              this.router.navigate(['/access'])
+                .catch(err => console.log(err));
+          });
       }
-    })
+    };
+    this.confirmDialog(confirmationRequest);
   }
 
   protected setPartner($event: any) {

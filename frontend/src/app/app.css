@@ -24,6 +24,14 @@
   opacity: 0.3;
 }
 
+.p-accordionheader{
+  padding: .8rem !important;
+}
+
+.p-accordioncontent-content{
+  padding: 0 !important;
+}
+
 .home-screen{
   background-color: var(--background);
   color: var(--text);

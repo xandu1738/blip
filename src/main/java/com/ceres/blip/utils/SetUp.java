@@ -5,13 +5,11 @@ import com.ceres.blip.models.enums.AppDomains;
 import com.ceres.blip.models.enums.DefaultPermissions;
 import com.ceres.blip.models.enums.DefaultRoles;
 import com.ceres.blip.repositories.*;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import java.sql.Timestamp;
 import java.util.Objects;
 import java.util.Optional;
@@ -19,40 +17,47 @@ import java.util.Optional;
 /**
  * This class runs on every app boot to set up all the defaults likes permissions, domains, etc.
  * To add more actions that shall always run on app start, create a method in here and
- * annotate it with @Bean
+ * annotate it with @PostConstruct or chain i to an annotated one
  */
 @Slf4j
-@Component
-@RequiredArgsConstructor
+@Service
 public class SetUp {
-
+    private static final String RAW_ADMIN_PASSWORD = "@Secure1234";
     private final SystemRolePermissionRepository systemRolePermissionRepository;
     private final SystemUserRepository systemUserRepository;
     private final PasswordEncoder passwordEncoder;
-    // Turn on or off system domains
-    @Value("${USE_DOMAINS:true}")
-    Boolean useDomains;
-
     private final SystemDomainRepository domainRepository;
     private final SystemPermissionRepository permissionRepository;
     private final SystemRoleRepository roleRepository;
 
-    @javax.annotation.PostConstruct
+    public SetUp(SystemRolePermissionRepository systemRolePermissionRepository, SystemUserRepository systemUserRepository, PasswordEncoder passwordEncoder, SystemDomainRepository domainRepository, SystemPermissionRepository permissionRepository, SystemRoleRepository roleRepository) {
+        this.systemRolePermissionRepository = systemRolePermissionRepository;
+        this.systemUserRepository = systemUserRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.domainRepository = domainRepository;
+        this.permissionRepository = permissionRepository;
+        this.roleRepository = roleRepository;
+    }
+
+    @PostConstruct
     protected void setupDomains() {
-        if (Boolean.TRUE.equals(useDomains)) {
-            log.info("Domains supported, setting them up.");
-            domainRepository.deleteAll();
-            for (AppDomains domain : AppDomains.values()) {
-                // check if domain exists orElse create it
-                log.info("Adding {} domain", domain.name());
+        log.info("Domains supported, setting them up.");
+
+        for (AppDomains domain : AppDomains.values()) {
+            // check if a domain exists orElse create it
+            log.info("Checking for {} domain", domain.name());
+
+            Optional<SystemDomainModel> existence = domainRepository.findByDomainName(domain.name());
+            if (existence.isEmpty()){
+                log.info("{} domain does not exist. Creating it.", domain.name());
                 var md = SystemDomainModel.builder();
                 md.domainName(String.valueOf(domain));
                 domainRepository.save(md.build());
+            }else {
+                log.info("{} domain already exists.", domain.name());
             }
-            log.debug("Domains setup successfully");
-        } else {
-            log.info("Domains are currently inactive.");
         }
+        log.debug("Domains setup successfully");
     }
 
     @PostConstruct
@@ -85,20 +90,22 @@ public class SetUp {
     }
 
     public void setupPermissions() {
-        permissionRepository.deleteAll();
         DefaultPermissions[] perms = DefaultPermissions.values();
 
         for (DefaultPermissions perm : perms) {
-            log.info("Adding {} permission", perm.name());
-            SystemPermissionModel permissionsModel = new SystemPermissionModel();
-            permissionsModel.setPermissionCode(perm.name());
-            permissionsModel.setPermissionName(perm.name().replace("_", " "));
-            permissionsModel.setPermissionDomain(AppDomains.BACK_OFFICE);
-            if (Boolean.TRUE.equals(useDomains)) {
+            log.info("Checking for {} permission", perm.name());
+            Optional<SystemPermissionModel> existence = permissionRepository.findByPermissionCode(perm.name());
+            if (existence.isEmpty()){
+                SystemPermissionModel permissionsModel = new SystemPermissionModel();
+                permissionsModel.setPermissionCode(perm.name());
+                permissionsModel.setPermissionName(perm.name().replace("_", " "));
+                permissionsModel.setPermissionDomain(AppDomains.BACK_OFFICE);
                 permissionsModel.setPermissionDomain(perm.getDomain());
+                permissionRepository.save(permissionsModel);
+                log.info("{} permission added successfully", perm.name());
+            } else {
+                log.info("{} permission already exists", perm.name());
             }
-            permissionRepository.save(permissionsModel);
-            log.info("{} permission added successfully", perm.name());
         }
         setUpDefaultRolePerms();
     }
@@ -138,7 +145,7 @@ public class SetUp {
         user.setLastName("Sepius");
         user.setEmail("ceres1738@gmail.com");
         user.setRoleCode(DefaultRoles.SUPER_ADMIN.name());
-        user.setPassword(passwordEncoder.encode("@Secure1234")); // This should be hashed in a real application
+        user.setPassword(passwordEncoder.encode(RAW_ADMIN_PASSWORD)); // This should be hashed in a real application
         user.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         user.setIsActive(true);
         Optional<SystemUserModel> existingUser = systemUserRepository.findByEmail(user.getEmail());

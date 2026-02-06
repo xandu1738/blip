@@ -1,6 +1,7 @@
 package com.ceres.blip.utils;
 
 import com.ceres.blip.config.ApplicationConf;
+import com.ceres.blip.dtos.OperationReturn;
 import com.ceres.blip.exceptions.AuthorizationRequiredException;
 import com.ceres.blip.models.database.ModuleModel;
 import com.ceres.blip.models.database.PartnerModel;
@@ -11,9 +12,8 @@ import com.ceres.blip.repositories.ModuleRepository;
 import com.ceres.blip.repositories.PartnersRepository;
 import com.ceres.blip.repositories.SystemRoleRepository;
 import com.ceres.blip.repositories.SystemUserRepository;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import io.micrometer.common.util.StringUtils;
 import jakarta.annotation.Nullable;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +35,10 @@ import java.util.concurrent.CompletableFuture;
 @Service
 public abstract class LocalUtilsService {
     private static final String AUTHENTICATION_REQUIRED = "AUTHENTICATION REQUIRED";
+    private static final String INVALID_PHONE_NUMBER = "INVALID PHONE NUMBER";
+    private static final String DATA = "data";
+    private static final String UG_PHONE_REGEX = "^(?:256|0)?(?:7[02456789]\\d{7}|[23]\\d{8})$";
+
     @Autowired
     private SystemUserRepository userRepository;
     @Autowired
@@ -46,8 +50,6 @@ public abstract class LocalUtilsService {
     @Autowired
     private ModuleRepository moduleRepository;
 
-    private static final ObjectMapper MAPPER = new ObjectMapper();
-    private static final String DATA = "data";
 
     /**
      * Works as ```requires()``` above, but will check for only one field
@@ -317,6 +319,33 @@ public abstract class LocalUtilsService {
         calendar.setTime(timestamp);
         calendar.add(Calendar.DATE, days);
         return new Timestamp(calendar.getTimeInMillis());
+    }
+
+
+    protected OperationReturn correctMSISDN(String msisdn) {
+        if (StringUtils.isBlank(msisdn)) {
+            return new OperationReturn(500, INVALID_PHONE_NUMBER);
+        }
+
+        // Remove spaces just in case
+        msisdn = msisdn.trim();
+
+        if (!checkMatch(msisdn)) {
+            return new OperationReturn(500, INVALID_PHONE_NUMBER);
+        }
+
+        // Normalize to international format
+        if (msisdn.startsWith("0")) {
+            msisdn = "256" + msisdn.substring(1);
+        } else if (!msisdn.startsWith("256")) {
+            msisdn = "256" + msisdn;
+        }
+
+        return new OperationReturn(200, msisdn);
+    }
+
+    private boolean checkMatch(String msisdn) {
+        return msisdn.matches(LocalUtilsService.UG_PHONE_REGEX);
     }
 }
 

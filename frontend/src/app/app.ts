@@ -11,6 +11,9 @@ import {NgClass} from '@angular/common';
 import {Button} from 'primeng/button';
 import {SubscriptionsList} from './components/Subscriptions/subscriptions-list/subscriptions-list';
 import {LandingComponent} from './components/common/landing/landing.component';
+import {Accordion, AccordionContent, AccordionHeader, AccordionPanel} from 'primeng/accordion';
+import {ConfirmDialog} from 'primeng/confirmdialog';
+import {Toast} from 'primeng/toast';
 
 @Component({
   selector: 'app-root',
@@ -22,7 +25,13 @@ import {LandingComponent} from './components/common/landing/landing.component';
     NgClass,
     Button,
     SubscriptionsList,
-    LandingComponent
+    LandingComponent,
+    Accordion,
+    AccordionPanel,
+    AccordionHeader,
+    AccordionContent,
+    ConfirmDialog,
+    Toast
   ],
   templateUrl: './app.html',
   styleUrl: './app.css'
@@ -32,7 +41,7 @@ export class App implements OnInit {
   isLicensed: boolean = false; // Add licensed state
   showLogin: boolean = false;
   showLoader: boolean = false;
-  items: MenuItem[] | undefined;
+  items: any[] | undefined;
 
   constructor(
     protected commonService: CommonService,
@@ -65,6 +74,7 @@ export class App implements OnInit {
 
     this.items = [
       {
+        value:'0',
         label: 'Dashboard',
         icon: 'pi pi-home',
         command: () => {
@@ -72,6 +82,7 @@ export class App implements OnInit {
         }
       },
       {
+        value:'1',
         label: 'Configuration',
         icon: 'pi pi-briefcase',
         items: [
@@ -94,6 +105,7 @@ export class App implements OnInit {
         ]
       },
       {
+        value:'2',
         label: 'Management',
         icon: 'pi pi-box',
         items: [
@@ -152,6 +164,7 @@ export class App implements OnInit {
         ]
       },
       {
+        value:'3',
         label: 'Logistics',
         icon: 'pi pi-box',
         items: [
@@ -179,13 +192,7 @@ export class App implements OnInit {
         ]
       },
       {
-        label: 'Payments',
-        icon: 'pi pi-wallet',
-        command: () => {
-          this.router.navigate(['/payments'])
-        }
-      },
-      {
+        value:'4',
         label: 'Analytics',
         icon: 'pi pi-chart-bar',
         items: [
@@ -213,6 +220,15 @@ export class App implements OnInit {
         ]
       },
       {
+        value:'5',
+        label: 'Payments',
+        icon: 'pi pi-wallet',
+        command: () => {
+          this.router.navigate(['/payments'])
+        }
+      },
+      {
+        value:'6',
         label: 'Settings',
         icon: 'pi pi-cog',
         command: () => {
