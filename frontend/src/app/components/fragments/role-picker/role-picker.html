@@ -1,0 +1,3 @@
+<p-autoComplete id="role" [(ngModel)]="selectedRole" optionValue="roleCode" optionLabel="roleName"
+  (ngModelChange)="onSelectedDomain($event)" [dropdown]="true" styleClass="w-full" [style]="{width: '100%'}"
+  placeholder="Select Role" [suggestions]="filteredRoles" (completeMethod)="search($event)" />

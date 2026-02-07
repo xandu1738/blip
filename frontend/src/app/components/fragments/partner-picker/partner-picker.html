@@ -1,0 +1,3 @@
+<p-autoComplete id="partner" [(ngModel)]="selectedPartner" optionValue="partnerCode" optionLabel="partnerName"
+  (ngModelChange)="onSelectedPartner($event)" [dropdown]="true" styleClass="w-full" [style]="{width: '100%'}"
+  placeholder="Select Partner" [suggestions]="filteredPartners" (completeMethod)="search($event)" />

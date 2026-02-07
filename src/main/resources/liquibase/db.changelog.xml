@@ -14,4 +14,5 @@
     <include file="/changes/subscriptions.sql" relativeToChangelogFile="true"/>
     <include file="/changes/file_management.sql" relativeToChangelogFile="true"/>
     <include file="/changes/subs_impl.sql" relativeToChangelogFile="true"/>
+    <include file="/changes/permission_domains.sql" relativeToChangelogFile="true"/>
 </databaseChangeLog>

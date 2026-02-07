@@ -40,7 +40,7 @@ public class ApplicationConf implements UserDetailsService {
         // get the user permissions
         Collection<SystemRolePermissionAssignmentModel> permissions = permissionAssignmentRepository.findAllByRoleCode(user.getRoleCode());
         for (SystemRolePermissionAssignmentModel permissionAssignmentModel : permissions) {
-            Optional<SystemPermissionModel> permissionsModel = permissionRepository.findFirstByPermissionCode(permissionAssignmentModel.getPermissionCode());
+            Optional<SystemPermissionModel> permissionsModel = permissionRepository.findByPermissionCode(permissionAssignmentModel.getPermissionCode());
             permissionsModel.ifPresent(permission -> authorities.add(new SimpleGrantedAuthority(permission.getPermissionCode())));
         }
         user.setAuthorities(authorities);

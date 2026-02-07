@@ -71,7 +71,7 @@ public class SubscriptionService extends LocalUtilsService {
         SystemUserModel authenticatedUser = authenticatedUser();
         JsonNode data = getRequestData(request);
 
-        requires(data, Constants.SUBSCRIPTION_ID.getValue(), Constants.SUBSCRIPTION_PERIOD.name());
+        requires(data, Constants.SUBSCRIPTION_ID.getValue(), Constants.SUBSCRIPTION_PERIOD.getValue());
         PartnerModel partnerModel = validatePartner(authenticatedUser.getPartnerCode());
 
         Long subscription = data.get(Constants.SUBSCRIPTION_ID.getValue()).asLong();
@@ -84,7 +84,7 @@ public class SubscriptionService extends LocalUtilsService {
         String subscriptionPeriod = SubscriptionPeriods.MONTHLY.name();
         JsonNode subscriptionPeriodNode = data.get(Constants.SUBSCRIPTION_PERIOD.getValue());
         if (subscriptionPeriodNode != null) {
-            subscriptionPeriod = subscriptionPeriodNode.asText();
+            subscriptionPeriod = subscriptionPeriodNode.asText().toUpperCase();
 
             if (!EnumUtils.isValidEnum(SubscriptionPeriods.class, subscriptionPeriod)) {
                 throw new IllegalStateException("Invalid Subscription Period Specified.");

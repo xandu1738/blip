@@ -1,8 +1,11 @@
 package com.ceres.blip.models.database;
 
-import com.ceres.blip.models.enums.AppDomains;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -17,13 +20,13 @@ public class SystemPermissionModel {
     @Column(name = "id")
     private Long id;
     @Basic
-    @Column(name = "permission_code")
+    @Column(name = "permission_code", nullable = false)
     private String permissionCode;
     @Basic
     @Column(name = "permission_name")
     private String permissionName;
     @Basic
-    @Column(name = "domain")
-    @Enumerated(EnumType.STRING)
-    private AppDomains permissionDomain;
+    @JdbcTypeCode(SqlTypes.ARRAY)
+    @Column(name = "domains", columnDefinition = "text[]")
+    private List<String> domains;
 }

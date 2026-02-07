@@ -1,0 +1,3 @@
+<p-autoComplete id="domain" [(ngModel)]="selectedDomain" optionValue="optionValue" optionLabel="optionLabel"
+  (ngModelChange)="onSelectedDomain($event)" [dropdown]="true" styleClass="w-full" [style]="{width: '100%'}"
+  placeholder="Select Domain" [suggestions]="filteredDomains" (completeMethod)="search($event)" />

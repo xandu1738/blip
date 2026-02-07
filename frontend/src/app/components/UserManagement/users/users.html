@@ -1,0 +1,101 @@
+<div class="px-4 flex justify-between">
+  <div>
+    <h1 class="text-3xl font-bold mb-2">User Management</h1>
+    <p class="my-4">Manage Account Information</p>
+  </div>
+  <p-button (onClick)="addUser()" icon="pi pi-plus" size="small" label="Add Role">
+  </p-button>
+</div>
+
+<div class="p-4 w-full select-none relative">
+  <div class="my-3">
+    <p-accordion value="0">
+      <p-accordion-panel value="0">
+        <p-accordion-header>Filter</p-accordion-header>
+        <p-accordion-content>
+          <!-- Search Filters Card -->
+          <div class="p-6 mb-6">
+            <div class="flex flex-col lg:flex-row lg:gap-4 my-3">
+              <!-- Partner Name -->
+              <div class="w-full lg:w-1/4 mb-4 lg:mb-0">
+                <label for="search_name" class="block text-sm font-medium mb-1 pl-1">Name</label>
+                <input pInputText type="text" id="search_name" placeholder="Search by Name" [(ngModel)]="userData.name"
+                  class="w-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition" />
+              </div>
+
+              <div class="w-full lg:w-1/4 mb-4 lg:mb-0">
+                <label for="acc" class="block text-sm font-medium mb-1 pl-1">Email</label>
+                <input pInputText type="email" id="acc" placeholder="Search by Email" [(ngModel)]="userData.email"
+                  class="w-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition" />
+              </div>
+
+              <div class="w-full lg:w-1/4 mb-4 lg:mb-0">
+                <label class="block text-sm font-medium mb-1 pl-1">Role</label>
+                <app-role-picker (onSelected)="onSelectRole($event)" [selectedRoleCode]="userData?.roleCode">
+                </app-role-picker>
+              </div>
+
+              <div class="w-full lg:w-1/4">
+                <label class="block text-sm font-medium mb-1 pl-1">Domain</label>
+                <app-domain-picker (onSelected)="onSelectDomain($event)" [selectedDomainCode]="userData?.domain">
+                </app-domain-picker>
+              </div>
+            </div>
+            <!-- Search Button -->
+            <div class="flex justify-end pt-2">
+              <p-button (onClick)="filterUsers()" icon="pi pi-search" label="Search" size="small" severity="primary">
+              </p-button>
+            </div>
+
+          </div>
+
+        </p-accordion-content>
+      </p-accordion-panel>
+
+    </p-accordion>
+  </div>
+
+  <p-table [value]="usersList" [paginator]="true" showGridlines [rows]="15" lazy="true"
+    [totalRecords]="search.totalRecords" (onLazyLoad)="loadLazy($event)" [tableStyle]="{ 'min-width': '50rem' }"
+    [rowsPerPageOptions]="[15, 20,50,100]">
+    <ng-template #header>
+      <tr>
+        <th id="fname">First Name</th>
+        <th id="lname">Last Name</th>
+        <th id="email">Email</th>
+        <th id="phoneNumber">Phone Number</th>
+        <th id="partnerCode">Partner Code</th>
+        <th id="role">Role Code</th>
+        <th id="domain">Domain</th>
+        <th id="active">Active</th>
+        <th id="created">Created At</th>
+        <th id="last-login">Last Login</th>
+      </tr>
+    </ng-template>
+    <ng-template #body let-customer>
+      <tr>
+        <td>{{ customer?.firstName || '---' }}</td>
+        <td>{{ customer?.lastName || '---' }}</td>
+        <td>{{ customer?.email || '---' }}</td>
+        <td>{{ customer?.phoneNumber || '---' }}</td>
+        <td>{{ customer?.partnerCode || '---' }}</td>
+        <td>{{ customer?.roleCode || '---' }}</td>
+        <td>{{ customer?.domain || '---' }}</td>
+        <td>{{ customer?.active || '---' }}</td>
+        <td>{{ customer?.createdAt || '---' }}</td>
+        <td>{{ customer?.lastLoggedInAt || 'NEVER' }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<!--<p-dialog-->
+<!--  header="Register User"-->
+<!--  [(visible)]="showAddDialog"-->
+<!--  [modal]="true"-->
+<!--  [style]="{ width: '500px' }"-->
+<!--  [closable]="true">-->
+
+<!--  -->
+
+<!--</p-dialog>-->

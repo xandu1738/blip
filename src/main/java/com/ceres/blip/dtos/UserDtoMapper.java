@@ -24,6 +24,8 @@ public class UserDtoMapper implements Function<SystemUserModel, UserDto> {
                 systemUserModel.getFirstName(),
                 systemUserModel.getLastName(),
                 systemUserModel.getEmail(),
+                systemUserModel.getPartnerCode(),
+                systemUserModel.getPhoneNumber(),
                 systemUserModel.getRoleCode(),
                 role.getRoleDomain().name(),
                 systemUserModel.getCreatedAt(),

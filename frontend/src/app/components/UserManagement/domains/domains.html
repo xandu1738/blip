@@ -1,0 +1,19 @@
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-6">
+  @for (domain of domains; track domain.optionValue) {
+    <div class="relative p-6 rounded-2xl shadow-xl overflow-hidden group cursor-pointer bg-gradient-to-br from-orange-300 via-orange-400 to-orange-500">
+
+      <!-- Shine effect on hover -->
+      <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent
+                translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000">
+      </div>
+
+      <div class="relative text-white">
+        <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mb-4">
+          <i [class]="domain" class="text-3xl"></i>
+        </div>
+        <h3 class="text-xl font-bold mb-2">{{ domain.optionLabel }}</h3>
+        <p class="text-sm opacity-90 line-clamp-3">{{ domain.optionValue }}</p>
+      </div>
+    </div>
+  }
+</div>

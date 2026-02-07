@@ -29,14 +29,17 @@ public class SystemUserModel implements UserDetails {
     @Column(name = "last_name")
     private String lastName;
     @Basic
-    @Column(name = "password")
+    @Column(name = "password", nullable = false)
     private String password;
     @Basic
-    @Column(name = "email")
+    @Column(name = "email", nullable = false)
     private String email;
     @Basic
     @Column(name = "role_code")
     private String roleCode;
+    @Basic
+    @Column(name = "phone_number")
+    private String phoneNumber;
     @Basic
     @Column(name = "partner_code")
     private String partnerCode;
