@@ -10,6 +10,7 @@ export interface User {
   lastLoggedInAt: string;
   isActive: boolean;
   username: string;
+  permissions: string[];
 }
 
 export interface LoginRequest {
@@ -53,14 +54,14 @@ export interface RefreshTokenRequest {
 
 export interface Partners {
   partnerName: string;
-  accountNumber:string;
-  contactPerson:string;
-  contactPhone:string;
-  accountId:number;
-  businessReference:string;
-  active:boolean;
-  logo:string;
-  package:string;
+  accountNumber: string;
+  contactPerson: string;
+  contactPhone: string;
+  accountId: number;
+  businessReference: string;
+  active: boolean;
+  logo: string;
+  package: string;
 }
 
 

@@ -64,12 +64,12 @@ export class RegisterComponent extends BaseComponent implements OnInit {
     dialogService: DialogService,
     confirmationService: ConfirmationService,
     messageService: MessageService,
-    protected authService: AuthService,
+    authService: AuthService,
     protected remoteService: RemoteService,
     protected router: Router,
     protected notificationService: NotificationService
   ) {
-    super(helper, loaderService, dialogService, confirmationService, messageService);
+    super(authService,helper, loaderService, dialogService, confirmationService, messageService);
     this.filteredPackages = [...this.packages];
   }
 

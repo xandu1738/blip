@@ -5,7 +5,7 @@ import {NgClass} from '@angular/common';
 @Component({
   selector: 'app-domains',
   imports: [
-    NgClass
+
   ],
   templateUrl: './domains.html',
   styleUrl: './domains.css',

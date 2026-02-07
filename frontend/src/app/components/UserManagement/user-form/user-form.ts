@@ -45,9 +45,9 @@ export class UserForm extends BaseComponent implements OnInit, OnDestroy {
     confirmationService: ConfirmationService,
     messageService: MessageService,
     private socketService: SocketService,
-    private authService: AuthService
+    authService: AuthService
   ) {
-    super(helper, loaderService, dialogService, confirmationService, messageService);
+    super(authService,helper, loaderService, dialogService, confirmationService, messageService);
   }
 
   override ngOnInit() {

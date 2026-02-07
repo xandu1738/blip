@@ -4,16 +4,19 @@ import {Observable} from 'rxjs';
 import {LoaderService} from './loader.service';
 import {DialogService} from 'primeng/dynamicdialog';
 import {ConfirmationService, MessageService} from 'primeng/api';
+import {User} from '../models/user.models';
+import {AuthService} from './auth.service';
 
 @Directive({
   selector: '[appBaseComponent]'
 })
 export abstract class BaseComponent implements OnInit {
   ngOnInit() {
-    //Placeholder
+    this.user = this.authService.getCurrentUser();
   }
 
   constructor(
+    protected authService: AuthService,
     protected helper: RemoteService,
     public loaderService: LoaderService,
     protected dialogService: DialogService,
@@ -24,6 +27,7 @@ export abstract class BaseComponent implements OnInit {
     });
   }
 
+  user: User | null = null;
   public showLoader: boolean = false;
 
   confirmDialogSettings = {

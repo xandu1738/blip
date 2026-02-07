@@ -8,14 +8,12 @@ import {AuthService} from '../../services/auth.service';
 import {Router} from '@angular/router';
 import {NotificationService} from '../../services/notification.service';
 import {AutoComplete} from 'primeng/autocomplete';
-import {FloatLabel} from 'primeng/floatlabel';
 import {FormsModule} from '@angular/forms';
 
 @Component({
   selector: 'app-role-picker',
   imports: [
     AutoComplete,
-    FloatLabel,
     FormsModule
   ],
   templateUrl: './role-picker.html',
@@ -33,12 +31,12 @@ export class RolePicker extends BaseComponent implements OnInit {
     dialogService: DialogService,
     confirmationService: ConfirmationService,
     messageService: MessageService,
-    protected authService: AuthService,
+    authService: AuthService,
     protected remoteService: RemoteService,
     protected router: Router,
     protected notificationService: NotificationService
   ) {
-    super(helper, loaderService, dialogService, confirmationService, messageService);
+    super(authService,helper, loaderService, dialogService, confirmationService, messageService);
   }
 
   @Output()

@@ -10,15 +10,10 @@ import {NotificationService} from '../../services/notification.service';
 import {TableModule} from 'primeng/table';
 import {Accordion, AccordionContent, AccordionHeader, AccordionPanel} from 'primeng/accordion';
 import {Button} from 'primeng/button';
-import {FloatLabel} from 'primeng/floatlabel';
 import {FormsModule} from '@angular/forms';
 import {InputText} from 'primeng/inputtext';
 import {DomainPicker} from '../../fragments/domain-picker/domain-picker';
 import {RolePicker} from '../../fragments/role-picker/role-picker';
-import {AutoComplete} from 'primeng/autocomplete';
-import {Dialog} from 'primeng/dialog';
-import {FileUpload} from 'primeng/fileupload';
-import {PartnerPicker} from '../../fragments/partner-picker/partner-picker';
 
 @Component({
   selector: 'app-users',
@@ -29,15 +24,10 @@ import {PartnerPicker} from '../../fragments/partner-picker/partner-picker';
     AccordionHeader,
     AccordionPanel,
     Button,
-    FloatLabel,
     FormsModule,
     InputText,
     DomainPicker,
     RolePicker,
-    AutoComplete,
-    Dialog,
-    FileUpload,
-    PartnerPicker
   ],
   templateUrl: './users.html',
   styleUrl: './users.css',
@@ -53,12 +43,12 @@ export class Users extends BaseComponent implements OnInit {
     dialogService: DialogService,
     confirmationService: ConfirmationService,
     messageService: MessageService,
-    protected authService: AuthService,
+    authService: AuthService,
     protected remoteService: RemoteService,
     protected router: Router,
     protected notificationService: NotificationService
   ) {
-    super(helper, loaderService, dialogService, confirmationService, messageService);
+    super(authService,helper, loaderService, dialogService, confirmationService, messageService);
   }
 
   usersList: any[] = [];

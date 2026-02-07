@@ -18,7 +18,7 @@
       <div class="billing-toggle">
         <button
           [class.active]="billingCycle === 'monthly'"
-          (click)="billingCycle = 'monthly'"
+          (click)="toggleBillingCycle('monthly')"
           class="toggle-btn">
           Monthly
         </button>

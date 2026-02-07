@@ -1,5 +1,4 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {FloatLabel} from 'primeng/floatlabel';
 import {AutoComplete} from 'primeng/autocomplete';
 import {FormsModule} from '@angular/forms';
 import {BaseComponent} from '../../services/base-component';
@@ -14,7 +13,6 @@ import {NotificationService} from '../../services/notification.service';
 @Component({
   selector: 'app-domain-picker',
   imports: [
-    FloatLabel,
     AutoComplete,
     FormsModule
   ],
@@ -28,12 +26,12 @@ export class DomainPicker extends BaseComponent implements OnInit {
     dialogService: DialogService,
     confirmationService: ConfirmationService,
     messageService: MessageService,
-    protected authService: AuthService,
+    authService: AuthService,
     protected remoteService: RemoteService,
     protected router: Router,
     protected notificationService: NotificationService
   ) {
-    super(helper, loaderService, dialogService, confirmationService, messageService);
+    super(authService,helper, loaderService, dialogService, confirmationService, messageService);
   }
 
   override ngOnInit() {

@@ -52,7 +52,10 @@ export class AuthService {
           if (!returnObject) return;
 
           this.setTokens(returnObject?.accessToken, returnObject?.refreshToken);
-          this.setUser(returnObject?.user);
+          let user = returnObject?.user;
+          user.permissions = returnObject?.permissions;
+
+          this.setUser(user);
 
           this._license.next(returnObject?.licensed || 'EXPIRED')
           this._isLoggedIn.next(true);

@@ -82,7 +82,7 @@ export class SubscriptionsList extends BaseComponent implements OnInit {
       onConfirm: () => {
         this.sendGetOrPostRequestToServer(
           "subscriptions/request",
-          {data: {subscription_id: plan?.id}},
+          {data: {subscription_id: plan?.id, subscription_period: this.billingCycle,}},
           true,
           (response: any) => {
             if (response?.returnCode !== 200) {
@@ -105,7 +105,7 @@ export class SubscriptionsList extends BaseComponent implements OnInit {
       onConfirm: () => {
         this.sendGetOrPostRequestToServer(
           "subscriptions/request",
-          {data: {subscription_id: plan?.id, update_subscription: true}},
+          {data: {subscription_id: plan?.id, subscription_period: this.billingCycle, update_subscription: true}},
           true,
           (response: any) => {
             if (response?.returnCode !== 200) {
@@ -119,5 +119,14 @@ export class SubscriptionsList extends BaseComponent implements OnInit {
       }
     };
     this.confirmDialog(req);
+  }
+
+  protected toggleBillingCycle(billingCycle: string) {
+    if (billingCycle === 'monthly') {
+      this.billingCycle = 'monthly';
+    }
+    if (billingCycle === 'annual') {
+      this.billingCycle = 'annual';
+    }
   }
 }
