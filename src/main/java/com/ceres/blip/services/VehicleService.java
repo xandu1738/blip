@@ -1,5 +1,6 @@
 package com.ceres.blip.services;
 
+import com.ceres.blip.dtos.ListResponseDto;
 import com.ceres.blip.exceptions.AuthorizationRequiredException;
 import com.ceres.blip.models.database.PartnerModel;
 import com.ceres.blip.models.database.SystemUserModel;
@@ -12,14 +13,18 @@ import com.ceres.blip.dtos.OperationReturnObject;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.EnumUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
-public class VehicleService extends LocalUtilsService{
+public class VehicleService extends LocalUtilsService {
     private static final String PARTNER_CODE = "partner_code";
     private static final String REGISTRATION_NUMBER = "registration_number";
     private static final String TYPE = "type";
@@ -32,16 +37,23 @@ public class VehicleService extends LocalUtilsService{
     private final VehicleRepository vehicleRepository;
 
     //Add a new vehicle for partner
+    @CacheEvict(value = "vehicles", allEntries = true)
     public OperationReturnObject addNewVehicle(JsonNode object) {
         try {
             SystemUserModel authenticatedUser = authenticatedUser();
 
             requires(object, DATA);
             JsonNode data = getRequestData(object);
-            requires(data, REGISTRATION_NUMBER, TYPE, PARTNER_CODE, CAPACITY);
+            requires(data, REGISTRATION_NUMBER, TYPE, CAPACITY,STATUS);
             String registrationNumber = data.get(REGISTRATION_NUMBER).asText();
-            String partnerCode = data.get(PARTNER_CODE).asText();
+            String partnerCode = authenticatedUser.getPartnerCode();
+
+            if (StringUtils.isBlank(partnerCode)) {
+                requires(data, PARTNER_CODE);
+                partnerCode = data.get(PARTNER_CODE).asText();
+            }
             String type = data.get(TYPE).asText();
+            String status = data.get(STATUS).asText();
             Integer capacity = data.get(CAPACITY).asInt();
 
             if (!EnumUtils.isValidEnum(VehicleTypes.class, type)) {
@@ -53,6 +65,7 @@ public class VehicleService extends LocalUtilsService{
             vehicleModel.setPartnerCode(partnerCode);
             vehicleModel.setType(VehicleTypes.valueOf(type));
             vehicleModel.setCreatedAt(getCurrentTimestamp());
+            vehicleModel.setStatus(status);
             vehicleModel.setCreatedBy(authenticatedUser.getId());
             vehicleModel.setCapacity(capacity);
 
@@ -81,9 +94,10 @@ public class VehicleService extends LocalUtilsService{
 
             // Process each vehicle in the array
             vehiclesArray.forEach(vehicleData -> {
-                requires(vehicleData, REGISTRATION_NUMBER, TYPE, PARTNER_CODE, CAPACITY);
+                requires(vehicleData, REGISTRATION_NUMBER, TYPE, PARTNER_CODE, CAPACITY, STATUS);
                 String registrationNumber = vehicleData.get(REGISTRATION_NUMBER).asText();
                 String type = vehicleData.get(TYPE).asText();
+                String status = vehicleData.get(STATUS).asText();
                 Integer capacity = vehicleData.get(CAPACITY).asInt();
 
                 if (!EnumUtils.isValidEnum(VehicleTypes.class, type)) {
@@ -95,6 +109,7 @@ public class VehicleService extends LocalUtilsService{
                 vehicleModel.setPartnerCode(partner.getPartnerCode());
                 vehicleModel.setType(VehicleTypes.valueOf(type));
                 vehicleModel.setCreatedAt(getCurrentTimestamp());
+                vehicleModel.setStatus(status);
                 vehicleModel.setCreatedBy(authenticatedUser.getId());
                 vehicleModel.setCapacity(capacity);
 
@@ -167,15 +182,17 @@ public class VehicleService extends LocalUtilsService{
     public OperationReturnObject vehiclesList(int pageNumber, int pageSize) throws AuthorizationRequiredException {
         requiresAuth();
         SystemUserModel authenticatedUser = authenticatedUser();
-        Page<VehicleModel> vehicles = null;
+        List<VehicleModel> vehicles = null;
 
-        if (getUserDomain().equals(AppDomains.BACK_OFFICE)){
-            vehicles = vehicleRepository.findAll(PageRequest.of(pageNumber, pageSize));
-            return new OperationReturnObject(200, "Vehicles list successfully fetched.", vehicles);
+        if (getUserDomain().equals(AppDomains.BACK_OFFICE)) {
+            vehicles = vehicleRepository.findAll(PageRequest.of(pageNumber, pageSize)).toList();
+            return new OperationReturnObject(200, "Vehicles list successfully fetched.", new ListResponseDto((long) vehicles.size(), vehicles));
         }
 
-        vehicles = vehicleRepository.findAllByPartnerCode(authenticatedUser.getPartnerCode(), PageRequest.of(pageNumber, pageSize));
-        return new OperationReturnObject(200, "Vehicles list successfully fetched.", vehicles);
+        vehicles = vehicleRepository.findAllByPartnerCode(authenticatedUser.getPartnerCode(), PageRequest.of(pageNumber, pageSize))
+                .toList();
+        ListResponseDto dto = new ListResponseDto((long) vehicles.size(), vehicles);
+        return new OperationReturnObject(200, "Vehicles list successfully fetched.", dto);
     }
 
     @Cacheable(value = "vehicle", key = "#vehicleId")

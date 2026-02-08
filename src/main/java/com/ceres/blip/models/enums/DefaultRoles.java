@@ -18,6 +18,7 @@ public enum DefaultRoles {
                     DefaultPermissions.MANAGE_USERS,
                     DefaultPermissions.MANAGE_ROLES,
                     DefaultPermissions.MANAGE_CHARGES,
+                    DefaultPermissions.MANAGE_VEHICLES,
                     DefaultPermissions.MANAGE_FLEETS,
                     DefaultPermissions.MANAGE_CONSIGNMENTS,
                     DefaultPermissions.MANAGE_DELIVERIES

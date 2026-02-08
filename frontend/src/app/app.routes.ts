@@ -1,22 +1,24 @@
-import {Routes} from '@angular/router';
-import {DashboardComponent} from './components/dashboard/dashboard.component';
-import {BusBookingComponent} from './components/bus-booking/bus-booking.component';
-import {ParcelsComponent} from './components/parcels/parcels.component';
-import {TrackingComponent} from './components/tracking/tracking.component';
-import {PaymentsComponent} from './components/payments/payments.component';
-import {ReportsComponent} from './components/reports/reports.component';
-import {SettingsComponent} from './components/settings/settings.component';
-import {LoginComponent} from './components/login/login.component';
-import {RegisterComponent} from './components/register/register.component';
-import {authGuard} from './guards/auth.guard';
-import {Configuration} from './components/configuration/configuration';
-import {Users} from './components/UserManagement/users/users';
-import {SubscriptionsList} from './components/Subscriptions/subscriptions-list/subscriptions-list';
-import {licenseGuard} from './guards/license-guard';
-import {subscriptionsGuard} from './guards/subscriptions-guard';
-import {Subscriptions} from './components/Subscriptions/subscriptions/subscriptions';
-import {AccessManagement} from './components/common/access-management/access-management';
-import {UserForm} from './components/UserManagement/user-form/user-form';
+import { Routes } from '@angular/router';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { BusBookingComponent } from './components/bus-booking/bus-booking.component';
+import { ParcelsComponent } from './components/parcels/parcels.component';
+import { TrackingComponent } from './components/tracking/tracking.component';
+import { PaymentsComponent } from './components/payments/payments.component';
+import { ReportsComponent } from './components/reports/reports.component';
+import { SettingsComponent } from './components/settings/settings.component';
+import { LoginComponent } from './components/login/login.component';
+import { RegisterComponent } from './components/register/register.component';
+import { authGuard } from './guards/auth.guard';
+import { Configuration } from './components/configuration/configuration';
+import { Users } from './components/UserManagement/users/users';
+import { SubscriptionsList } from './components/Subscriptions/subscriptions-list/subscriptions-list';
+import { licenseGuard } from './guards/license-guard';
+import { subscriptionsGuard } from './guards/subscriptions-guard';
+import { Subscriptions } from './components/Subscriptions/subscriptions/subscriptions';
+import { AccessManagement } from './components/common/access-management/access-management';
+import { UserForm } from './components/UserManagement/user-form/user-form';
+import { VehiclesList } from './components/management/vehicles/vehicles-list/vehicles-list';
+import { VehicleForm } from './components/management/vehicles/vehicle-form/vehicle-form';
 
 export const routes: Routes = [
   {
@@ -58,6 +60,21 @@ export const routes: Routes = [
   {
     path: 'users',
     component: Users,
+    canActivate: [authGuard, licenseGuard]
+  },
+  {
+    path: 'vehicles',
+    component: VehiclesList,
+    canActivate: [authGuard, licenseGuard]
+  },
+  {
+    path: 'vehicle-form',
+    component: VehicleForm,
+    canActivate: [authGuard, licenseGuard]
+  },
+  {
+    path: 'vehicle-form/:id',
+    component: VehicleForm,
     canActivate: [authGuard, licenseGuard]
   },
   {
