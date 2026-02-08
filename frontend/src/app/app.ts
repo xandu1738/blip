@@ -245,7 +245,7 @@ export class App extends BaseComponent implements OnInit {
         icon: 'pi pi-user',
         value: 2,
         command: () => {
-          this.router.navigate(['/dashboard'])
+          this.router.navigate(['/drivers'])
         }
       });
     }

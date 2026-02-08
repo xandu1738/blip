@@ -19,6 +19,8 @@ import { AccessManagement } from './components/common/access-management/access-m
 import { UserForm } from './components/UserManagement/user-form/user-form';
 import { VehiclesList } from './components/management/vehicles/vehicles-list/vehicles-list';
 import { VehicleForm } from './components/management/vehicles/vehicle-form/vehicle-form';
+import { DriversList } from './components/management/drivers/drivers-list/drivers-list';
+import { DriverForm } from './components/management/drivers/driver-form/driver-form';
 
 export const routes: Routes = [
   {
@@ -75,6 +77,21 @@ export const routes: Routes = [
   {
     path: 'vehicle-form/:id',
     component: VehicleForm,
+    canActivate: [authGuard, licenseGuard]
+  },
+  {
+    path: 'drivers',
+    component: DriversList,
+    canActivate: [authGuard, licenseGuard]
+  },
+  {
+    path: 'driver-form',
+    component: DriverForm,
+    canActivate: [authGuard, licenseGuard]
+  },
+  {
+    path: 'driver-form/:id',
+    component: DriverForm,
     canActivate: [authGuard, licenseGuard]
   },
   {

@@ -1,0 +1,27 @@
+/* Add component specific styles here */
+.status-badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.status-active {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+
+.status-inactive {
+    background-color: #f3f4f6;
+    color: #374151;
+}
+
+.status-deleted {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+.status-unknown {
+    background-color: #e5e7eb;
+    color: #4b5563;
+}
