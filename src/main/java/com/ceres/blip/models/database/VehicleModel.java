@@ -24,10 +24,6 @@ public class VehicleModel {
     @Column(name = "capacity", nullable = false)
     private Integer capacity;
 
-//    @Enumerated(EnumType.STRING)
-//    @Column(name = "category", nullable = false, length = 50)
-//    private VehicleTypes category;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false, length = 20)
     private VehicleTypes type;

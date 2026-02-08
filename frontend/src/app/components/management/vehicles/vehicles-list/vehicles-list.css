@@ -1,0 +1,32 @@
+.status-badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.status-active {
+    background-color: #d1fae5;
+    /* green-100 */
+    color: #065f46;
+    /* green-800 */
+}
+
+.status-inactive {
+    background-color: #f3f4f6;
+    /* gray-100 */
+    color: #1f2937;
+    /* gray-800 */
+}
+
+.status-maintenance {
+    background-color: #fef3c7;
+    /* yellow-100 */
+    color: #92400e;
+    /* yellow-800 */
+}
+
+.status-unknown {
+    background-color: #e5e7eb;
+    color: #374151;
+}

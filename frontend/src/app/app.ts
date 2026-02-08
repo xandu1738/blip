@@ -1,22 +1,22 @@
-import {Component, OnInit} from '@angular/core';
-import {TableModule} from 'primeng/table';
-import {Avatar} from 'primeng/avatar';
-import {Router, RouterOutlet} from '@angular/router';
-import {Events} from './components/services/events';
-import {AuthService} from './components/services/auth.service';
-import {LoaderService} from './components/services/loader.service';
-import {Button} from 'primeng/button';
-import {SubscriptionsList} from './components/Subscriptions/subscriptions-list/subscriptions-list';
-import {LandingComponent} from './components/common/landing/landing.component';
-import {Accordion, AccordionContent, AccordionHeader, AccordionPanel} from 'primeng/accordion';
-import {ConfirmDialog} from 'primeng/confirmdialog';
-import {Toast} from 'primeng/toast';
-import {BaseComponent} from './components/services/base-component';
-import {RemoteService} from './components/services/remoteService';
-import {DialogService} from 'primeng/dynamicdialog';
-import {ConfirmationService, MessageService} from 'primeng/api';
-import {SocketService} from './components/services/socket.service';
-import {TruncatePipe} from './pipes/truncate-pipe';
+import { Component, OnInit } from '@angular/core';
+import { TableModule } from 'primeng/table';
+import { Avatar } from 'primeng/avatar';
+import { Router, RouterOutlet } from '@angular/router';
+import { Events } from './components/services/events';
+import { AuthService } from './components/services/auth.service';
+import { LoaderService } from './components/services/loader.service';
+import { Button } from 'primeng/button';
+import { SubscriptionsList } from './components/Subscriptions/subscriptions-list/subscriptions-list';
+import { LandingComponent } from './components/common/landing/landing.component';
+import { Accordion, AccordionContent, AccordionHeader, AccordionPanel } from 'primeng/accordion';
+import { ConfirmDialog } from 'primeng/confirmdialog';
+import { Toast } from 'primeng/toast';
+import { BaseComponent } from './components/services/base-component';
+import { RemoteService } from './components/services/remoteService';
+import { DialogService } from 'primeng/dynamicdialog';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { SocketService } from './components/services/socket.service';
+import { TruncatePipe } from './pipes/truncate-pipe';
 
 interface MenuItem {
   value: string | number;
@@ -109,13 +109,13 @@ export class App extends BaseComponent implements OnInit {
 
   configurePanelMenu() {
     this.items?.push({
-        value: '0',
-        label: 'Dashboard',
-        icon: 'pi pi-home',
-        command: () => {
-          this.router.navigate(['/dashboard'])
-        }
+      value: '0',
+      label: 'Dashboard',
+      icon: 'pi pi-home',
+      command: () => {
+        this.router.navigate(['/dashboard'])
       }
+    }
     );
 
     let configMenu = this.getConfigMenu();
@@ -181,7 +181,7 @@ export class App extends BaseComponent implements OnInit {
     this.items.push(settings);
   }
 
-  getConfigMenu(){
+  getConfigMenu() {
     let config: MenuItem = {
       value: '1',
       label: 'Configuration',
@@ -251,13 +251,13 @@ export class App extends BaseComponent implements OnInit {
     }
     if (this.user?.permissions?.includes('MANAGE_VEHICLES')) {
       management.items.push({
-          value: 3,
-          label: 'Vehicles',
-          icon: 'pi pi-car',
-          command: () => {
-            this.router.navigate(['/dashboard'])
-          }
+        value: 3,
+        label: 'Vehicles',
+        icon: 'pi pi-car',
+        command: () => {
+          this.router.navigate(['/vehicles'])
         }
+      }
       )
     }
     if (this.user?.permissions?.includes('MANAGE_ROUTES')) {
@@ -272,13 +272,13 @@ export class App extends BaseComponent implements OnInit {
     }
     if (this.user?.permissions?.includes('MANAGE_FARES')) {
       management.items.push({
-          value: 5,
-          label: 'Fares and Charges',
-          icon: 'pi pi-megaphone',
-          command: () => {
-            this.router.navigate(['/dashboard'])
-          }
+        value: 5,
+        label: 'Fares and Charges',
+        icon: 'pi pi-megaphone',
+        command: () => {
+          this.router.navigate(['/dashboard'])
         }
+      }
       )
     }
     if (this.user?.permissions?.includes('MANAGE_LICENSES')) {
@@ -308,13 +308,13 @@ export class App extends BaseComponent implements OnInit {
 
     if (this.user?.permissions?.includes('MANAGE_TRACKING')) {
       logistics.items.push({
-          value: 0,
-          label: 'Tracking',
-          icon: 'pi pi-map-marker',
-          command: () => {
-            this.router.navigate(['/tracking'])
-          }
+        value: 0,
+        label: 'Tracking',
+        icon: 'pi pi-map-marker',
+        command: () => {
+          this.router.navigate(['/tracking'])
         }
+      }
       );
     }
 
@@ -331,13 +331,13 @@ export class App extends BaseComponent implements OnInit {
 
     if (this.user?.permissions?.includes('MANAGE_PARCELS')) {
       logistics.items.push({
-          value: 1,
-          label: 'Parcels',
-          icon: 'pi pi-box',
-          command: () => {
-            this.router.navigate(['/parcels'])
-          }
+        value: 1,
+        label: 'Parcels',
+        icon: 'pi pi-box',
+        command: () => {
+          this.router.navigate(['/parcels'])
         }
+      }
       );
     }
     return logistics;
