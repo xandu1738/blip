@@ -266,10 +266,11 @@ export class App extends BaseComponent implements OnInit {
         label: 'Routes & Trips',
         icon: 'pi pi-map',
         command: () => {
-          this.router.navigate(['/dashboard'])
+          this.router.navigate(['/routes'])
         }
       })
     }
+
     if (this.user?.permissions?.includes('MANAGE_FARES')) {
       management.items.push({
         value: 5,

@@ -1,23 +1,203 @@
-<h1 class="text-3xl font-bold text-gray-800 mb-6">Parcel & Luggage Management</h1>
-<div class="bg-white p-6 rounded-lg shadow-md mb-8">
-    <h2 class="text-xl font-semibold text-gray-800 mb-4">New Parcel Shipment</h2>
-    <form class="space-y-4">
-        <div>
-            <label class="block text-gray-700">Sender Name</label>
-            <input type="text" class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-        </div>
-        <div>
-            <label class="block text-gray-700">Recipient Name</label>
-            <input type="text" class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-        </div>
-        <div>
-            <label class="block text-gray-700">Destination</label>
-            <input type="text" class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-        </div>
-        <button type="submit" class="w-full bg-green-600 text-white p-2 rounded-md hover:bg-green-700 transition duration-200">Create Shipment</button>
-    </form>
+<div class="flex justify-between items-start mb-6">
+  <div>
+    <h1 class="text-3xl font-bold mb-2 text-gray-900 dark:text-white">Parcel & Consignment Management</h1>
+    <p class="text-gray-500 dark:text-gray-400 font-medium">Manage parcel registrations and consignment
+      distributions</p>
+  </div>
+  <div class="flex gap-3">
+    <p-button label="Register Parcel" icon="pi pi-box" size="small" (onClick)="registerParcel()"
+              severity="info"></p-button>
+    <p-button label="New Consignment" icon="pi pi-truck" size="small" (onClick)="createConsignment()"
+              severity="primary"></p-button>
+  </div>
 </div>
-<div class="bg-white p-6 rounded-lg shadow-md">
-    <h2 class="text-xl font-semibold text-gray-800 mb-4">Current Parcels</h2>
-    <p class="text-gray-500">A table showing all parcels would be located here.</p>
+
+<!-- Stats Grid -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+  <div
+    class="stat-card p-6 rounded-xl shadow-sm bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700">
+    <div class="flex items-center gap-4">
+      <div class="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg">
+        <i class="pi pi-box text-blue-600 dark:text-blue-400 text-xl"></i>
+      </div>
+      <div>
+        <p class="text-sm font-semibold text-gray-500 dark:text-gray-400">Total Parcels</p>
+        <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ parcelStats?.total || 0 }}</p>
+      </div>
+    </div>
+  </div>
+  <div
+    class="stat-card p-6 rounded-xl shadow-sm bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700">
+    <div class="flex items-center gap-4">
+      <div class="bg-orange-50 dark:bg-orange-900/20 p-3 rounded-lg">
+        <i class="pi pi-clock text-orange-600 dark:text-orange-400 text-xl"></i>
+      </div>
+      <div>
+        <p class="text-sm font-semibold text-gray-500 dark:text-gray-400">Registered</p>
+        <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ parcelStats?.registered || 0 }}</p>
+      </div>
+    </div>
+  </div>
+  <div
+    class="stat-card p-6 rounded-xl shadow-sm bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700">
+    <div class="flex items-center gap-4">
+      <div class="bg-indigo-50 dark:bg-indigo-900/20 p-3 rounded-lg">
+        <i class="pi pi-truck text-indigo-600 dark:text-indigo-400 text-xl"></i>
+      </div>
+      <div>
+        <p class="text-sm font-semibold text-gray-500 dark:text-gray-400">Consignments</p>
+        <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ consignmentStats?.total || 0 }}</p>
+      </div>
+    </div>
+  </div>
+  <div
+    class="stat-card p-6 rounded-xl shadow-sm bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700">
+    <div class="flex items-center gap-4">
+      <div class="bg-green-50 dark:bg-green-900/20 p-3 rounded-lg">
+        <i class="pi pi-check-circle text-green-600 dark:text-green-400 text-xl"></i>
+      </div>
+      <div>
+        <p class="text-sm font-semibold text-gray-500 dark:text-gray-400">Delivered</p>
+        <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ parcelStats?.delivered || 0 }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="mb-6">
+  <p-accordion [multiple]="true" class="custom-accordion">
+    <p-accordion-panel value="0">
+      <p-accordion-header>
+                <span class="flex items-center gap-2 font-semibold">
+                    <i class="pi pi-filter"></i> Filters
+                </span>
+      </p-accordion-header>
+      <p-accordion-content>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 py-4">
+          <div class="flex flex-col gap-2">
+            <label class="text-xs font-bold text-gray-500 uppercase">Parcel Status</label>
+            <p-select [options]="statusOptions" [(ngModel)]="filterData.parcelStatus"
+                      placeholder="All Statuses" class="flex-1" [showClear]="true"></p-select>
+          </div>
+          <div class="flex flex-col gap-2">
+            <label class="text-xs font-bold text-gray-500 uppercase">Search</label>
+            <input pInputText type="text" [(ngModel)]="filterData.searchQuery"
+                   placeholder="Receiver name or phone..." class="flex-1 px-4 py-2"/>
+          </div>
+          <div class="flex items-end">
+            <p-button (onClick)="filterDataAction()" icon="pi pi-search" label="Search" severity="primary"
+                      class="w-full"></p-button>
+          </div>
+        </div>
+      </p-accordion-content>
+    </p-accordion-panel>
+  </p-accordion>
+</div>
+
+<div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+  <p-tabs value="0">
+    <p-tablist>
+      <p-tab value="0">Registered Parcels</p-tab>
+      <p-tab value="1">Consignments</p-tab>
+    </p-tablist>
+
+    <p-tabpanels>
+      <p-tabpanel value="0">
+        <p-table [value]="parcels" [loading]="loadingParcels" [paginator]="true" [rows]="10"
+                 [rowsPerPageOptions]="[10, 20, 50]" responsiveLayout="scroll">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Recipient</th>
+              <th>Contact</th>
+              <th>Route</th>
+              <th>Weight</th>
+              <th>Cost</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-parcel>
+            <tr>
+              <td>
+                <div class="font-bold text-gray-900 dark:text-white">{{ parcel.receiverName }}</div>
+                <div class="text-xs text-gray-500">{{ parcel.type }}</div>
+              </td>
+              <td>{{ parcel.receiverPhone }}</td>
+              <td>
+                <div class="text-xs text-gray-400 uppercase font-semibold">From</div>
+                <div class="mb-1">{{ parcel.pickupLocation }}</div>
+                <div class="text-xs text-gray-400 uppercase font-semibold">To</div>
+                <div>{{ parcel.dropOffLocation }}</div>
+              </td>
+              <td class="font-sans tabular-nums">{{ parcel.weight | number:'1.2-2' }} kg</td>
+              <td class="font-bold font-sans tabular-nums text-blue-600">{{
+                  parcel.cost | number:'1.2-2'
+                }}
+              </td>
+              <td>
+                                <span [class]="'status-badge status-' + parcel.status">
+                                    {{ parcel.status }}
+                                </span>
+              </td>
+              <td>
+                <p-button icon="pi pi-link" [text]="true" [rounded]="true" severity="info"
+                          (onClick)="assignParcel(parcel)" [disabled]="parcel.status !== 'registered'"
+                          pTooltip="Assign to Consignment"></p-button>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="7" class="text-center py-8 text-gray-500">No parcels found.</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </p-tabpanel>
+
+      <p-tabpanel value="1">
+        <p-table [value]="consignments" [loading]="loadingConsignments" [paginator]="true" [rows]="10"
+                 [rowsPerPageOptions]="[10, 20, 50]" responsiveLayout="scroll">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Number</th>
+              <th>Origin</th>
+              <th>Destination</th>
+              <th>Weight</th>
+              <th>Load</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-con>
+            <tr>
+              <td class="font-bold text-blue-600">{{ con.consignmentNumber }}</td>
+              <td>{{ con.origin }}</td>
+              <td>{{ con.destination }}</td>
+              <td class="font-sans tabular-nums">{{ con.totalWeight | number:'1.2-2' }} kg</td>
+              <td>
+                <div class="text-xs text-gray-400 uppercase font-semibold">Value</div>
+                <div class="font-bold text-green-600">{{ con.totalCost | number:'1.2-2' }}</div>
+              </td>
+              <td>
+                                <span [class]="'status-badge status-' + con.status">
+                                    {{ con.status }}
+                                </span>
+              </td>
+              <td>
+                <p-button icon="pi pi-eye" [text]="true" [rounded]="true"
+                          severity="secondary"></p-button>
+                <p-button icon="pi pi-truck" [text]="true" [rounded]="true"
+                          severity="primary"></p-button>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="7" class="text-center py-8 text-gray-500">No consignments found.</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </p-tabpanel>
+    </p-tabpanels>
+  </p-tabs>
 </div>

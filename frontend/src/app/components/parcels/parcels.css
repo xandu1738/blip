@@ -1,0 +1,49 @@
+/* Add component specific styles here */
+.status-badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.status-active,
+.status-registered {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+
+.status-inactive,
+.status-created {
+    background-color: #f3f4f6;
+    color: #374151;
+}
+
+.status-deleted,
+.status-failed {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+.status-assigned,
+.status-in_transit {
+    background-color: #dbeafe;
+    color: #1e40af;
+}
+
+.status-delivered {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+.status-unknown {
+    background-color: #e5e7eb;
+    color: #4b5563;
+}
+
+.stat-card {
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+}

@@ -1,0 +1,9 @@
+:host ::ng-deep .custom-select .p-select,
+:host ::ng-deep .custom-input .p-inputnumber-input {
+    width: 100% !important;
+    border-radius: 0.5rem !important;
+}
+
+:host ::ng-deep .p-inputnumber {
+    width: 100%;
+}

@@ -21,6 +21,8 @@ import { VehiclesList } from './components/management/vehicles/vehicles-list/veh
 import { VehicleForm } from './components/management/vehicles/vehicle-form/vehicle-form';
 import { DriversList } from './components/management/drivers/drivers-list/drivers-list';
 import { DriverForm } from './components/management/drivers/driver-form/driver-form';
+import { RoutesList } from './components/management/routes/routes-list/routes-list';
+import { RouteForm } from './components/management/routes/route-form/route-form';
 
 export const routes: Routes = [
   {
@@ -92,6 +94,21 @@ export const routes: Routes = [
   {
     path: 'driver-form/:id',
     component: DriverForm,
+    canActivate: [authGuard, licenseGuard]
+  },
+  {
+    path: 'routes',
+    component: RoutesList,
+    canActivate: [authGuard, licenseGuard]
+  },
+  {
+    path: 'route-form',
+    component: RouteForm,
+    canActivate: [authGuard, licenseGuard]
+  },
+  {
+    path: 'route-form/:id',
+    component: RouteForm,
     canActivate: [authGuard, licenseGuard]
   },
   {

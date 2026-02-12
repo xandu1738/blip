@@ -12,12 +12,15 @@ import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -26,22 +29,29 @@ public class RouteService extends LocalUtilsService{
     private static final String ROUTE_ID = "route_id";
     private static final String ORIGIN = "origin";
     private static final String DESTINATION = "destination";
-    private static final String ESTIMATED_DISTANCE = "estimated_distance";
-    private static final String ESTIMATED_DURATION = "estimated_duration";
+    private static final String ESTIMATED_DISTANCE = "estimatedDistance";
+    private static final String ESTIMATED_DURATION = "estimatedDuration";
     private static final String STATUS = "status";
-    private static final String PARTNER_CODE = "partner_code";
+    private static final String PARTNER_CODE = "partnerCode";
     private static final String INTERNAL_SERVER_ERROR = "Internal Server Error: ";
     private static final String ROUTES_FETCHED_SUCCESSFULLY = "Routes fetched successfully";
     private final RouteRepository routeRepository;
     //create a new route for a partner
+    @CacheEvict(value = "routes", allEntries = true)
     public OperationReturnObject createNewRoute(JsonNode object) {
         try {
             SystemUserModel authenticatedUser = authenticatedUser();
             JsonNode data = getRequestData(object);
-            requires(data, ORIGIN, DESTINATION, PARTNER_CODE, ESTIMATED_DISTANCE, ESTIMATED_DURATION);
+            requires(data, ORIGIN, DESTINATION, ESTIMATED_DISTANCE, ESTIMATED_DURATION);
             String origin = data.get(ORIGIN).asText();
             String destination = data.get(DESTINATION).asText();
-            String partnerCode = data.get(PARTNER_CODE).asText();
+
+
+            String partnerCode = authenticatedUser.getPartnerCode();
+            if (StringUtils.isNotBlank(partnerCode)) {
+                requires(data, PARTNER_CODE);
+                partnerCode = data.get(PARTNER_CODE).asText();
+            }
             Double estimatedDistance = data.get(ESTIMATED_DISTANCE).asDouble();
             Double estimatedDuration = data.get(ESTIMATED_DURATION).asDouble();
 
@@ -115,7 +125,8 @@ public class RouteService extends LocalUtilsService{
             SystemUserModel authenticatedUser = authenticatedUser();
             if (StringUtils.isNotBlank(authenticatedUser.getPartnerCode())) {
                 validatePartner(partnerCode);
-                return new OperationReturnObject(200, ROUTES_FETCHED_SUCCESSFULLY, routeRepository.findAllByPartnerCode(partnerCode, PageRequest.of(pageNumber, pageSize)));
+                List<RouteModel> routes = routeRepository.findAllByPartnerCode(partnerCode, PageRequest.of(pageNumber, pageSize)).toList();
+                return new OperationReturnObject(200, ROUTES_FETCHED_SUCCESSFULLY, routes);
             }
 
             belongsTo(AppDomains.BACK_OFFICE);

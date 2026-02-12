@@ -1,0 +1,58 @@
+<div
+    class="flex flex-col gap-6 p-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700">
+    <div class="border-b border-gray-100 dark:border-gray-700 pb-4">
+        <h1 class="text-3xl font-extrabold text-gray-900 dark:text-white">{{ isEdit ? 'Edit Route' : 'Add New Route' }}
+        </h1>
+        <p class="text-gray-500 dark:text-gray-400 mt-2">Specify the origin, destination, and transit details for this
+            route.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Origin Selection -->
+        <div class="flex flex-col gap-2">
+            <label for="origin" class="text-sm font-semibold text-gray-700 dark:text-gray-300 ml-1">Origin
+                District</label>
+            <p-select id="origin" [options]="districts" [(ngModel)]="route.origin" placeholder="Select Origin"
+                class="w-full custom-select" [filter]="true"></p-select>
+        </div>
+
+        <!-- Destination Selection -->
+        <div class="flex flex-col gap-2">
+            <label for="destination" class="text-sm font-semibold text-gray-700 dark:text-gray-300 ml-1">Destination
+                District</label>
+            <p-select id="destination" [options]="districts" [(ngModel)]="route.destination"
+                placeholder="Select Destination" class="w-full custom-select" [filter]="true"></p-select>
+        </div>
+
+        <!-- Estimated Distance -->
+        <div class="flex flex-col gap-2">
+            <label for="distance" class="text-sm font-semibold text-gray-700 dark:text-gray-300 ml-1">Estimated Distance
+                (KM)</label>
+            <p-inputNumber id="distance" [(ngModel)]="route.estimatedDistance" mode="decimal" [minFractionDigits]="2"
+                placeholder="Distance in KM" class="w-full custom-input"></p-inputNumber>
+        </div>
+
+        <!-- Estimated Duration -->
+        <div class="flex flex-col gap-2">
+            <label for="duration" class="text-sm font-semibold text-gray-700 dark:text-gray-300 ml-1">Estimated Duration
+                (Hrs)</label>
+            <p-inputNumber id="duration" [(ngModel)]="route.estimatedDuration" mode="decimal" [minFractionDigits]="1"
+                placeholder="Duration in Hours" class="w-full custom-input"></p-inputNumber>
+        </div>
+
+        <!-- Status Selection -->
+        <div class="flex flex-col gap-2">
+            <label for="status" class="text-sm font-semibold text-gray-700 dark:text-gray-300 ml-1">Route Status</label>
+            <p-select id="status"
+                [options]="[{label: 'Active', value: 'ACTIVE'}, {label: 'Inactive', value: 'INACTIVE'}]"
+                [(ngModel)]="route.status" placeholder="Select Status" class="w-full custom-select"></p-select>
+        </div>
+    </div>
+
+    <div class="flex justify-end gap-4 mt-8 pt-6 border-t border-gray-100 dark:border-gray-700">
+        <p-button label="Cancel" severity="secondary" [outlined]="true" (onClick)="cancel()"
+            class="w-full md:w-32"></p-button>
+        <p-button [label]="isEdit ? 'Update Route' : 'Create Route'" severity="primary" (onClick)="saveRoute()"
+            class="w-full md:w-40"></p-button>
+    </div>
+</div>
