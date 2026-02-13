@@ -1,0 +1,78 @@
+<div class="flex justify-between items-start mb-4">
+    <div>
+        <h1 class="text-3xl font-bold mb-2">{{isEditMode ? 'Edit Driver' : 'Add New Driver'}}</h1>
+        <p class="mb-4">Enter driver details below.</p>
+    </div>
+</div>
+
+<div class="p-4 w-full select-none relative card">
+    <div class="grid grid-cols-1 gap-4">
+        <div class="field">
+            <label for="name" class="block text-sm font-medium mb-1">Name</label>
+            <input pInputText id="name" [(ngModel)]="driver.name" class="w-full" placeholder="Enter driver name" />
+        </div>
+
+        <div class="field">
+            <label for="license" class="block text-sm font-medium mb-1">License Number</label>
+            <input pInputText id="license" [(ngModel)]="driver.license_number" class="w-full"
+                placeholder="Enter license number" />
+        </div>
+
+        <div class="field">
+            <label for="contact" class="block text-sm font-medium mb-1">Contact Number</label>
+            <input pInputText id="contact" [(ngModel)]="driver.contact_number" class="w-full"
+                placeholder="Enter contact number" />
+        </div>
+
+        <div class="field">
+            <label for="status" class="block text-sm font-medium mb-1">Status</label>
+            <p-autoComplete id="status" [(ngModel)]="driver.status" [suggestions]="filteredStatuses"
+                (completeMethod)="search($event)" field="label" [dropdown]="true" [forceSelection]="true"
+                class="w-full">
+                <ng-template let-status pTemplate="item">
+                    <div>{{status.label}}</div>
+                </ng-template>
+                <!-- We need to ensure ngModel binds to the value string, but AutoComplete usually binds objects if field is set. -->
+                <!-- Wait, if forceSelection is true and field is label, it might bind the whole object. -->
+                <!-- VehicleForm used: [(ngModel)]="vehicle.status" (string) -->
+                <!-- And `filteredStatuses` as objects {label, value}. -->
+                <!-- If vehicle.status is string 'ACTIVE', AutoComplete might not show 'Active' label correctly unless `dataKey` or manual handling. -->
+                <!-- VehicleForm implementation:
+              vehicleStatuses: any[] = [ {label: 'Active', value: 'ACTIVE'} ... ];
+
+              <p-autoComplete ... field="label" ...>
+         -->
+                <!-- Actually, for AutoComplete to work with simple strings but display labels, it's tricky.
+              Maybe VehicleForm uses objects for status in model?
+              VehicleModel.ts: status?: string;
+
+              If I look at `VehicleForm.ts`:
+              search($event) returns objects.
+              If `vehicle.status` is a string, p-autoComplete might overwrite it with an object on selection.
+              And `saveVehicle` sends this object?
+
+              VehicleService expects `status` as string in `addNewVehicle`.
+              data.get(STATUS).asText();
+
+              If `vehicle.status` is object {label: 'Active', value: 'ACTIVE'}, `.asText()` might return "[object Object]" or similar?
+              Unless generic object toString is not used.
+
+              Let's be safe: Handle selection to extract value.
+              OR use Dropdown p-dropdown which handles this better:
+              <p-dropdown [options]="driverStatuses" [(ngModel)]="driver.status" optionLabel="label" optionValue="value"></p-dropdown>
+
+              I will use p-dropdown if available (need import).
+              VehicleForm used AutoComplete. I'll stick to AutoComplete but I'll fix the binding.
+
+              If I select an item, `driver.status` becomes the object.
+              So in `saveDriver`, I should extract `.value` if it is an object.
+         -->
+            </p-autoComplete>
+        </div>
+    </div>
+
+    <div class="flex justify-end gap-2 mt-6">
+        <p-button label="Cancel" severity="secondary" (onClick)="cancel()"></p-button>
+        <p-button label="Save" (onClick)="saveDriver()"></p-button>
+    </div>
+</div>

@@ -27,7 +27,12 @@ public class ManagementController {
     }
 
     @GetMapping("/our-roles")
-    public OperationReturnObject systemRoles(){
+    public OperationReturnObject systemRoles() {
         return managementService.fetchSystemRoles();
+    }
+
+    @GetMapping("/districts")
+    public OperationReturnObject fetchDistricts() {
+        return managementService.fetchDistricts();
     }
 }

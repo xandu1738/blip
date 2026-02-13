@@ -47,6 +47,7 @@ public class TripService extends LocalUtilsService {
         tripModel.setTripDate(tripDate);
         tripModel.setCreatedAt(getCurrentTimestamp());
         tripModel.setCreatedBy(authenticatedUser().getId());
+        tripModel.setPartnerCode(authenticatedUser().getPartnerCode());
         TripModel savedTrip = repository.save(tripModel);
 
         executeAsync(() -> vehicleRepository.findById(busId).ifPresent(
@@ -67,11 +68,13 @@ public class TripService extends LocalUtilsService {
         requires(data, "id");
         Long id = data.get("id").asLong();
 
-        TripModel tripModel = repository.findById(id).orElseThrow(() -> new IllegalArgumentException("Trip with ID " + id + " not found."));
+        TripModel tripModel = repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Trip with ID " + id + " not found."));
         Long routeId = data.get("route_id").asLong();
         tripModel.setRouteId(routeId);
         Long busId = data.get("bus_id").asLong();
-        //todo: reconcile trip seats to new bus seats. UNLESS we have some good number that has already booked seats then reject modification.
+        // todo: reconcile trip seats to new bus seats. UNLESS we have some good number
+        // that has already booked seats then reject modification.
         tripModel.setBusId(busId);
         String td = data.get("trip_date").asText();
         if (StringUtils.isNotBlank(td)) {
@@ -85,13 +88,15 @@ public class TripService extends LocalUtilsService {
 
     @Cacheable(value = "trips", key = "#pageNumber + '-' + #pageSize")
     public OperationReturnObject tripList(int pageNumber, int pageSize) {
-        Page<TripModel> trips = repository.findAll(PageRequest.of(pageNumber, pageSize));
+        Page<TripModel> trips = repository.findAllByPartnerCode(authenticatedUser().getPartnerCode(),
+                PageRequest.of(pageNumber, pageSize));
         return new OperationReturnObject(200, "Trips list successfully fetched.", trips);
     }
 
     @Cacheable(value = "trip", key = "#tripId")
     public OperationReturnObject tripDetails(long tripId) {
-        return new OperationReturnObject(200, "Trip details successfully fetched.", repository.findById(tripId).orElse(null));
+        return new OperationReturnObject(200, "Trip details successfully fetched.",
+                repository.findById(tripId).orElse(null));
     }
 
     @CacheEvict(value = "trips", key = "#tripId")

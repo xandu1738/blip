@@ -1,0 +1,94 @@
+<div class="p-6">
+    <div class="flex items-center gap-4 mb-8">
+        <p-button icon="pi pi-arrow-left" [rounded]="true" [text]="true" severity="secondary"
+            (onClick)="cancel()"></p-button>
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">{{ isEditMode ? 'Edit' : 'Register' }} Parcel
+            </h1>
+            <p class="text-gray-500 dark:text-gray-400 font-medium">Enter parcel and recipient details</p>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Recipient Section -->
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm">
+            <h2 class="text-lg font-bold mb-6 flex items-center gap-2">
+                <i class="pi pi-user text-blue-600"></i> Recipient Information
+            </h2>
+
+            <div class="space-y-4">
+                <div class="flex flex-col gap-2">
+                    <label class="font-semibold text-gray-700 dark:text-gray-300">Full Name</label>
+                    <input pInputText [(ngModel)]="parcel.receiverName" placeholder="Enter recipient name"
+                        class="w-full" />
+                </div>
+
+                <div class="flex flex-col gap-2">
+                    <label class="font-semibold text-gray-700 dark:text-gray-300">Phone Number</label>
+                    <input pInputText [(ngModel)]="parcel.receiverPhone" placeholder="e.g. +254 700 000000"
+                        class="w-full" />
+                </div>
+            </div>
+        </div>
+
+        <!-- Parcel Details -->
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm">
+            <h2 class="text-lg font-bold mb-6 flex items-center gap-2">
+                <i class="pi pi-box text-blue-600"></i> Parcel Details
+            </h2>
+
+            <div class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="flex flex-col gap-2">
+                        <label class="font-semibold text-gray-700 dark:text-gray-300">Weight (kg)</label>
+                        <p-inputNumber [(ngModel)]="parcel.weight" mode="decimal" [minFractionDigits]="2"
+                            [maxFractionDigits]="2" class="w-full"></p-inputNumber>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <label class="font-semibold text-gray-700 dark:text-gray-300">Type</label>
+                        <p-select [options]="typeOptions" [(ngModel)]="parcel.type" optionLabel="label"
+                            optionValue="value" class="w-full"></p-select>
+                    </div>
+                </div>
+
+                <div class="flex flex-col gap-2">
+                    <label class="font-semibold text-gray-700 dark:text-gray-300">Dimensions (optional)</label>
+                    <input pInputText [(ngModel)]="parcel.dimensions" placeholder="e.g. 20x20x10 cm" class="w-full" />
+                </div>
+
+                <div class="flex flex-col gap-2">
+                    <label class="font-semibold text-gray-700 dark:text-gray-300">Shipping Cost</label>
+                    <p-inputNumber [(ngModel)]="parcel.cost" mode="currency" currency="KES" locale="en-KE"
+                        class="w-full"></p-inputNumber>
+                </div>
+            </div>
+        </div>
+
+        <!-- Logistics -->
+        <div
+            class="bg-white dark:bg-gray-800 p-6 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm md:col-span-2">
+            <h2 class="text-lg font-bold mb-6 flex items-center gap-2">
+                <i class="pi pi-map-marker text-blue-600"></i> Route Details
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="flex flex-col gap-2">
+                    <label class="font-semibold text-gray-700 dark:text-gray-300">Pickup Location</label>
+                    <input pInputText [(ngModel)]="parcel.pickupLocation" placeholder="Enter pickup station or address"
+                        class="w-full" />
+                </div>
+
+                <div class="flex flex-col gap-2">
+                    <label class="font-semibold text-gray-700 dark:text-gray-300">Drop-off Location</label>
+                    <input pInputText [(ngModel)]="parcel.dropOffLocation"
+                        placeholder="Enter destination station or address" class="w-full" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-8 flex justify-end gap-3 border-t pt-6 border-gray-100 dark:border-gray-700">
+        <p-button label="Cancel" icon="pi pi-times" severity="secondary" (onClick)="cancel()"></p-button>
+        <p-button label="Register Parcel" icon="pi pi-check" severity="primary" (onClick)="saveParcel()"></p-button>
+    </div>
+</div>

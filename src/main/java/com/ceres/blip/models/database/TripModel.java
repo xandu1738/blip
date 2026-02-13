@@ -18,7 +18,7 @@ public class TripModel {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "route_id",nullable = false)
+    @Column(name = "route_id", nullable = false)
     private Long routeId;
 
     @Column(name = "bus_id", nullable = false)
@@ -33,6 +33,9 @@ public class TripModel {
     @Enumerated(EnumType.STRING)
     @Column(name = "status", length = 20)
     private TripStatus status;
+
+    @Column(name = "partner_code")
+    private String partnerCode;
 
     @Column(name = "created_at")
     private Timestamp createdAt;

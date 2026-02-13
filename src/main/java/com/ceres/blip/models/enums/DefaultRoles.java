@@ -21,7 +21,14 @@ public enum DefaultRoles {
                     DefaultPermissions.MANAGE_VEHICLES,
                     DefaultPermissions.MANAGE_FLEETS,
                     DefaultPermissions.MANAGE_CONSIGNMENTS,
-                    DefaultPermissions.MANAGE_DELIVERIES
+                    DefaultPermissions.MANAGE_DELIVERIES,
+                    DefaultPermissions.MANAGE_PAYMENTS,
+                    DefaultPermissions.MANAGE_ROUTES,
+                    DefaultPermissions.MANAGE_CHARGES,
+                    DefaultPermissions.MANAGE_PARCELS,
+                    DefaultPermissions.MANAGE_FARES,
+                    DefaultPermissions.MANAGE_TRACKING,
+                    DefaultPermissions.MANAGE_SCHEDULES
             ));
 
     final String code;

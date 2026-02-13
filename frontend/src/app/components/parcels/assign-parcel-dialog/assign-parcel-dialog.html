@@ -1,0 +1,33 @@
+<div class="p-4">
+    <div class="mb-6">
+        <p class="text-gray-600 dark:text-gray-400 mb-2">Assigning parcel to a consignment for delivery.</p>
+        <div class="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg border border-blue-100 dark:border-blue-800">
+            <div class="font-bold text-blue-900 dark:text-blue-100">{{ parcel.receiverName }}</div>
+            <div class="text-sm text-blue-700 dark:text-blue-300">{{ parcel.pickupLocation }} → {{
+                parcel.dropOffLocation }}</div>
+            <div class="text-xs text-blue-600 dark:text-blue-400 mt-1">{{ parcel.weight }} kg | {{ parcel.type }}</div>
+        </div>
+    </div>
+
+    <div class="space-y-4">
+        <div class="flex flex-col gap-2">
+            <label class="font-semibold text-gray-700 dark:text-gray-300">Select Consignment</label>
+            <p-select [options]="consignments" [(ngModel)]="selectedConsignmentId"
+                placeholder="Choose an active consignment" class="w-full" [loading]="!consignments.length"></p-select>
+            <p *ngIf="!consignments.length" class="text-xs text-orange-600 mt-1">No active 'Created' consignments found.
+                Create one first.</p>
+        </div>
+
+        <div class="flex flex-col gap-2">
+            <label class="font-semibold text-gray-700 dark:text-gray-300">Remarks (Optional)</label>
+            <textarea pTextarea [(ngModel)]="remarks" rows="3" placeholder="Any special handling instructions..."
+                class="w-full"></textarea>
+        </div>
+    </div>
+
+    <div class="flex justify-end gap-3 mt-8 pt-4 border-t border-gray-100 dark:border-gray-700">
+        <p-button label="Cancel" severity="secondary" (onClick)="cancel()"></p-button>
+        <p-button label="Confirm Assignment" severity="primary" [loading]="loading" [disabled]="!selectedConsignmentId"
+            (onClick)="assign()"></p-button>
+    </div>
+</div>

@@ -19,6 +19,15 @@ import { AccessManagement } from './components/common/access-management/access-m
 import { UserForm } from './components/UserManagement/user-form/user-form';
 import { VehiclesList } from './components/management/vehicles/vehicles-list/vehicles-list';
 import { VehicleForm } from './components/management/vehicles/vehicle-form/vehicle-form';
+import { DriversList } from './components/management/drivers/drivers-list/drivers-list';
+import { DriverForm } from './components/management/drivers/driver-form/driver-form';
+import { RoutesList } from './components/management/routes/routes-list/routes-list';
+import { RouteForm } from './components/management/routes/route-form/route-form';
+import { ParcelForm } from './components/parcels/parcel-form/parcel-form';
+import { ConsignmentForm } from './components/parcels/consignment-form/consignment-form';
+import { ConsignmentDetails } from './components/parcels/consignment-details/consignment-details';
+import { SchedulesComponent } from './components/management/schedules/schedules.component';
+import { ScheduleForm } from './components/management/schedule-form/schedule-form';
 
 export const routes: Routes = [
   {
@@ -78,6 +87,51 @@ export const routes: Routes = [
     canActivate: [authGuard, licenseGuard]
   },
   {
+    path: 'drivers',
+    component: DriversList,
+    canActivate: [authGuard, licenseGuard]
+  },
+  {
+    path: 'schedules',
+    component: SchedulesComponent,
+    canActivate: [authGuard, licenseGuard]
+  },
+  {
+    path: 'schedule-form',
+    component: ScheduleForm,
+    canActivate: [authGuard, licenseGuard]
+  },
+  {
+    path: 'schedule-form/:id',
+    component: ScheduleForm,
+    canActivate: [authGuard, licenseGuard]
+  },
+  {
+    path: 'driver-form',
+    component: DriverForm,
+    canActivate: [authGuard, licenseGuard]
+  },
+  {
+    path: 'driver-form/:id',
+    component: DriverForm,
+    canActivate: [authGuard, licenseGuard]
+  },
+  {
+    path: 'routes',
+    component: RoutesList,
+    canActivate: [authGuard, licenseGuard]
+  },
+  {
+    path: 'route-form',
+    component: RouteForm,
+    canActivate: [authGuard, licenseGuard]
+  },
+  {
+    path: 'route-form/:id',
+    component: RouteForm,
+    canActivate: [authGuard, licenseGuard]
+  },
+  {
     path: 'modules',
     component: ParcelsComponent,
     canActivate: [authGuard, licenseGuard]
@@ -85,6 +139,21 @@ export const routes: Routes = [
   {
     path: 'parcels',
     component: ParcelsComponent,
+    canActivate: [authGuard, licenseGuard]
+  },
+  {
+    path: 'parcels/register',
+    component: ParcelForm,
+    canActivate: [authGuard, licenseGuard]
+  },
+  {
+    path: 'parcels/consignment/new',
+    component: ConsignmentForm,
+    canActivate: [authGuard, licenseGuard]
+  },
+  {
+    path: 'parcels/consignment/:id',
+    component: ConsignmentDetails,
     canActivate: [authGuard, licenseGuard]
   },
   {

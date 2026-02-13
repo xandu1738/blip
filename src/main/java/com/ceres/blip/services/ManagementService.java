@@ -16,6 +16,8 @@ import java.util.*;
 @RequiredArgsConstructor
 public class ManagementService extends LocalUtilsService {
     private final SystemRoleRepository systemRoleRepository;
+    private final com.ceres.blip.repositories.DistrictRepository districtRepository;
+
     public @NonNull Map<String, Object> fetchEnumValues() {
         List<Map<String, String>> domains = Arrays.stream(AppDomains.values())
                 .map(o -> {
@@ -32,12 +34,16 @@ public class ManagementService extends LocalUtilsService {
         return mapper;
     }
 
-    public OperationReturnObject fetchSystemRoles(){
+    public OperationReturnObject fetchSystemRoles() {
         SystemUserModel authenticatedUser = authenticatedUser();
         SystemRoleModel userRole = systemRoleRepository.findByRoleCode(authenticatedUser.getRoleCode())
                 .orElseThrow(() -> new IllegalStateException("User has no role assigned"));
 
         List<SystemRoleModel> rolesICanManage = systemRoleRepository.findAllByRoleDomain(userRole.getRoleDomain());
         return new OperationReturnObject(200, "Roles fetched successfully", rolesICanManage);
+    }
+
+    public OperationReturnObject fetchDistricts() {
+        return new OperationReturnObject(200, "Districts fetched successfully", districtRepository.findAll());
     }
 }

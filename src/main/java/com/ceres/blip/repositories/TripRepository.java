@@ -4,6 +4,10 @@ import com.ceres.blip.models.database.TripModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 @Repository
-public interface TripRepository extends JpaRepository<TripModel,Long> {
+public interface TripRepository extends JpaRepository<TripModel, Long> {
+    Page<TripModel> findAllByPartnerCode(String partnerCode, Pageable pageable);
 }
