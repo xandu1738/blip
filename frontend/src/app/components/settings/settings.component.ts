@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { TableModule } from 'primeng/table';
 import {Dialog, DialogModule} from 'primeng/dialog';
 import {ButtonDirective, ButtonModule} from 'primeng/button';
@@ -9,6 +9,12 @@ import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 import { NotificationService } from '../services/notification.service';
 import { LoaderService } from '../services/loader.service';
+import {BaseComponent} from '../services/base-component';
+import {Events} from '../services/events';
+import {RemoteService} from '../services/remoteService';
+import {DialogService} from 'primeng/dynamicdialog';
+import {ConfirmationService, MessageService} from 'primeng/api';
+import {SocketService} from '../services/socket.service';
 
 @Component({
   selector: 'app-settings',
@@ -24,7 +30,10 @@ import { LoaderService } from '../services/loader.service';
   templateUrl: './settings.html',
   styleUrl: './settings.css'
 })
-export class SettingsComponent {
+export class SettingsComponent extends BaseComponent implements OnInit{
+  override ngOnInit(): void {
+    super.ngOnInit();
+  }
   modules = [
     {
       name: "Transport",
@@ -175,12 +184,19 @@ export class SettingsComponent {
     autoStart: false
   };
 
+
   constructor(
-    private authService: AuthService,
-    private router: Router,
-    private notificationService: NotificationService,
-    private loaderService: LoaderService
-  ) {}
+    protected router: Router,
+    helper: RemoteService,
+    loaderService: LoaderService,
+    dialogService: DialogService,
+    confirmationService: ConfirmationService,
+    messageService: MessageService,
+    protected notificationService: NotificationService,
+    authService: AuthService
+  ) {
+    super(authService, helper, loaderService, dialogService, confirmationService, messageService);
+  }
 
   get filteredModules() {
     return this.modules.filter(m =>
@@ -214,7 +230,7 @@ export class SettingsComponent {
 
   addModule() {
     if (!this.newModule.name.trim() || !this.newModule.description.trim()) {
-      this.notificationService.showWarning('Please fill in all fields before saving');
+      this.showWarning('Please fill in all fields before saving');
       return;
     }
 
@@ -227,60 +243,60 @@ export class SettingsComponent {
     };
 
     this.modules.push(module);
-    this.notificationService.showSuccess('New module added successfully');
+    this.showSuccess('New module added successfully');
     this.showAddDialog = false;
   }
 
   // New method implementations
   exportConfiguration() {
     // Mock export functionality
-    this.notificationService.showInfo('Configuration export started. Download will begin shortly.');
+    this.showInfo('Configuration export started. Download will begin shortly.');
     console.log('Exporting configuration...');
   }
 
   refreshModules() {
-    this.notificationService.showInfo('Refreshing modules list...');
+    this.showInfo('Refreshing modules list...');
     // Mock refresh - in real app, would call API
     setTimeout(() => {
-      this.notificationService.showSuccess('Modules list refreshed successfully');
+      this.showSuccess('Modules list refreshed successfully');
     }, 1000);
   }
 
   configureModule(module: any) {
-    this.notificationService.showInfo(`Opening configuration for ${module.name}`);
+    this.showInfo(`Opening configuration for ${module.name}`);
     console.log('Configure module:', module);
   }
 
   showModuleOptions(module: any) {
-    this.notificationService.showInfo(`Showing options for ${module.name}`);
+    this.showInfo(`Showing options for ${module.name}`);
     console.log('Module options:', module);
   }
 
   saveSettings() {
-    this.notificationService.showSuccess('Settings saved successfully');
+    this.showSuccess('Settings saved successfully');
     console.log('Saving settings:', this.settings);
   }
 
   addIntegration() {
-    this.notificationService.showInfo('Opening integration wizard...');
+    this.showInfo('Opening integration wizard...');
     console.log('Adding new integration...');
   }
 
   configureIntegration(integration: any) {
-    this.notificationService.showInfo(`Configuring ${integration.name}`);
+    this.showInfo(`Configuring ${integration.name}`);
     console.log('Configure integration:', integration);
   }
 
   testIntegration(integration: any) {
-    this.notificationService.showInfo(`Testing ${integration.name} connection...`);
+    this.showInfo(`Testing ${integration.name} connection...`);
     console.log('Testing integration:', integration);
 
     // Mock test result
     setTimeout(() => {
       if (integration.status === 'error') {
-        this.notificationService.showError(`${integration.name} test failed. Please check configuration.`);
+        this.showError(`${integration.name} test failed. Please check configuration.`);
       } else {
-        this.notificationService.showSuccess(`${integration.name} test successful!`);
+        this.showSuccess(`${integration.name} test successful!`);
       }
     }, 2000);
   }

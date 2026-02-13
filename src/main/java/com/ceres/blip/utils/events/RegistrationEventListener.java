@@ -33,6 +33,7 @@ public class RegistrationEventListener implements ApplicationListener<UserRegist
         try {
             Map<String, String> message = new HashMap<>();
             message.put("type", "USER_REGISTRATION");
+            message.put("partnerCode",user.getPartnerCode());
             message.put("email", user.getEmail());
             message.put("firstName", user.getFirstName());
             message.put("lastName", user.getLastName());

@@ -35,8 +35,9 @@ public class VehicleService extends LocalUtilsService {
     private static final String STATUS = "status";
 
     private final VehicleRepository vehicleRepository;
+    private final NotificationService notificationService;
 
-    //Add a new vehicle for partner
+    // Add a new vehicle for partner
     @CacheEvict(value = "vehicles", allEntries = true)
     public OperationReturnObject addNewVehicle(JsonNode object) {
         try {
@@ -44,7 +45,7 @@ public class VehicleService extends LocalUtilsService {
 
             requires(object, DATA);
             JsonNode data = getRequestData(object);
-            requires(data, REGISTRATION_NUMBER, TYPE, CAPACITY,STATUS);
+            requires(data, REGISTRATION_NUMBER, TYPE, CAPACITY, STATUS);
             String registrationNumber = data.get(REGISTRATION_NUMBER).asText();
             String partnerCode = authenticatedUser.getPartnerCode();
 
@@ -70,13 +71,21 @@ public class VehicleService extends LocalUtilsService {
             vehicleModel.setCapacity(capacity);
 
             VehicleModel savedVehicle = vehicleRepository.save(vehicleModel);
+
+            notificationService.sendNotification(
+                    partnerCode,
+                    "New Vehicle Registered",
+                    "A new vehicle with registration number " + registrationNumber + " has been added.",
+                    "VEHICLE_ADDED");
+
             return new OperationReturnObject(200, "Vehicle Successfully registered", savedVehicle);
         } catch (IllegalArgumentException e) {
             return new OperationReturnObject(400, e.getMessage(), null);
         }
     }
 
-    //Vehicle Bulk Registration: Receives a list of vehicles to be registered for a partner as a JSON array
+    // Vehicle Bulk Registration: Receives a list of vehicles to be registered for a
+    // partner as a JSON array
     public OperationReturnObject bulkVehicleRegistration(JsonNode object) {
         try {
             SystemUserModel authenticatedUser = authenticatedUser();
@@ -101,7 +110,8 @@ public class VehicleService extends LocalUtilsService {
                 Integer capacity = vehicleData.get(CAPACITY).asInt();
 
                 if (!EnumUtils.isValidEnum(VehicleTypes.class, type)) {
-                    throw new IllegalArgumentException("Invalid vehicle type for registration number: " + registrationNumber);
+                    throw new IllegalArgumentException(
+                            "Invalid vehicle type for registration number: " + registrationNumber);
                 }
 
                 VehicleModel vehicleModel = new VehicleModel();
@@ -122,7 +132,7 @@ public class VehicleService extends LocalUtilsService {
         }
     }
 
-    //Edit Vehicle information
+    // Edit Vehicle information
     public OperationReturnObject editVehicleInformation(JsonNode object) {
         try {
             authenticatedUser();
@@ -160,7 +170,7 @@ public class VehicleService extends LocalUtilsService {
         }
     }
 
-    //Assign Vehicle to partner
+    // Assign Vehicle to partner
     public OperationReturnObject assignVehicleToPartner(String partnerCode, Long vehicleId) {
         try {
             authenticatedUser();
@@ -186,10 +196,12 @@ public class VehicleService extends LocalUtilsService {
 
         if (getUserDomain().equals(AppDomains.BACK_OFFICE)) {
             vehicles = vehicleRepository.findAll(PageRequest.of(pageNumber, pageSize)).toList();
-            return new OperationReturnObject(200, "Vehicles list successfully fetched.", new ListResponseDto((long) vehicles.size(), vehicles));
+            return new OperationReturnObject(200, "Vehicles list successfully fetched.",
+                    new ListResponseDto((long) vehicles.size(), vehicles));
         }
 
-        vehicles = vehicleRepository.findAllByPartnerCode(authenticatedUser.getPartnerCode(), PageRequest.of(pageNumber, pageSize))
+        vehicles = vehicleRepository
+                .findAllByPartnerCode(authenticatedUser.getPartnerCode(), PageRequest.of(pageNumber, pageSize))
                 .toList();
         ListResponseDto dto = new ListResponseDto((long) vehicles.size(), vehicles);
         return new OperationReturnObject(200, "Vehicles list successfully fetched.", dto);
@@ -203,5 +215,5 @@ public class VehicleService extends LocalUtilsService {
         return new OperationReturnObject(200, "Vehicle details successfully fetched.", vehicleModel);
     }
 
-    //TODO: Assign Vehicle to driver
+    // TODO: Assign Vehicle to driver
 }

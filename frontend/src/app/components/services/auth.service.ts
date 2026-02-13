@@ -1,8 +1,8 @@
-import {Injectable} from '@angular/core';
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
-import {BehaviorSubject, Observable, throwError} from 'rxjs';
-import {catchError, map, tap} from 'rxjs/operators';
-import {environment} from '../../../environments/environment';
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
 import {
   User,
   LoginRequest,
@@ -11,7 +11,7 @@ import {
   ApiResponse,
   RefreshTokenRequest
 } from '../models/user.models';
-import {MessageService} from 'primeng/api';
+import { MessageService } from 'primeng/api';
 
 @Injectable({
   providedIn: 'root'
@@ -39,7 +39,7 @@ export class AuthService {
 
   login(email: string, password: string): Observable<LoginResponse> {
     const loginData: LoginRequest = {
-      data: {email, password}
+      data: { email, password }
     };
 
     return this.http.post<ApiResponse<any>>(`${this.apiUrl}/user-management/login`, loginData)
@@ -71,7 +71,7 @@ export class AuthService {
       'Request-Origin': 'BLIP-PORTAL',
       'Authorization': `Bearer ${accessToken}`
     }
-    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/user-management/create-user`, userData,{headers: requestHeaders})
+    return this.http.post<ApiResponse<any>>(`${this.apiUrl}/user-management/create-user`, userData, { headers: requestHeaders })
       .pipe(
         map(response => response?.returnObject),
         catchError(this.handleError)
@@ -87,13 +87,13 @@ export class AuthService {
     }
 
     const refreshData: RefreshTokenRequest = {
-      data: {refreshToken}
+      data: { refreshToken }
     };
 
     return this.http.post<ApiResponse<string>>(
       `${this.apiUrl}/user-management/refresh-token`,
       refreshData,
-      {headers: {'Request-Origin': 'BLIP-PORTAL', 'X-Skip-Auth': 'true'}})
+      { headers: { 'Request-Origin': 'BLIP-PORTAL', 'X-Skip-Auth': 'true' } })
       .pipe(
         map(response => response?.returnObject),
         tap(newToken => {
@@ -113,7 +113,7 @@ export class AuthService {
     const mockAccessToken = 'demo-access-token-' + Date.now();
     const mockRefreshToken = 'demo-refresh-token-' + Date.now();
 
-    console.log('AuthService: Generated tokens:', {mockAccessToken, mockRefreshToken}); // Debug log
+    console.log('AuthService: Generated tokens:', { mockAccessToken, mockRefreshToken }); // Debug log
 
     this.setTokens(mockAccessToken, mockRefreshToken);
     this.setUser(user);
@@ -206,5 +206,10 @@ export class AuthService {
       });
       return;
     }
+  }
+
+  hasPermission(permission: string): boolean {
+    const user = this._currentUser.value;
+    return !!(user && user.permissions && user.permissions.includes(permission));
   }
 }

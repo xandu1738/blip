@@ -32,6 +32,7 @@ public class DriverService extends LocalUtilsService {
     private static final String DRIVER_ID = "driver_id";
 
     private final DriverRepository driverRepository;
+    private final NotificationService notificationService;
 
     @CacheEvict(value = "drivers", allEntries = true)
     public OperationReturnObject addNewDriver(JsonNode object) {
@@ -66,6 +67,13 @@ public class DriverService extends LocalUtilsService {
             driver.setCreatedBy(authenticatedUser.getId());
 
             DriverModel savedDriver = driverRepository.save(driver);
+
+            notificationService.sendNotification(
+                    partnerCode,
+                    "New Driver Registered",
+                    "A new driver, " + name + ", has been added to the system.",
+                    "DRIVER_ADDED");
+
             return new OperationReturnObject(200, "Driver successfully created", savedDriver);
 
         } catch (IllegalArgumentException e) {

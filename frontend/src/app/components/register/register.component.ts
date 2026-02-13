@@ -144,7 +144,7 @@ export class RegisterComponent extends BaseComponent implements OnInit {
         },
         error: (error) => {
           console.error(error);
-          this.notificationService.showError(error.message || 'Failed to load partners', 'Request Failed');
+          this.showError(error.message || 'Failed to load partners');
         },
         complete: () => {
           this.isLoading = false;
