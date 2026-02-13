@@ -15,6 +15,8 @@ import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { TabsModule } from 'primeng/tabs';
 import { SelectModule } from 'primeng/select';
+import { Router } from '@angular/router';
+import { AssignParcelDialog } from './assign-parcel-dialog/assign-parcel-dialog';
 
 @Component({
   selector: 'app-parcels',
@@ -68,7 +70,8 @@ export class ParcelsComponent extends BaseComponent implements OnInit {
     confirmationService: ConfirmationService,
     messageService: MessageService,
     authService: AuthService,
-    helper: RemoteService
+    helper: RemoteService,
+    private router: Router
   ) {
     super(authService, helper, loaderService, dialogService, confirmationService, messageService);
   }
@@ -122,22 +125,34 @@ export class ParcelsComponent extends BaseComponent implements OnInit {
   }
 
   registerParcel() {
-    // This will open a dialog or navigate to a form
-    this.messageService.add({ severity: 'info', summary: 'Info', detail: 'Parcel registration form coming soon' });
+    this.router.navigate(['/parcels/register']);
   }
 
   createConsignment() {
-    // This will open a dialog or navigate to a form
-    this.messageService.add({ severity: 'info', summary: 'Info', detail: 'Consignment creation form coming soon' });
+    this.router.navigate(['/parcels/consignment/new']);
   }
 
   assignParcel(parcel: any) {
-    // This will open a dialog to select a consignment
-    this.messageService.add({ severity: 'info', summary: 'Info', detail: 'Parcel assignment logic coming soon' });
+    const ref = this.dialogService.open(AssignParcelDialog, {
+      header: 'Assign Parcel to Consignment',
+      width: '500px',
+      data: { parcel }
+    });
+
+    if (ref) {
+      ref.onClose.subscribe((result) => {
+        if (result) {
+          this.loadAllData();
+        }
+      });
+    }
+  }
+
+  viewConsignment(con: any) {
+    this.router.navigate(['/parcels/consignment', con.id]);
   }
 
   filterDataAction() {
-    // Apply filtering logic
     this.loadAllData();
   }
 }

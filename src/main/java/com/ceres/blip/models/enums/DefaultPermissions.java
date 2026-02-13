@@ -32,6 +32,7 @@ public enum DefaultPermissions {
     MANAGE_TRIPS("MANAGE_TRIPS", "Can manage trips", List.of(AppDomains.BACK_OFFICE, AppDomains.CLIENT_ADMIN)),
     MANAGE_CONSIGNMENTS("MANAGE_CONSIGNMENTS", "Can manage consignments", List.of(AppDomains.BACK_OFFICE, AppDomains.CLIENT_ADMIN)),
     MANAGE_DRIVERS("MANAGE_DRIVERS", "Can manage drivers", List.of(AppDomains.BACK_OFFICE, AppDomains.CLIENT_ADMIN)),
+    MANAGE_SCHEDULES("MANAGE_SCHEDULES", "Can manage schedules", List.of(AppDomains.BACK_OFFICE, AppDomains.CLIENT_ADMIN)),
 
     //View Permissions
     VIEW_MODULES("VIEW_MODULES", "Can view modules", List.of(AppDomains.BACK_OFFICE, AppDomains.CLIENT_ADMIN, AppDomains.PUBLIC)),

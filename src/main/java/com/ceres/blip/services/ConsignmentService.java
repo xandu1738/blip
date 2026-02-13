@@ -115,6 +115,25 @@ public class ConsignmentService extends LocalUtilsService {
         }
     }
 
+    public OperationReturnObject getConsignmentDetails(Long consignmentId) {
+        try {
+            ConsignmentModel consignment = consignmentRepository.findById(consignmentId)
+                    .orElseThrow(() -> new IllegalArgumentException("Consignment not found"));
+
+            List<ConsignmentParcelModel> mappings = consignmentParcelRepository.findAllByConsignmentId(consignmentId);
+            List<Long> parcelIds = mappings.stream().map(ConsignmentParcelModel::getParcelId).toList();
+            List<ParcelModel> parcels = parcelRepository.findAllById(parcelIds);
+
+            Map<String, Object> result = new HashMap<>();
+            result.put("consignment", consignment);
+            result.put("parcels", parcels);
+
+            return new OperationReturnObject(200, "Details fetched successfully", result);
+        } catch (Exception e) {
+            return new OperationReturnObject(400, e.getMessage(), null);
+        }
+    }
+
     public OperationReturnObject getStats() {
         try {
             SystemUserModel authenticatedUser = authenticatedUser();

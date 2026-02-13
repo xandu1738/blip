@@ -25,7 +25,8 @@ public enum DefaultRoles {
                     DefaultPermissions.MANAGE_PAYMENTS,
                     DefaultPermissions.MANAGE_ROUTES,
                     DefaultPermissions.MANAGE_CHARGES,
-                    DefaultPermissions.MANAGE_PARCELS
+                    DefaultPermissions.MANAGE_PARCELS,
+                    DefaultPermissions.MANAGE_SCHEDULES
             ));
 
     final String code;

@@ -322,7 +322,7 @@ export class App extends BaseComponent implements OnInit {
     if (this.user?.permissions?.includes('MANAGE_CONSIGNMENTS')) {
       logistics.items.push({
         value: 2,
-        label: 'Fleets & Consignments',
+        label: 'Consignments',
         icon: 'pi pi-warehouse',
         command: () => {
           this.router.navigate(['/parcels'])

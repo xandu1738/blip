@@ -28,6 +28,11 @@ public class ConsignmentController {
         return consignmentService.listConsignments();
     }
 
+    @GetMapping("/{id}/details")
+    public OperationReturnObject getConsignmentDetails(@PathVariable Long id) {
+        return consignmentService.getConsignmentDetails(id);
+    }
+
     @GetMapping("/stats")
     public OperationReturnObject getStats() {
         return consignmentService.getStats();

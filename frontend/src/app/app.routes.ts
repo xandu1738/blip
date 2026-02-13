@@ -23,6 +23,9 @@ import { DriversList } from './components/management/drivers/drivers-list/driver
 import { DriverForm } from './components/management/drivers/driver-form/driver-form';
 import { RoutesList } from './components/management/routes/routes-list/routes-list';
 import { RouteForm } from './components/management/routes/route-form/route-form';
+import { ParcelForm } from './components/parcels/parcel-form/parcel-form';
+import { ConsignmentForm } from './components/parcels/consignment-form/consignment-form';
+import { ConsignmentDetails } from './components/parcels/consignment-details/consignment-details';
 
 export const routes: Routes = [
   {
@@ -119,6 +122,21 @@ export const routes: Routes = [
   {
     path: 'parcels',
     component: ParcelsComponent,
+    canActivate: [authGuard, licenseGuard]
+  },
+  {
+    path: 'parcels/register',
+    component: ParcelForm,
+    canActivate: [authGuard, licenseGuard]
+  },
+  {
+    path: 'parcels/consignment/new',
+    component: ConsignmentForm,
+    canActivate: [authGuard, licenseGuard]
+  },
+  {
+    path: 'parcels/consignment/:id',
+    component: ConsignmentDetails,
     canActivate: [authGuard, licenseGuard]
   },
   {

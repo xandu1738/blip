@@ -26,4 +26,8 @@ export class ConsignmentService {
     getStats(): Observable<any> {
         return this.http.get(`${this.apiUrl}/stats`);
     }
+
+    getConsignmentDetails(id: number): Observable<any> {
+        return this.http.get(`${this.apiUrl}/${id}/details`);
+    }
 }
