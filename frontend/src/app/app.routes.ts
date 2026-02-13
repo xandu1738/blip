@@ -26,6 +26,8 @@ import { RouteForm } from './components/management/routes/route-form/route-form'
 import { ParcelForm } from './components/parcels/parcel-form/parcel-form';
 import { ConsignmentForm } from './components/parcels/consignment-form/consignment-form';
 import { ConsignmentDetails } from './components/parcels/consignment-details/consignment-details';
+import { SchedulesComponent } from './components/management/schedules/schedules.component';
+import { ScheduleForm } from './components/management/schedule-form/schedule-form';
 
 export const routes: Routes = [
   {
@@ -87,6 +89,21 @@ export const routes: Routes = [
   {
     path: 'drivers',
     component: DriversList,
+    canActivate: [authGuard, licenseGuard]
+  },
+  {
+    path: 'schedules',
+    component: SchedulesComponent,
+    canActivate: [authGuard, licenseGuard]
+  },
+  {
+    path: 'schedule-form',
+    component: ScheduleForm,
+    canActivate: [authGuard, licenseGuard]
+  },
+  {
+    path: 'schedule-form/:id',
+    component: ScheduleForm,
     canActivate: [authGuard, licenseGuard]
   },
   {

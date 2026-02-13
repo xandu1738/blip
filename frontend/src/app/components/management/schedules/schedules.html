@@ -1,0 +1,75 @@
+<div class="flex justify-between items-start mb-6">
+    <div>
+        <h1 class="text-3xl font-bold mb-2">Schedules & Trips</h1>
+        <p class="text-gray-500 dark:text-gray-400 font-medium">Manage your partner's fleet schedules and trips</p>
+    </div>
+    <p-button label="Add Schedule" icon="pi pi-plus" size="small" (onClick)="addSchedule()"></p-button>
+</div>
+
+<!-- Stats Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    @for (stat of stats; track stat.label) {
+    <div
+        class="stat-card p-6 rounded-xl shadow-sm flex items-center justify-between hover:shadow-md transition-shadow bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700">
+        <div>
+            <p class="text-sm mb-1 text-gray-500 dark:text-gray-400 font-semibold uppercase tracking-wider">{{
+                stat.label }}</p>
+            <p class="font-bold font-sans tabular-nums text-3xl text-gray-900 dark:text-white">{{ stat.value }}</p>
+        </div>
+        <div [class]="stat.bgColor + ' p-4 rounded-xl'">
+            <i [class]="stat.icon + ' ' + stat.color + ' text-2xl'"></i>
+        </div>
+    </div>
+    }
+</div>
+
+<div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+    <p-table [value]="trips" [lazy]="true" (onLazyLoad)="loadTrips($event)" [paginator]="true" [rows]="rows"
+        [totalRecords]="totalRecords" [loading]="loading" [rowsPerPageOptions]="[10, 25, 50]" responsiveLayout="scroll">
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Date</th>
+                <th>Route</th>
+                <th>Vehicle</th>
+                <th>Driver</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-trip>
+            <tr>
+                <td class="font-sans tabular-nums">{{ trip.tripDate | date:'mediumDate' }}</td>
+                <td>
+                    <div class="font-bold text-gray-900 dark:text-white">{{ trip.routeId }}</div>
+                    <div class="text-xs text-gray-500">Route ID</div>
+                </td>
+                <td>
+                    <div class="font-medium text-gray-700 dark:text-gray-300">{{ trip.busId }}</div>
+                    <div class="text-xs text-gray-400 italic">Bus ID</div>
+                </td>
+                <td>{{ trip.driverId || 'Not Assigned' }}</td>
+                <td>
+                    <span [class]="'status-badge status-' + (trip.status ? trip.status.toLowerCase() : 'unknown')">
+                        {{ trip.status }}
+                    </span>
+                </td>
+                <td class="flex gap-2">
+                    <p-button icon="pi pi-pencil" [text]="true" [rounded]="true" severity="secondary"
+                        (onClick)="editSchedule(trip)" pTooltip="Edit Trip"></p-button>
+                    <p-button icon="pi pi-trash" [text]="true" [rounded]="true" severity="danger"
+                        (onClick)="deleteSchedule(trip)" pTooltip="Remove Trip"></p-button>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="6" class="text-center py-12">
+                    <div class="flex flex-col items-center gap-2">
+                        <i class="pi pi-calendar-times text-4xl text-gray-300"></i>
+                        <p class="text-gray-500">No schedules found for your partner account.</p>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

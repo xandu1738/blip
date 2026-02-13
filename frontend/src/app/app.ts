@@ -1,22 +1,22 @@
-import { Component, OnInit } from '@angular/core';
-import { TableModule } from 'primeng/table';
-import { Avatar } from 'primeng/avatar';
-import { Router, RouterOutlet } from '@angular/router';
-import { Events } from './components/services/events';
-import { AuthService } from './components/services/auth.service';
-import { LoaderService } from './components/services/loader.service';
-import { Button } from 'primeng/button';
-import { SubscriptionsList } from './components/Subscriptions/subscriptions-list/subscriptions-list';
-import { LandingComponent } from './components/common/landing/landing.component';
-import { Accordion, AccordionContent, AccordionHeader, AccordionPanel } from 'primeng/accordion';
-import { ConfirmDialog } from 'primeng/confirmdialog';
-import { Toast } from 'primeng/toast';
-import { BaseComponent } from './components/services/base-component';
-import { RemoteService } from './components/services/remoteService';
-import { DialogService } from 'primeng/dynamicdialog';
-import { ConfirmationService, MessageService } from 'primeng/api';
-import { SocketService } from './components/services/socket.service';
-import { TruncatePipe } from './pipes/truncate-pipe';
+import {Component, OnInit} from '@angular/core';
+import {TableModule} from 'primeng/table';
+import {Avatar} from 'primeng/avatar';
+import {Router, RouterOutlet} from '@angular/router';
+import {Events} from './components/services/events';
+import {AuthService} from './components/services/auth.service';
+import {LoaderService} from './components/services/loader.service';
+import {Button} from 'primeng/button';
+import {SubscriptionsList} from './components/Subscriptions/subscriptions-list/subscriptions-list';
+import {LandingComponent} from './components/common/landing/landing.component';
+import {Accordion, AccordionContent, AccordionHeader, AccordionPanel} from 'primeng/accordion';
+import {ConfirmDialog} from 'primeng/confirmdialog';
+import {Toast} from 'primeng/toast';
+import {BaseComponent} from './components/services/base-component';
+import {RemoteService} from './components/services/remoteService';
+import {DialogService} from 'primeng/dynamicdialog';
+import {ConfirmationService, MessageService} from 'primeng/api';
+import {SocketService} from './components/services/socket.service';
+import {TruncatePipe} from './pipes/truncate-pipe';
 
 interface MenuItem {
   value: string | number;
@@ -109,19 +109,17 @@ export class App extends BaseComponent implements OnInit {
 
   configurePanelMenu() {
     this.items?.push({
-      value: '0',
-      label: 'Dashboard',
-      icon: 'pi pi-home',
-      command: () => {
-        this.router.navigate(['/dashboard'])
+        value: '0',
+        label: 'Dashboard',
+        icon: 'pi pi-home',
+        command: () => {
+          this.router.navigate(['/dashboard'])
+        }
       }
-    }
     );
 
     let configMenu = this.getConfigMenu();
-    if (!configMenu.items) {
-      configMenu.items = [];
-    }
+    configMenu.items ??= [];
     if (configMenu.items?.length > 0) {
       this.items?.push(configMenu);
     }
@@ -138,25 +136,19 @@ export class App extends BaseComponent implements OnInit {
     }
 
     let mgt = this.getManagementMenu();
-    if (!mgt.items) {
-      mgt.items = [];
-    }
+    mgt.items ??= [];
     if (mgt.items?.length > 0) {
       this.items.push(mgt);
     }
 
     let logistics = this.getLogisticsMenu();
-    if (!logistics.items) {
-      logistics.items = [];
-    }
+    logistics.items ??= [];
     if (logistics.items?.length > 0) {
       this.items.push(logistics);
     }
 
     let analytics = this.getAnalyticsMenu();
-    if (!analytics.items) {
-      analytics.items = [];
-    }
+    analytics.items ??= [];
 
     let payments = {
       value: '5',
@@ -189,9 +181,7 @@ export class App extends BaseComponent implements OnInit {
       items: []
     };
 
-    if (!config.items) {
-      config.items = [];
-    }
+    config.items ??= [];
 
     if (this.user?.permissions?.includes('MANAGE_PARTNERS')) {
       config.items.push({
@@ -205,6 +195,7 @@ export class App extends BaseComponent implements OnInit {
     }
     return config;
   }
+
   getManagementMenu() {
     let management: MenuItem = {
       value: '2',
@@ -213,9 +204,7 @@ export class App extends BaseComponent implements OnInit {
       items: []
     }
 
-    if (!management.items) {
-      management.items = [];
-    }
+    management.items ??= [];
 
     if (this.user?.permissions?.includes('MANAGE_USERS')) {
       management.items.push({
@@ -251,35 +240,48 @@ export class App extends BaseComponent implements OnInit {
     }
     if (this.user?.permissions?.includes('MANAGE_VEHICLES')) {
       management.items.push({
-        value: 3,
-        label: 'Vehicles',
-        icon: 'pi pi-car',
-        command: () => {
-          this.router.navigate(['/vehicles'])
+          value: 3,
+          label: 'Vehicles',
+          icon: 'pi pi-car',
+          command: () => {
+            this.router.navigate(['/vehicles'])
+          }
         }
-      }
       )
     }
+
     if (this.user?.permissions?.includes('MANAGE_ROUTES')) {
       management.items.push({
-        value: 4,
-        label: 'Routes & Trips',
-        icon: 'pi pi-map',
+          value: 4,
+          label: 'Routes',
+          icon: 'pi pi-gauge',
+          command: () => {
+            this.router.navigate(['/routes'])
+          }
+        }
+      );
+    }
+
+    if (this.user?.permissions?.includes('MANAGE_SCHEDULES')) {
+      management.items.push({
+        value: 7,
+        label: 'Schedules',
+        icon: 'pi pi-calendar',
         command: () => {
-          this.router.navigate(['/routes'])
+          this.router.navigate(['/schedules'])
         }
       })
     }
 
     if (this.user?.permissions?.includes('MANAGE_FARES')) {
       management.items.push({
-        value: 5,
-        label: 'Fares and Charges',
-        icon: 'pi pi-megaphone',
-        command: () => {
-          this.router.navigate(['/dashboard'])
+          value: 5,
+          label: 'Fares and Charges',
+          icon: 'pi pi-megaphone',
+          command: () => {
+            this.router.navigate(['/dashboard'])
+          }
         }
-      }
       )
     }
     if (this.user?.permissions?.includes('MANAGE_LICENSES')) {
@@ -291,6 +293,8 @@ export class App extends BaseComponent implements OnInit {
           this.router.navigate(['/manage-subscriptions'])
         }
       })
+
+      return management;
     }
     return management;
   }
@@ -303,19 +307,17 @@ export class App extends BaseComponent implements OnInit {
       items: []
     };
 
-    if (!logistics.items) {
-      logistics.items = [];
-    }
+    logistics.items ??= [];
 
     if (this.user?.permissions?.includes('MANAGE_TRACKING')) {
       logistics.items.push({
-        value: 0,
-        label: 'Tracking',
-        icon: 'pi pi-map-marker',
-        command: () => {
-          this.router.navigate(['/tracking'])
+          value: 0,
+          label: 'Tracking',
+          icon: 'pi pi-map-marker',
+          command: () => {
+            this.router.navigate(['/tracking'])
+          }
         }
-      }
       );
     }
 
@@ -332,13 +334,13 @@ export class App extends BaseComponent implements OnInit {
 
     if (this.user?.permissions?.includes('MANAGE_PARCELS')) {
       logistics.items.push({
-        value: 1,
-        label: 'Parcels',
-        icon: 'pi pi-box',
-        command: () => {
-          this.router.navigate(['/parcels'])
+          value: 1,
+          label: 'Parcels',
+          icon: 'pi pi-box',
+          command: () => {
+            this.router.navigate(['/parcels'])
+          }
         }
-      }
       );
     }
     return logistics;
@@ -352,9 +354,7 @@ export class App extends BaseComponent implements OnInit {
       items: []
     }
 
-    if (!analytics.items) {
-      analytics.items = [];
-    }
+    analytics.items ??= [];
 
     if (this.user?.permissions?.includes('MANAGE_REPORTS')) {
       analytics.items.push({
@@ -391,5 +391,4 @@ export class App extends BaseComponent implements OnInit {
 
     return analytics;
   }
-
 }

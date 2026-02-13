@@ -26,6 +26,8 @@ public enum DefaultRoles {
                     DefaultPermissions.MANAGE_ROUTES,
                     DefaultPermissions.MANAGE_CHARGES,
                     DefaultPermissions.MANAGE_PARCELS,
+                    DefaultPermissions.MANAGE_FARES,
+                    DefaultPermissions.MANAGE_TRACKING,
                     DefaultPermissions.MANAGE_SCHEDULES
             ));
 
