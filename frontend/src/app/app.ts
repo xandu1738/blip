@@ -149,6 +149,9 @@ export class App extends BaseComponent implements OnInit {
 
     let analytics = this.getAnalyticsMenu();
     analytics.items ??= [];
+    if (analytics.items?.length > 0) {
+      this.items.push(analytics);
+    }
 
     let payments = {
       value: '5',
@@ -193,6 +196,62 @@ export class App extends BaseComponent implements OnInit {
         }
       });
     }
+    if (this.user?.permissions?.includes('MANAGE_DRIVERS')) {
+      config.items.push({
+        label: 'Drivers',
+        icon: 'pi pi-user',
+        value: 2,
+        command: () => {
+          this.router.navigate(['/drivers'])
+        }
+      });
+    }
+    if (this.user?.permissions?.includes('MANAGE_VEHICLES')) {
+      config.items.push({
+          value: 3,
+          label: 'Vehicles',
+          icon: 'pi pi-car',
+          command: () => {
+            this.router.navigate(['/vehicles'])
+          }
+        }
+      )
+    }
+
+    if (this.user?.permissions?.includes('MANAGE_ROUTES')) {
+      config.items.push({
+          value: 4,
+          label: 'Routes',
+          icon: 'pi pi-gauge',
+          command: () => {
+            this.router.navigate(['/routes'])
+          }
+        }
+      );
+    }
+
+    if (this.user?.permissions?.includes('MANAGE_SCHEDULES')) {
+      config.items.push({
+        value: 7,
+        label: 'Schedules',
+        icon: 'pi pi-calendar',
+        command: () => {
+          this.router.navigate(['/schedules'])
+        }
+      })
+    }
+
+    if (this.user?.permissions?.includes('MANAGE_FARES')) {
+      config.items.push({
+          value: 5,
+          label: 'Fares and Charges',
+          icon: 'pi pi-megaphone',
+          command: () => {
+            this.router.navigate(['/dashboard'])
+          }
+        }
+      )
+    }
     return config;
   }
 
@@ -228,62 +287,7 @@ export class App extends BaseComponent implements OnInit {
         }
       });
     }
-    if (this.user?.permissions?.includes('MANAGE_DRIVERS')) {
-      management.items.push({
-        label: 'Drivers',
-        icon: 'pi pi-user',
-        value: 2,
-        command: () => {
-          this.router.navigate(['/drivers'])
-        }
-      });
-    }
-    if (this.user?.permissions?.includes('MANAGE_VEHICLES')) {
-      management.items.push({
-          value: 3,
-          label: 'Vehicles',
-          icon: 'pi pi-car',
-          command: () => {
-            this.router.navigate(['/vehicles'])
-          }
-        }
-      )
-    }
 
-    if (this.user?.permissions?.includes('MANAGE_ROUTES')) {
-      management.items.push({
-          value: 4,
-          label: 'Routes',
-          icon: 'pi pi-gauge',
-          command: () => {
-            this.router.navigate(['/routes'])
-          }
-        }
-      );
-    }
-
-    if (this.user?.permissions?.includes('MANAGE_SCHEDULES')) {
-      management.items.push({
-        value: 7,
-        label: 'Schedules',
-        icon: 'pi pi-calendar',
-        command: () => {
-          this.router.navigate(['/schedules'])
-        }
-      })
-    }
-
-    if (this.user?.permissions?.includes('MANAGE_FARES')) {
-      management.items.push({
-          value: 5,
-          label: 'Fares and Charges',
-          icon: 'pi pi-megaphone',
-          command: () => {
-            this.router.navigate(['/dashboard'])
-          }
-        }
-      )
-    }
     if (this.user?.permissions?.includes('MANAGE_LICENSES')) {
       management.items.push({
         value: 6,

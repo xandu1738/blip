@@ -28,7 +28,8 @@ public enum DefaultRoles {
                     DefaultPermissions.MANAGE_PARCELS,
                     DefaultPermissions.MANAGE_FARES,
                     DefaultPermissions.MANAGE_TRACKING,
-                    DefaultPermissions.MANAGE_SCHEDULES
+                    DefaultPermissions.MANAGE_SCHEDULES,
+                    DefaultPermissions.MANAGE_REPORTS
             ));
 
     final String code;

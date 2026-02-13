@@ -21,6 +21,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -88,8 +89,8 @@ public class TripService extends LocalUtilsService {
 
     @Cacheable(value = "trips", key = "#pageNumber + '-' + #pageSize")
     public OperationReturnObject tripList(int pageNumber, int pageSize) {
-        Page<TripModel> trips = repository.findAllByPartnerCode(authenticatedUser().getPartnerCode(),
-                PageRequest.of(pageNumber, pageSize));
+        List<TripModel> trips = repository.findAllByPartnerCode(authenticatedUser().getPartnerCode(),
+                PageRequest.of(pageNumber, pageSize)).toList();
         return new OperationReturnObject(200, "Trips list successfully fetched.", trips);
     }
 
