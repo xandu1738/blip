@@ -43,4 +43,7 @@ public class VehicleModel {
     @Column(name = "created_by", nullable = false)
     private Long createdBy;
 
+    @Column(name = "vehicle_category", length = 50)
+    private String vehicleCategory;
+
 }

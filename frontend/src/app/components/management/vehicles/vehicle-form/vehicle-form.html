@@ -4,32 +4,36 @@
   <div class="flex flex-col gap-2">
     <label for="regNumber">Registration Number</label>
     <input pInputText id="regNumber" [(ngModel)]="vehicle.registration_number"
-           placeholder="Enter registration number"/>
+      placeholder="Enter registration number" />
   </div>
 
   <div class="flex flex-col gap-2">
     <label for="type">Vehicle Type</label>
-    <p-autoComplete id="type" [suggestions]="filteredTypes"
-                    dropdown="true"
-                    (completeMethod)="searchVehicleTypes($event)"
-                    [(ngModel)]="vehicle.type" placeholder="Select a type"
-                    class="w-full" [style]="{'width':'100%'}"></p-autoComplete>
+    <p-autoComplete id="type" [suggestions]="filteredTypes" dropdown="true"
+      (completeMethod)="searchVehicleTypes($event)" [(ngModel)]="vehicle.type" placeholder="Select a type"
+      class="w-full" [style]="{'width':'100%'}"></p-autoComplete>
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <label for="category">Vehicle Category</label>
+    <p-autoComplete id="category" [suggestions]="filteredCategories" dropdown="true"
+      (completeMethod)="searchCategories($event)" [(ngModel)]="vehicle.vehicle_category" placeholder="Select a category"
+      class="w-full" [style]="{'width':'100%'}" field="label" optionValue="value"></p-autoComplete>
   </div>
 
   <div class="flex flex-col gap-2">
     <label for="capacity">Capacity</label>
-    <p-inputNumber id="capacity" [(ngModel)]="vehicle.capacity" [min]="1" placeholder="Enter capacity"
-                   class="w-full" [style]="{'width':'100%'}"></p-inputNumber>
+    <p-inputNumber id="capacity" [(ngModel)]="vehicle.capacity" [min]="1" placeholder="Enter capacity" class="w-full"
+      [style]="{'width':'100%'}"></p-inputNumber>
   </div>
 
   @if (isEditMode) {
-    <div class="flex flex-col gap-2">
-      <label for="status">Status</label>
-      <p-autoComplete id="status" [suggestions]="filteredStatuses" [(ngModel)]="vehicle.status"
-                      (completeMethod)="search($event)" dropdown="true"
-                      placeholder="Select status"
-                      class="w-full" [style]="{'width':'100%'}"></p-autoComplete>
-    </div>
+  <div class="flex flex-col gap-2">
+    <label for="status">Status</label>
+    <p-autoComplete id="status" [suggestions]="filteredStatuses" [(ngModel)]="vehicle.status"
+      (completeMethod)="search($event)" dropdown="true" placeholder="Select status" class="w-full"
+      [style]="{'width':'100%'}"></p-autoComplete>
+  </div>
   }
 
 

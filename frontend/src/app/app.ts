@@ -267,6 +267,25 @@ export class App extends BaseComponent implements OnInit {
       })
     }
 
+    if (this.user?.permissions?.includes('MANAGE_VEHICLES')) {
+      config.items.push({
+        value: 8,
+        label: 'Amenities',
+        icon: 'pi pi-list',
+        command: () => {
+          this.router.navigate(['/amenities'])
+        }
+      });
+      config.items.push({
+        value: 9,
+        label: 'Vehicle Categories',
+        icon: 'pi pi-tags',
+        command: () => {
+          this.router.navigate(['/vehicle-categories'])
+        }
+      });
+    }
+
     if (this.user?.permissions?.includes('MANAGE_FARES')) {
       config.items.push({
         value: 5,

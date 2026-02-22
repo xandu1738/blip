@@ -5,6 +5,7 @@ import {LoaderService} from '../../../services/loader.service';
 import {DialogService} from 'primeng/dynamicdialog';
 import {ConfirmationService, MessageService} from 'primeng/api';
 import {AuthService} from '../../../services/auth.service';
+import {ManagementService} from '../../../services/management.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {RemoteService} from '../../../services/remoteService';
 import {Button} from 'primeng/button';
@@ -44,17 +45,20 @@ export class VehicleForm extends BaseComponent implements OnInit {
     {label: 'Inactive', value: 'INACTIVE'},
     {label: 'Maintenance', value: 'MAINTENANCE'}
   ];
+  vehicleCategories: any[] = [];
+  filteredCategories: any[] = [];
 
   constructor(
-    private vehicleService: VehicleService,
+    protected vehicleService: VehicleService,
     loaderService: LoaderService,
     dialogService: DialogService,
     confirmationService: ConfirmationService,
     messageService: MessageService,
     authService: AuthService,
     helper: RemoteService,
-    private router: Router,
-    private route: ActivatedRoute
+    protected managementService: ManagementService,
+    protected router: Router,
+    protected route: ActivatedRoute
   ) {
     super(authService, helper, loaderService, dialogService, confirmationService, messageService);
   }
@@ -62,6 +66,7 @@ export class VehicleForm extends BaseComponent implements OnInit {
   override ngOnInit() {
     super.ngOnInit();
     this.initializeVehicleTypes();
+    this.loadVehicleCategories();
 
     this.route.params.subscribe(params => {
       if (params['id']) {
@@ -82,7 +87,11 @@ export class VehicleForm extends BaseComponent implements OnInit {
     this.vehicleService.fetchVehicleDetails(id).subscribe({
       next: (res) => {
         if (res.returnObject) {
-          this.vehicle = res.returnObject;
+          this.vehicle = res?.returnObject;
+
+          this.vehicle['registration_number'] = res?.returnObject.registrationNumber;
+          this.vehicle['partner_code'] = res?.returnObject.partnerCode;
+          this.vehicle['vehicle_category'] = res?.returnObject.vehicleCategory;
         }
       },
       error: (err) => {
@@ -139,6 +148,27 @@ export class VehicleForm extends BaseComponent implements OnInit {
         (domain: any) =>
           domain.label.toLowerCase().indexOf($event.query.toLowerCase()) === 0) :
       [...this.vehicleTypes];
+  }
+
+  loadVehicleCategories() {
+    this.managementService.fetchVehicleCategories().subscribe({
+      next: (res) => {
+        if (res.returnObject) {
+          this.vehicleCategories = res.returnObject.map((cat: any) => ({
+            label: cat.name,
+            value: cat.categoryCode
+          }));
+        }
+      }
+    });
+  }
+
+  searchCategories($event: any) {
+    this.filteredCategories = $event.query ?
+      this.vehicleCategories.filter(
+        (cat: any) =>
+          cat.label.toLowerCase().indexOf($event.query.toLowerCase()) === 0) :
+      [...this.vehicleCategories];
   }
 
   cancel() {

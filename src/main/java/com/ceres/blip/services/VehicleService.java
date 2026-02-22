@@ -16,7 +16,6 @@ import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +32,7 @@ public class VehicleService extends LocalUtilsService {
     private static final String VEHICLES = "vehicles";
     private static final String VEHICLE_ID = "vehicle_id";
     private static final String STATUS = "status";
+    private static final String VEHICLE_CATEGORY = "vehicle_category";
 
     private final VehicleRepository vehicleRepository;
     private final NotificationService notificationService;
@@ -45,7 +45,7 @@ public class VehicleService extends LocalUtilsService {
 
             requires(object, DATA);
             JsonNode data = getRequestData(object);
-            requires(data, REGISTRATION_NUMBER, TYPE, CAPACITY, STATUS);
+            requires(data, REGISTRATION_NUMBER, TYPE, CAPACITY, STATUS, VEHICLE_CATEGORY);
             String registrationNumber = data.get(REGISTRATION_NUMBER).asText();
             String partnerCode = authenticatedUser.getPartnerCode();
 
@@ -69,6 +69,10 @@ public class VehicleService extends LocalUtilsService {
             vehicleModel.setStatus(status);
             vehicleModel.setCreatedBy(authenticatedUser.getId());
             vehicleModel.setCapacity(capacity);
+
+            if (data.has(VEHICLE_CATEGORY)) {
+                vehicleModel.setVehicleCategory(data.get(VEHICLE_CATEGORY).asText());
+            }
 
             VehicleModel savedVehicle = vehicleRepository.save(vehicleModel);
 
@@ -133,14 +137,15 @@ public class VehicleService extends LocalUtilsService {
     }
 
     // Edit Vehicle information
+    @CacheEvict(value = {"vehicles", "vehicle"}, allEntries = true)
     public OperationReturnObject editVehicleInformation(JsonNode object) {
         try {
             authenticatedUser();
 
             requires(object, DATA);
             JsonNode data = getRequestData(object);
-            requires(data, VEHICLE_ID);
-            Long vehicleId = data.get(VEHICLE_ID).asLong();
+            requires(data, "id");
+            Long vehicleId = data.get("id").asLong();
 
             VehicleModel vehicleModel = vehicleRepository.findById(vehicleId)
                     .orElseThrow(() -> new IllegalArgumentException("Vehicle not found"));
@@ -162,6 +167,15 @@ public class VehicleService extends LocalUtilsService {
             if (data.has(STATUS)) {
                 vehicleModel.setStatus(data.get(STATUS).asText());
             }
+            if (data.has(VEHICLE_CATEGORY)) {
+                vehicleModel.setVehicleCategory(data.get(VEHICLE_CATEGORY).asText());
+            }
+
+            notificationService.sendNotification(
+                    vehicleModel.getPartnerCode(),
+                    "New Vehicle Registered",
+                    "Details of vehicle with registration number " + vehicleModel.getRegistrationNumber() + " has been modified.",
+                    "VEHICLE_EDITED");
 
             VehicleModel updatedVehicle = vehicleRepository.save(vehicleModel);
             return new OperationReturnObject(200, "Vehicle Information Updated Successfully", updatedVehicle);

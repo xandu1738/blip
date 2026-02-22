@@ -1,0 +1,71 @@
+<div class="p-6">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold">Vehicle Categories</h1>
+    <p-button size="small" label="Add Category" icon="pi pi-plus" (onClick)="openAddDialog()"></p-button>
+  </div>
+
+  <p-table [value]="categories" [paginator]="true" [rows]="10">
+    <ng-template pTemplate="header">
+      <tr>
+        <th id="name">Name</th>
+        <th id="code">Code</th>
+        <th id="description">Description</th>
+        <th id="amenities">Amenities</th>
+        <th id="stat">Status</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-category>
+      <tr>
+        <td>{{category.name}}</td>
+        <td><code>{{category.categoryCode}}</code></td>
+        <td>{{category.description}}</td>
+        <td>
+          <div class="flex flex-wrap gap-1">
+            @for (amenity of category.amenities; track amenity) {
+              <span class="px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded-full">{{amenity}}</span>
+            }
+          </div>
+        </td>
+        <td>
+              <span [class]="category.active ? 'text-green-600' : 'text-red-600'">
+                {{category.active ? 'Active' : 'Inactive'}}
+              </span>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="6" class="text-center p-4">No categories found.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <p-dialog header="Add New Category" [(visible)]="showAddDialog" [modal]="true" [style]="{width: '500px'}">
+    <div class="flex flex-col gap-4 mt-2">
+      <div class="flex flex-col gap-2">
+        <label for="cat-name">Category Name</label>
+        <input pInputText id="cat-name" [(ngModel)]="newCategory.name" placeholder="e.g. VIP Coach, Economy" />
+      </div>
+      <div class="flex flex-col gap-2">
+        <label for="cat-desc">Description</label>
+        <input pInputText id="cat-desc" [(ngModel)]="newCategory.description" placeholder="Short description" />
+      </div>
+      <div class="flex flex-col gap-2">
+        <label for="cat-amenities">Amenities</label>
+        <p-multiSelect
+          id="cat-amenities"
+          [options]="availableAmenities"
+          [(ngModel)]="newCategory.amenities"
+          optionLabel="name"
+          optionValue="code"
+          placeholder="Select Amenities"
+          appendTo="body">
+        </p-multiSelect>
+      </div>
+    </div>
+    <ng-template pTemplate="footer">
+      <button pButton label="Cancel" icon="pi pi-times" class="p-button-text" (click)="showAddDialog = false"></button>
+      <button pButton label="Save" icon="pi pi-check" (click)="saveCategory()"></button>
+    </ng-template>
+  </p-dialog>
+</div>
