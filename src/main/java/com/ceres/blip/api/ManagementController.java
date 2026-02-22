@@ -1,11 +1,11 @@
 package com.ceres.blip.api;
 
 import com.ceres.blip.dtos.OperationReturnObject;
+import com.ceres.blip.exceptions.AuthorizationRequiredException;
 import com.ceres.blip.services.ManagementService;
+import com.fasterxml.jackson.databind.JsonNode;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -34,5 +34,24 @@ public class ManagementController {
     @GetMapping("/districts")
     public OperationReturnObject fetchDistricts() {
         return managementService.fetchDistricts();
+    }
+
+    @GetMapping("/vehicle-categories")
+    public OperationReturnObject fetchVehicleCategories() {
+        return managementService.fetchVehicleCategories();
+    }
+    @GetMapping("/amenities")
+    public OperationReturnObject fetchAmenities() {
+        return managementService.fetchAmenities();
+    }
+
+    @PostMapping("/add-vehicle-category")
+    public OperationReturnObject addVehicleCategory(@RequestBody JsonNode object) throws AuthorizationRequiredException {
+        return managementService.addVehicleCategory(object);
+    }
+
+    @PostMapping("/add-amenity")
+    public OperationReturnObject addAmenity(@RequestBody JsonNode object) throws AuthorizationRequiredException {
+        return managementService.addAmenity(object);
     }
 }
