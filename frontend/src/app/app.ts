@@ -96,6 +96,11 @@ export class App extends BaseComponent implements OnInit {
     this.authService.isLoggedIn.subscribe((loggedIn: boolean) => {
       console.log('App component: Login state changed to:', loggedIn);
       this.isLoggedIn = loggedIn;
+      if (loggedIn) {
+        this.socketService.activate();
+      } else {
+        this.socketService.deactivate();
+      }
     });
 
     this.authService.licensed.subscribe((license: string) => {

@@ -17,14 +17,16 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
-public class RouteService extends LocalUtilsService{
+public class RouteService extends LocalUtilsService {
     private static final String DATA = "data";
     private static final String ROUTE_ID = "route_id";
     private static final String ORIGIN = "origin";
@@ -36,6 +38,7 @@ public class RouteService extends LocalUtilsService{
     private static final String INTERNAL_SERVER_ERROR = "Internal Server Error: ";
     private static final String ROUTES_FETCHED_SUCCESSFULLY = "Routes fetched successfully";
     private final RouteRepository routeRepository;
+
     //create a new route for a partner
     @CacheEvict(value = "routes", allEntries = true)
     public OperationReturnObject createNewRoute(JsonNode object) {
@@ -45,6 +48,10 @@ public class RouteService extends LocalUtilsService{
             requires(data, ORIGIN, DESTINATION, ESTIMATED_DISTANCE, ESTIMATED_DURATION);
             String origin = data.get(ORIGIN).asText();
             String destination = data.get(DESTINATION).asText();
+
+            if (Objects.equals(origin, destination)) {
+                throw new IllegalArgumentException("Origin and destination cannot be same");
+            }
 
 
             String partnerCode = authenticatedUser.getPartnerCode();
@@ -120,7 +127,7 @@ public class RouteService extends LocalUtilsService{
 
     //List all routes for a partner
     @Cacheable(value = "routes", key = "#pageNumber + '-' + #pageSize")
-    public OperationReturnObject listRoutes(String partnerCode,int pageNumber, int pageSize) {
+    public OperationReturnObject listRoutes(String partnerCode, int pageNumber, int pageSize) {
         try {
             SystemUserModel authenticatedUser = authenticatedUser();
             if (StringUtils.isNotBlank(authenticatedUser.getPartnerCode())) {
@@ -130,7 +137,7 @@ public class RouteService extends LocalUtilsService{
             }
 
             belongsTo(AppDomains.BACK_OFFICE);
-            if (getUserDomain().equals(AppDomains.BACK_OFFICE) && StringUtils.isNotBlank(partnerCode)){
+            if (getUserDomain().equals(AppDomains.BACK_OFFICE) && StringUtils.isNotBlank(partnerCode)) {
                 validatePartner(partnerCode);
                 return new OperationReturnObject(200, ROUTES_FETCHED_SUCCESSFULLY, routeRepository.findAllByPartnerCode(partnerCode, PageRequest.of(pageNumber, pageSize)));
             }
@@ -152,6 +159,22 @@ public class RouteService extends LocalUtilsService{
                     .orElseThrow(() -> new IllegalArgumentException("Route with ID " + routeId + " not found"));
 
             return new OperationReturnObject(200, "Route fetched successfully", existingRoute);
+        } catch (IllegalArgumentException e) {
+            return new OperationReturnObject(400, e.getMessage(), null);
+        } catch (Exception e) {
+            return new OperationReturnObject(400, INTERNAL_SERVER_ERROR + e.getMessage(), null);
+        }
+    }
+
+    public OperationReturnObject filterRoutes(String query) {
+        try {
+            requiresAuth();
+            List<RouteModel> routes = routeRepository.findAllByOriginContainingIgnoreCaseOrDestinationContainingIgnoreCase(
+                    query,
+                    query,
+                    PageRequest.of(0, 5, Sort.by(Sort.Direction.ASC, "origin"))
+            );
+            return new OperationReturnObject(200, ROUTES_FETCHED_SUCCESSFULLY, routes);
         } catch (IllegalArgumentException e) {
             return new OperationReturnObject(400, e.getMessage(), null);
         } catch (Exception e) {

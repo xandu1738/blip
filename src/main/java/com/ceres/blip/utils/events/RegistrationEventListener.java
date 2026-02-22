@@ -1,8 +1,8 @@
 package com.ceres.blip.utils.events;
 
 import com.ceres.blip.models.database.SystemUserModel;
+import com.ceres.blip.services.NotificationService;
 import com.ceres.blip.utils.mail.MessagingService;
-import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import java.util.HashMap;
 import java.util.Map;
-import java.io.UnsupportedEncodingException;
 
 @Component
 @RequiredArgsConstructor
@@ -20,6 +19,7 @@ import java.io.UnsupportedEncodingException;
 public class RegistrationEventListener implements ApplicationListener<UserRegistrationEvent> {
     private final MessagingService mailService;
     private final RedisTemplate<String, Object> redisTemplate;
+    private final NotificationService notificationService;
     private final ObjectMapper objectMapper;
 
     @Override
@@ -30,10 +30,16 @@ public class RegistrationEventListener implements ApplicationListener<UserRegist
         String applicationUrl = event.getApplicationUrl();
 
         // Publish to Redis
+        notificationService.sendNotification(
+                user.getPartnerCode(),
+                "New User Registered",
+                "A new user, " + user.getFirstName() + " " + user.getLastName() + ", has been registered.",
+                "USER_REGISTRATION");
+
         try {
             Map<String, String> message = new HashMap<>();
             message.put("type", "USER_REGISTRATION");
-            message.put("partnerCode",user.getPartnerCode());
+            message.put("partnerCode", user.getPartnerCode());
             message.put("email", user.getEmail());
             message.put("firstName", user.getFirstName());
             message.put("lastName", user.getLastName());
@@ -41,7 +47,7 @@ public class RegistrationEventListener implements ApplicationListener<UserRegist
 
             String jsonMessage = objectMapper.writeValueAsString(message);
             redisTemplate.convertAndSend("notification-channel", jsonMessage);
-            log.info("Published user registration event to Redis: {}", user.getEmail());
+            log.info("Published legacy user registration event to Redis: {}", user.getEmail());
         } catch (Exception e) {
             log.error("Failed to publish registration event to Redis", e);
         }
