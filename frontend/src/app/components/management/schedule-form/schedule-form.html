@@ -1,11 +1,11 @@
 <div class="mx-auto p-6">
   <div class="flex items-center gap-4 mb-8">
     <p-button icon="pi pi-arrow-left" [rounded]="true" [text]="true" severity="secondary"
-              (onClick)="cancel()"></p-button>
+      (onClick)="cancel()"></p-button>
     <div>
       <h1 class="text-2xl font-bold text-gray-900 dark:text-white">{{
-          isEditMode ? 'Edit Schedule' : 'New
-            Schedule'
+        isEditMode ? 'Edit Schedule' : 'New
+        Schedule'
         }}</h1>
       <p class="text-gray-500 dark:text-gray-400 font-medium">Configure trip details for your fleet</p>
     </div>
@@ -16,42 +16,52 @@
       <!-- Route -->
       <div class="flex flex-col gap-2">
         <label for="route" class="text-sm font-semibold text-gray-700 dark:text-gray-300">Route</label>
-        <p-select id="route" [options]="routes" [(ngModel)]="trip.route_id" placeholder="Select Route"
-                  class="w-full" [filter]="true"></p-select>
+        <p-select id="route" [options]="routes" [(ngModel)]="trip.route_id" placeholder="Select Route" class="w-full"
+          [filter]="true"></p-select>
       </div>
 
       <!-- Vehicle -->
       <div class="flex flex-col gap-2">
         <label for="vehicle" class="text-sm font-semibold text-gray-700 dark:text-gray-300">Vehicle</label>
         <p-select id="vehicle" [options]="vehicles" [(ngModel)]="trip.bus_id" placeholder="Select Vehicle"
-                  class="w-full" [filter]="true"></p-select>
+          class="w-full" [filter]="true"></p-select>
       </div>
 
       <!-- Driver -->
       <div class="flex flex-col gap-2">
         <label for="driver" class="text-sm font-semibold text-gray-700 dark:text-gray-300">Driver</label>
-        <p-select id="driver" [options]="drivers" [(ngModel)]="trip.driver_id"
-                  placeholder="Select Driver (Optional)" class="w-full" [filter]="true" [showClear]="true"></p-select>
+        <p-select id="driver" [options]="drivers" [(ngModel)]="trip.driver_id" placeholder="Select Driver (Optional)"
+          class="w-full" [filter]="true" [showClear]="true"></p-select>
       </div>
 
       <!-- Date -->
       <div class="flex flex-col gap-2">
         <label for="date" class="text-sm font-semibold text-gray-700 dark:text-gray-300">Trip Date</label>
-        <p-datepicker
-          id="date"
-          [(ngModel)]="trip.trip_date"
-          dateFormat="yy-mm-dd"
-          placeholder="Select Date"
-          [style]="{'width':'100%'}"
-          class="w-full"></p-datepicker>
+        <p-datepicker id="date" [(ngModel)]="trip.trip_date" dateFormat="yy-mm-dd" placeholder="Select Date"
+          [style]="{'width':'100%'}" class="w-full"></p-datepicker>
+      </div>
+
+      <!-- Set Off Time -->
+      <div class="flex flex-col gap-2">
+        <label for="set_off_time" class="text-sm font-semibold text-gray-700 dark:text-gray-300">Set Off Time</label>
+        <p-datepicker id="set_off_time" [(ngModel)]="trip.set_off_time" [timeOnly]="true" hourFormat="24"
+          placeholder="Select Set Off Time" [style]="{'width':'100%'}" class="w-full"></p-datepicker>
+      </div>
+
+      <!-- Estimated Arrival Time -->
+      <div class="flex flex-col gap-2">
+        <label for="arrival_time" class="text-sm font-semibold text-gray-700 dark:text-gray-300">Estimated Arrival
+          Time</label>
+        <p-datepicker id="arrival_time" [(ngModel)]="trip.estimated_arrival_time" [timeOnly]="true" hourFormat="24"
+          placeholder="Select Arrival Time" [style]="{'width':'100%'}" class="w-full"></p-datepicker>
       </div>
     </div>
 
     <div class="flex justify-end gap-3 mt-8 pt-6 border-t border-gray-100 dark:border-gray-700">
       <p-button label="Cancel" severity="secondary" [text]="true" (onClick)="cancel()"></p-button>
       <p-button [label]="isEditMode ? 'Update Schedule' : 'Create Schedule'"
-                [icon]="isEditMode ? 'pi pi-check' : 'pi pi-plus'" (onClick)="saveTrip()"
-                [disabled]="!trip.route_id || !trip.bus_id || !trip.trip_date"></p-button>
+        [icon]="isEditMode ? 'pi pi-check' : 'pi pi-plus'" (onClick)="saveTrip()"
+        [disabled]="!trip.route_id || !trip.bus_id || !trip.trip_date"></p-button>
     </div>
   </div>
 </div>

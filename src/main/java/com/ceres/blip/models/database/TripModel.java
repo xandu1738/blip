@@ -37,6 +37,12 @@ public class TripModel {
     @Column(name = "partner_code")
     private String partnerCode;
 
+    @Column(name = "set_off_time")
+    private Timestamp setOffTime;
+
+    @Column(name = "estimated_arrival_time")
+    private Timestamp estimatedArrivalTime;
+
     @Column(name = "created_at")
     private Timestamp createdAt;
 

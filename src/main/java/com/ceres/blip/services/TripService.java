@@ -21,6 +21,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -46,6 +47,14 @@ public class TripService extends LocalUtilsService {
         tripModel.setRouteId(routeId);
         tripModel.setStatus(status);
         tripModel.setTripDate(tripDate);
+
+        if (data.has("set_off_time")) {
+            tripModel.setSetOffTime(stringToTimestamp(data.get("set_off_time").asText()));
+        }
+        if (data.has("estimated_arrival_time")) {
+            tripModel.setEstimatedArrivalTime(stringToTimestamp(data.get("estimated_arrival_time").asText()));
+        }
+
         tripModel.setCreatedAt(getCurrentTimestamp());
         tripModel.setCreatedBy(authenticatedUser().getId());
         tripModel.setPartnerCode(authenticatedUser().getPartnerCode());
@@ -81,6 +90,13 @@ public class TripService extends LocalUtilsService {
         if (StringUtils.isNotBlank(td)) {
             LocalDate tripDate = LocalDate.parse(td);
             tripModel.setTripDate(tripDate);
+        }
+
+        if (data.has("set_off_time")) {
+            tripModel.setSetOffTime(stringToTimestamp(data.get("set_off_time").asText()));
+        }
+        if (data.has("estimated_arrival_time")) {
+            tripModel.setEstimatedArrivalTime(stringToTimestamp(data.get("estimated_arrival_time").asText()));
         }
 
         repository.save(tripModel);
