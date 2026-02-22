@@ -1,21 +1,21 @@
-import {Component, OnInit} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {BaseComponent} from '../../services/base-component';
-import {TripService} from '../../services/trip.service';
-import {RouteService} from '../../services/route.service';
-import {VehicleService} from '../../services/vehicle.service';
-import {DriversService} from '../../services/drivers.service';
-import {LoaderService} from '../../services/loader.service';
-import {DialogService} from 'primeng/dynamicdialog';
-import {ConfirmationService, MessageService} from 'primeng/api';
-import {AuthService} from '../../services/auth.service';
-import {ActivatedRoute, Router} from '@angular/router';
-import {RemoteService} from '../../services/remoteService';
-import {ButtonModule} from 'primeng/button';
-import {FormsModule} from '@angular/forms';
-import {InputTextModule} from 'primeng/inputtext';
-import {SelectModule} from 'primeng/select';
-import {DatePickerModule} from 'primeng/datepicker';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { BaseComponent } from '../../services/base-component';
+import { TripService } from '../../services/trip.service';
+import { RouteService } from '../../services/route.service';
+import { VehicleService } from '../../services/vehicle.service';
+import { DriversService } from '../../services/drivers.service';
+import { LoaderService } from '../../services/loader.service';
+import { DialogService } from 'primeng/dynamicdialog';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { AuthService } from '../../services/auth.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { RemoteService } from '../../services/remoteService';
+import { ButtonModule } from 'primeng/button';
+import { FormsModule } from '@angular/forms';
+import { InputTextModule } from 'primeng/inputtext';
+import { SelectModule } from 'primeng/select';
+import { DatePickerModule } from 'primeng/datepicker';
 
 @Component({
   selector: 'app-schedule-form',
@@ -37,6 +37,8 @@ export class ScheduleForm extends BaseComponent implements OnInit {
     bus_id: null,
     driver_id: null,
     trip_date: null,
+    set_off_time: null,
+    estimated_arrival_time: null,
     status: 'SCHEDULED'
   };
 
@@ -115,6 +117,8 @@ export class ScheduleForm extends BaseComponent implements OnInit {
             bus_id: data.busId,
             driver_id: data.driverId,
             trip_date: new Date(data.tripDate),
+            set_off_time: data.setOffTime ? this.parseTime(data.setOffTime) : null,
+            estimated_arrival_time: data.estimatedArrivalTime ? this.parseTime(data.estimatedArrivalTime) : null,
             status: data.status
           };
         }
@@ -122,14 +126,31 @@ export class ScheduleForm extends BaseComponent implements OnInit {
     });
   }
 
+  parseTime(timeStr: string): Date {
+    const [hours, minutes, seconds] = timeStr.split(':').map(Number);
+    const date = new Date();
+    date.setHours(hours, minutes, seconds || 0, 0);
+    return date;
+  }
+
   saveTrip() {
     // Format date for backend YYYY-MM-DD
     const date = new Date(this.trip.trip_date);
     const formattedDate = date.toISOString().split('T')[0];
 
+    const formatTime = (d: Date | null) => {
+      if (!d) return null;
+      const hours = String(d.getHours()).padStart(2, '0');
+      const minutes = String(d.getMinutes()).padStart(2, '0');
+      const seconds = String(d.getSeconds()).padStart(2, '0');
+      return `${hours}:${minutes}:${seconds}`;
+    };
+
     const payload = {
       ...this.trip,
-      trip_date: formattedDate
+      trip_date: formattedDate,
+      set_off_time: formatTime(this.trip.set_off_time),
+      estimated_arrival_time: formatTime(this.trip.estimated_arrival_time)
     };
 
     const action = this.isEditMode ?
@@ -146,7 +167,7 @@ export class ScheduleForm extends BaseComponent implements OnInit {
           });
           this.router.navigate(['/schedules']);
         } else {
-          this.messageService.add({severity: 'error', summary: 'Error', detail: res.returnMessage});
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: res.returnMessage });
         }
       },
       error: () => {
