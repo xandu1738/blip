@@ -7,6 +7,7 @@ export interface Vehicle {
     partner_code?: string;
     created_at?: string;
     created_by?: number;
+    vehicle_category?: string;
 }
 
 export enum VehicleType {

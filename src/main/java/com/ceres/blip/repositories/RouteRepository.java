@@ -11,4 +11,5 @@ import java.util.List;
 @Repository
 public interface RouteRepository extends JpaRepository<RouteModel, Long> {
     Page<RouteModel> findAllByPartnerCode(String partnerCode, Pageable pageable);
+    List<RouteModel> findAllByOriginContainingIgnoreCaseOrDestinationContainingIgnoreCase(String origin, String destination,Pageable pageable);
 }

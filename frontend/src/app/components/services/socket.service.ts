@@ -25,13 +25,14 @@ export class SocketService {
             this.connected$.next(true);
 
             this.client.subscribe('/topic/events', (message: Message) => {
-                if (message.body) {
-                    console.log('Received message from Redis:', message.body);
-                    try {
-                        this.messages$.next(JSON.parse(message.body));
-                    } catch (e) {
-                        this.messages$.next(message.body);
-                    }
+                this.handleMessage(message);
+            });
+
+            this.authService.currentUser.subscribe(user => {
+                if (user && user.partnerCode) {
+                    this.client.subscribe(`/topic/notifications/${user.partnerCode}`, (message: Message) => {
+                        this.handleMessage(message);
+                    });
                 }
             });
         };
@@ -40,6 +41,17 @@ export class SocketService {
             console.error('Broker reported error: ' + frame.headers['message']);
             console.error('Additional details: ' + frame.body);
         };
+    }
+
+    private handleMessage(message: Message) {
+        if (message.body) {
+            console.log('Received message:', message.body);
+            try {
+                this.messages$.next(JSON.parse(message.body));
+            } catch (e) {
+                this.messages$.next(message.body);
+            }
+        }
     }
 
     public activate() {

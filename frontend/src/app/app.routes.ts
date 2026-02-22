@@ -28,6 +28,8 @@ import { ConsignmentForm } from './components/parcels/consignment-form/consignme
 import { ConsignmentDetails } from './components/parcels/consignment-details/consignment-details';
 import { SchedulesComponent } from './components/management/schedules/schedules.component';
 import { ScheduleForm } from './components/management/schedule-form/schedule-form';
+import { Amenities } from './components/management/amenities/amenities';
+import { VehicleCategories } from './components/management/vehicle-categories/vehicle-categories';
 
 export const routes: Routes = [
   {
@@ -179,6 +181,16 @@ export const routes: Routes = [
   {
     path: 'configuration',
     component: Configuration,
+    canActivate: [authGuard, licenseGuard]
+  },
+  {
+    path: 'amenities',
+    component: Amenities,
+    canActivate: [authGuard, licenseGuard]
+  },
+  {
+    path: 'vehicle-categories',
+    component: VehicleCategories,
     canActivate: [authGuard, licenseGuard]
   },
   {

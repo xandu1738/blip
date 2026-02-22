@@ -118,13 +118,14 @@ export class Configuration extends BaseComponent {
 
   addModule() {
     if (!this.newModule.name.trim() || !this.newModule.description.trim()) {
-      this.notificationService.showWarning('Please fill in all fields before saving');
+      this.showWarning('Please fill in all fields before saving');
       return;
     }
 
     // Auto-generate code from name if not provided
     const code = this.newModule.code.trim() ||
-      this.newModule.name.toUpperCase().replace(/\s+/g, '_').replace(/[^A-Z0-9_]/g, '');
+      this.newModule.name.toUpperCase().replaceAll(/\s+/g, '_')
+        .replaceAll(/[^A-Z0-9_]/g, '');
 
     const module = {
       id: this.modules.length + 1,
@@ -136,7 +137,7 @@ export class Configuration extends BaseComponent {
     };
 
     this.modules.push(module);
-    this.notificationService.showSuccess(`Module '${module.name}' added successfully`);
+    this.showSuccess(`Module '${module.name}' added successfully`);
     this.showAddDialog = false;
   }
 
@@ -144,27 +145,27 @@ export class Configuration extends BaseComponent {
   protected search: any = {};
 
   refreshModules() {
-    this.notificationService.showInfo('Refreshing modules list...');
+    this.showInfo('Refreshing modules list...');
     // In real app, would call ModulesService.modulesList()
     setTimeout(() => {
-      this.notificationService.showSuccess('Modules list refreshed successfully');
+      this.showSuccess('Modules list refreshed successfully');
     }, 1000);
   }
 
   viewModule(module: any) {
-    this.notificationService.showInfo(`Viewing details for ${module.name}`);
+    this.showInfo(`Viewing details for ${module.name}`);
     // In real app, would navigate to module details page or open detail modal
     console.log('View module:', module);
   }
 
   editModule(module: any) {
-    this.notificationService.showInfo(`Editing ${module.name}`);
+    this.showInfo(`Editing ${module.name}`);
     // In real app, would open edit modal with module data
     console.log('Edit module:', module);
   }
 
   viewSubscriptions(module: any) {
-    this.notificationService.showInfo(`Viewing subscriptions for ${module.name}`);
+    this.showInfo(`Viewing subscriptions for ${module.name}`);
     // In real app, would show partners subscribed to this module
     console.log('View subscriptions for module:', module);
   }

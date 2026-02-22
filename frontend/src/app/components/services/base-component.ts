@@ -134,6 +134,14 @@ export abstract class BaseComponent implements OnInit {
     });
   }
 
+  showInfo(message: string) {
+    this.messageService.add({
+      severity: 'info',
+      summary: 'Info',
+      detail: message
+    });
+  }
+
   showError(message: string) {
     this.messageService.add({
       severity: 'error',

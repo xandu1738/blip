@@ -34,6 +34,7 @@ public enum DefaultPermissions {
     MANAGE_DRIVERS("MANAGE_DRIVERS", "Can manage drivers", List.of(AppDomains.BACK_OFFICE, AppDomains.CLIENT_ADMIN)),
     MANAGE_SCHEDULES("MANAGE_SCHEDULES", "Can manage schedules", List.of(AppDomains.BACK_OFFICE, AppDomains.CLIENT_ADMIN)),
     MANAGE_FARES("MANAGE_FARES", "Can manage fare", List.of(AppDomains.BACK_OFFICE, AppDomains.CLIENT_ADMIN)),
+    MANAGE_REPORTS("MANAGE_REPORTS", "Can manage reports", List.of(AppDomains.BACK_OFFICE, AppDomains.CLIENT_ADMIN)),
 
     //View Permissions
     VIEW_MODULES("VIEW_MODULES", "Can view modules", List.of(AppDomains.BACK_OFFICE, AppDomains.CLIENT_ADMIN, AppDomains.PUBLIC)),

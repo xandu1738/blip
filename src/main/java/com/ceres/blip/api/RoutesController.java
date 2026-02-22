@@ -34,4 +34,9 @@ public class RoutesController {
     public ResponseEntity<OperationReturnObject> routesList(@PathVariable String partnerCode, @PathVariable int pageSize, @PathVariable int pageNumber) {
         return ResponseEntity.ok(routeService.listRoutes(partnerCode, pageNumber, pageSize));
     }
+
+    @GetMapping("/filter/{query}")
+    public ResponseEntity<OperationReturnObject> filterRoutes(@PathVariable String query) {
+        return ResponseEntity.ok(routeService.filterRoutes(query));
+    }
 }

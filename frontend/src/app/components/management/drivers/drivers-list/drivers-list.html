@@ -1,79 +1,91 @@
 <div class="flex justify-between items-start mb-4">
-    <div>
-        <h1 class="text-3xl font-bold mb-2">Driver Details</h1>
-        <p class="mb-4">Manage Driver Details and Information</p>
-    </div>
-    <p-button label="Add Driver" icon="pi pi-plus" size="small" (onClick)="addDriver()"></p-button>
+  <div>
+    <h1 class="text-3xl font-bold mb-2">Driver Details</h1>
+    <p class="mb-4">Manage Driver Details and Information</p>
+  </div>
+  <p-button label="Add Driver" icon="pi pi-plus" size="small" (onClick)="addDriver()"></p-button>
 </div>
 
 <div class="p-4 w-full select-none relative">
-    <div class="my-3">
-        <p-accordion value="0">
-            <p-accordion-panel value="0">
-                <p-accordion-header>Filter</p-accordion-header>
-                <p-accordion-content>
-                    <!-- Search Filters Card -->
-                    <div class="p-6 mb-6">
-                        <div class="flex flex-col lg:flex-row lg:gap-4 my-3">
-                            <!-- Driver Name -->
-                            <div class="w-full lg:w-1/2 mb-4 lg:mb-0">
-                                <label for="search_name" class="block text-sm font-medium mb-1 pl-1">Name</label>
-                                <input pInputText type="text" id="search_name" placeholder="Search by Name"
-                                    [(ngModel)]="driverData.name"
-                                    class="w-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition" />
-                            </div>
+  <div class="my-3">
+    <p-accordion value="0">
+      <p-accordion-panel value="0">
+        <p-accordion-header>Filter</p-accordion-header>
+        <p-accordion-content>
+          <!-- Search Filters Card -->
+          <div class="p-6 mb-6">
+            <div class="flex flex-col lg:flex-row lg:gap-4 my-3">
+              <!-- Driver Name -->
+              <div class="w-full lg:w-1/2 mb-4 lg:mb-0">
+                <label for="search_name" class="block text-sm font-medium mb-1 pl-1">Name</label>
+                <input pInputText type="text" id="search_name" placeholder="Search by Name"
+                       [(ngModel)]="driverData.name"
+                       class="w-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"/>
+              </div>
+              <div class="w-full lg:w-1/2 mb-4 lg:mb-0">
+                <label for="search_ln" class="block text-sm font-medium mb-1 pl-1">License Number</label>
+                <input pInputText type="text" id="search_ln" placeholder="Search by License Number"
+                       [(ngModel)]="driverData.licenseNumber"
+                       class="w-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"/>
+              </div>
+              <div class="w-full lg:w-1/2 mb-4 lg:mb-0">
+                <label for="search_cn" class="block text-sm font-medium mb-1 pl-1">Phone Number</label>
+                <input pInputText type="text" id="search_cn" placeholder="Search by Phone Number"
+                       [(ngModel)]="driverData.phoneNumber"
+                       class="w-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"/>
+              </div>
 
-                        </div>
-                        <!-- Search Button -->
-                        <div class="flex justify-end pt-2">
-                            <p-button (onClick)="filterDrivers()" icon="pi pi-search" label="Search" size="small"
-                                severity="primary">
-                            </p-button>
-                        </div>
+            </div>
+            <!-- Search Button -->
+            <div class="flex justify-end pt-2">
+              <p-button (onClick)="filterDrivers()" icon="pi pi-search" label="Search" size="small"
+                        severity="primary">
+              </p-button>
+            </div>
 
-                    </div>
+          </div>
 
-                </p-accordion-content>
-            </p-accordion-panel>
+        </p-accordion-content>
+      </p-accordion-panel>
 
-        </p-accordion>
-    </div>
+    </p-accordion>
+  </div>
 
-    <p-table [value]="drivers" [lazy]="true" (onLazyLoad)="loadDrivers($event)" [paginator]="true" [rows]="rows"
-        [totalRecords]="totalRecords" [loading]="loading" [rowsPerPageOptions]="[10, 25, 50]">
-        <ng-template pTemplate="header">
-            <tr>
-                <th id="name">Name</th>
-                <th id="license">License Number</th>
-                <th id="contact">Contact Number</th>
-                <th id="stat">Status</th>
-                <th id="cat">Created At</th>
-                <th id="act">Actions</th>
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-driver>
-            <tr>
-                <td>{{ driver.name }}</td>
-                <td>{{ driver.licenseNumber }}</td>
-                <td>{{ driver.contactNumber }}</td>
-                <td>
+  <p-table [value]="drivers" [lazy]="true" (onLazyLoad)="loadDrivers($event)" [paginator]="true" [rows]="rows"
+           [totalRecords]="totalRecords" [loading]="loading" [rowsPerPageOptions]="[10, 25, 50]">
+    <ng-template pTemplate="header">
+      <tr>
+        <th id="name">Name</th>
+        <th id="license">License Number</th>
+        <th id="contact">Contact Number</th>
+        <th id="stat">Status</th>
+        <th id="cat">Created At</th>
+        <th id="act">Actions</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-driver>
+      <tr>
+        <td>{{ driver.name }}</td>
+        <td>{{ driver.licenseNumber }}</td>
+        <td>{{ driver.contactNumber }}</td>
+        <td>
                     <span [class]="'status-badge status-' + (driver.status ? driver.status.toLowerCase() : 'unknown')">
                         {{ driver.status }}
                     </span>
-                </td>
-                <td>{{ driver.createdAt | date:'medium' }}</td>
-                <td>
-                    <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="secondary"
-                        (onClick)="editDriver(driver)"></p-button>
-                    <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger"
-                        (onClick)="deleteDriver(driver)"></p-button>
-                </td>
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="emptymessage">
-            <tr>
-                <td colspan="6" class="text-center p-4">No drivers found.</td>
-            </tr>
-        </ng-template>
-    </p-table>
+        </td>
+        <td>{{ driver.createdAt | date:'medium' }}</td>
+        <td>
+          <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="secondary"
+                    (onClick)="editDriver(driver)"></p-button>
+          <p-button icon="pi pi-trash" [rounded]="true" [text]="true" severity="danger"
+                    (onClick)="deleteDriver(driver)"></p-button>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="6" class="text-center p-4">No drivers found.</td>
+      </tr>
+    </ng-template>
+  </p-table>
 </div>
