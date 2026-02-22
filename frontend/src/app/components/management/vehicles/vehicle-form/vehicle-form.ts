@@ -89,9 +89,9 @@ export class VehicleForm extends BaseComponent implements OnInit {
         if (res.returnObject) {
           this.vehicle = res?.returnObject;
 
-          this.vehicle['registration_number'] = res?.returnObject.registrationNumber;
-          this.vehicle['partner_code'] = res?.returnObject.partnerCode;
-          this.vehicle['vehicle_category'] = res?.returnObject.vehicleCategory;
+          this.vehicle['registration_number'] = res?.returnObject?.registrationNumber;
+          this.vehicle['partner_code'] = res?.returnObject?.partnerCode;
+          this.vehicle['vehicle_category'] = res?.returnObject?.vehicleCategory;
         }
       },
       error: (err) => {
