@@ -38,7 +38,7 @@ public class VehicleService extends LocalUtilsService {
     private final NotificationService notificationService;
 
     // Add a new vehicle for partner
-    @CacheEvict(value = "vehicles", allEntries = true)
+//    @CacheEvict(value = "vehicles", allEntries = true)
     public OperationReturnObject addNewVehicle(JsonNode object) {
         try {
             SystemUserModel authenticatedUser = authenticatedUser();
@@ -53,6 +53,11 @@ public class VehicleService extends LocalUtilsService {
                 requires(data, PARTNER_CODE);
                 partnerCode = data.get(PARTNER_CODE).asText();
             }
+
+            if (StringUtils.isBlank(partnerCode)) {
+                throw new IllegalArgumentException("Partner code cannot be blank");
+            }
+
             String type = data.get(TYPE).asText();
             String status = data.get(STATUS).asText();
             Integer capacity = data.get(CAPACITY).asInt();
@@ -137,17 +142,26 @@ public class VehicleService extends LocalUtilsService {
     }
 
     // Edit Vehicle information
-    @CacheEvict(value = {"vehicles", "vehicle"}, allEntries = true)
+//    @CacheEvict(value = {"vehicles", "vehicle"}, allEntries = true)
     public OperationReturnObject editVehicleInformation(JsonNode object) {
         try {
-            authenticatedUser();
+            SystemUserModel authenticatedUser = authenticatedUser();
 
             requires(object, DATA);
             JsonNode data = getRequestData(object);
             requires(data, "id");
             Long vehicleId = data.get("id").asLong();
+            String partnerCode = authenticatedUser.getPartnerCode();
+            if (StringUtils.isBlank(partnerCode)) {
+                requires(data, PARTNER_CODE);
+                partnerCode = data.get(PARTNER_CODE).asText();
+            }
 
-            VehicleModel vehicleModel = vehicleRepository.findById(vehicleId)
+            if (StringUtils.isBlank(partnerCode)) {
+                throw new IllegalArgumentException("Partner code cannot be blank");
+            }
+
+            VehicleModel vehicleModel = vehicleRepository.findByIdAndPartnerCode(vehicleId,partnerCode)
                     .orElseThrow(() -> new IllegalArgumentException("Vehicle not found"));
 
             // Update fields if present
@@ -202,13 +216,13 @@ public class VehicleService extends LocalUtilsService {
         }
     }
 
-    @Cacheable(value = "vehicles", key = "#pageNumber + '-' + #pageSize")
+//    @Cacheable(value = "vehicles", key = "#pageNumber + '-' + #pageSize")
     public OperationReturnObject vehiclesList(int pageNumber, int pageSize) throws AuthorizationRequiredException {
         requiresAuth();
         SystemUserModel authenticatedUser = authenticatedUser();
         List<VehicleModel> vehicles = null;
 
-        if (getUserDomain().equals(AppDomains.BACK_OFFICE)) {
+        if (getUserDomain().equals(AppDomains.BACK_OFFICE) && StringUtils.isBlank(authenticatedUser.getPartnerCode())) {
             vehicles = vehicleRepository.findAll(PageRequest.of(pageNumber, pageSize)).toList();
             return new OperationReturnObject(200, "Vehicles list successfully fetched.",
                     new ListResponseDto((long) vehicles.size(), vehicles));
@@ -221,7 +235,7 @@ public class VehicleService extends LocalUtilsService {
         return new OperationReturnObject(200, "Vehicles list successfully fetched.", dto);
     }
 
-    @Cacheable(value = "vehicle", key = "#vehicleId")
+//    @Cacheable(value = "vehicle", key = "#vehicleId")
     public OperationReturnObject fetchVehicleDetails(Long vehicleId) throws AuthorizationRequiredException {
         requiresAuth();
         VehicleModel vehicleModel = vehicleRepository.findById(vehicleId)

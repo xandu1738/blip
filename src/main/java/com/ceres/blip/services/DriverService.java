@@ -1,6 +1,7 @@
 package com.ceres.blip.services;
 
 import com.ceres.blip.dtos.ListResponseDto;
+import com.ceres.blip.dtos.OperationReturn;
 import com.ceres.blip.dtos.OperationReturnObject;
 import com.ceres.blip.exceptions.AuthorizationRequiredException;
 import com.ceres.blip.models.database.DriverModel;
@@ -34,7 +35,7 @@ public class DriverService extends LocalUtilsService {
     private final DriverRepository driverRepository;
     private final NotificationService notificationService;
 
-    @CacheEvict(value = "drivers", allEntries = true)
+//    @CacheEvict(value = "drivers", allEntries = true)
     public OperationReturnObject addNewDriver(JsonNode object) {
         try {
             SystemUserModel authenticatedUser = authenticatedUser();
@@ -47,9 +48,19 @@ public class DriverService extends LocalUtilsService {
             String contactNumber = data.get(CONTACT_NUMBER).asText();
             String partnerCode = authenticatedUser.getPartnerCode();
 
+            OperationReturn operationReturn = correctMSISDN(contactNumber);
+            if (operationReturn.returnCode() != 200) {
+                throw new IllegalArgumentException(operationReturn.returnMessage());
+            }
+            contactNumber = operationReturn.returnMessage();
+
             if (StringUtils.isBlank(partnerCode)) {
                 requires(data, PARTNER_CODE);
                 partnerCode = data.get(PARTNER_CODE).asText();
+            }
+
+            if (StringUtils.isBlank(partnerCode)) {
+                throw new IllegalStateException("Partner code cannot be blank");
             }
 
             Optional<DriverModel> existingDriver = driverRepository.findByLicenseNumber(licenseNumber);
@@ -81,13 +92,13 @@ public class DriverService extends LocalUtilsService {
         }
     }
 
-    @Cacheable(value = "drivers", key = "#pageNumber + '-' + #pageSize")
+//    @Cacheable(value = "drivers", key = "#pageNumber + '-' + #pageSize")
     public OperationReturnObject listDrivers(int pageNumber, int pageSize) throws AuthorizationRequiredException {
         requiresAuth();
         SystemUserModel authenticatedUser = authenticatedUser();
         List<DriverModel> drivers;
 
-        if (getUserDomain().equals(AppDomains.BACK_OFFICE)) {
+        if (getUserDomain().equals(AppDomains.BACK_OFFICE) && StringUtils.isBlank(authenticatedUser.getPartnerCode())) {
             drivers = driverRepository.findAll(PageRequest.of(pageNumber, pageSize)).toList();
         } else {
             drivers = driverRepository
@@ -99,7 +110,7 @@ public class DriverService extends LocalUtilsService {
                 new ListResponseDto((long) drivers.size(), drivers));
     }
 
-    @Cacheable(value = "driver", key = "#driverId")
+//    @Cacheable(value = "driver", key = "#driverId")
     public OperationReturnObject fetchDriverDetails(Long driverId) throws AuthorizationRequiredException {
         requiresAuth();
         DriverModel driver = driverRepository.findById(driverId)
@@ -107,7 +118,7 @@ public class DriverService extends LocalUtilsService {
         return new OperationReturnObject(200, "Driver details successfully fetched", driver);
     }
 
-    @CacheEvict(value = { "drivers", "driver" }, allEntries = true)
+//    @CacheEvict(value = {"drivers", "driver"}, allEntries = true)
     public OperationReturnObject editDriver(JsonNode object) {
         try {
             authenticatedUser();
@@ -115,8 +126,18 @@ public class DriverService extends LocalUtilsService {
             JsonNode data = getRequestData(object);
             requires(data, DRIVER_ID);
 
+            String partnerCode = authenticatedUser().getPartnerCode();
+            if (StringUtils.isBlank(partnerCode)) {
+                requires(data, PARTNER_CODE);
+                partnerCode = data.get(PARTNER_CODE).asText();
+            }
+
+            if (StringUtils.isBlank(partnerCode)) {
+                throw new IllegalStateException("Partner code cannot be blank");
+            }
+
             Long driverId = data.get(DRIVER_ID).asLong();
-            DriverModel driver = driverRepository.findById(driverId)
+            DriverModel driver = driverRepository.findByIdAndPartnerCode(driverId,partnerCode)
                     .orElseThrow(() -> new IllegalArgumentException("Driver not found"));
 
             if (data.has(NAME))
@@ -124,7 +145,7 @@ public class DriverService extends LocalUtilsService {
             if (data.has(LICENSE_NUMBER)) {
                 String newLicense = data.get(LICENSE_NUMBER).asText();
                 if (!newLicense.equals(driver.getLicenseNumber())
-                        && driverRepository.findByLicenseNumber(newLicense).isPresent()) {
+                    && driverRepository.findByLicenseNumber(newLicense).isPresent()) {
                     throw new IllegalArgumentException("License number already in use by another driver");
                 }
                 driver.setLicenseNumber(newLicense);
@@ -142,7 +163,7 @@ public class DriverService extends LocalUtilsService {
         }
     }
 
-    @CacheEvict(value = { "drivers", "driver" }, allEntries = true)
+//    @CacheEvict(value = {"drivers", "driver"}, allEntries = true)
     public OperationReturnObject deleteDriver(Long driverId) {
         try {
             authenticatedUser();

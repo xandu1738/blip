@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -49,16 +50,26 @@ public class RouteService extends LocalUtilsService {
             String origin = data.get(ORIGIN).asText();
             String destination = data.get(DESTINATION).asText();
 
+            Optional<RouteModel> existingRoute = routeRepository.findByOriginAndDestination(origin, destination);
+            if (existingRoute.isPresent()) {
+                throw new IllegalArgumentException("Route already exists for origin " + origin + " and destination " + destination);
+            }
+
             if (Objects.equals(origin, destination)) {
                 throw new IllegalArgumentException("Origin and destination cannot be same");
             }
 
 
             String partnerCode = authenticatedUser.getPartnerCode();
-            if (StringUtils.isNotBlank(partnerCode)) {
+            if (StringUtils.isBlank(partnerCode)) {
                 requires(data, PARTNER_CODE);
                 partnerCode = data.get(PARTNER_CODE).asText();
             }
+
+            if (StringUtils.isBlank(partnerCode)) {
+                throw new IllegalArgumentException("Partner code cannot be blank");
+            }
+
             Double estimatedDistance = data.get(ESTIMATED_DISTANCE).asDouble();
             Double estimatedDuration = data.get(ESTIMATED_DURATION).asDouble();
 
