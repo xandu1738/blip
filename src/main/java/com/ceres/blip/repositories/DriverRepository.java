@@ -13,4 +13,6 @@ public interface DriverRepository extends JpaRepository<DriverModel, Long> {
     Page<DriverModel> findAllByPartnerCode(String partnerCode, Pageable pageable);
 
     Optional<DriverModel> findByLicenseNumber(String licenseNumber);
+
+    Optional<DriverModel> findByIdAndPartnerCode(Long id, String partnerCode);
 }
