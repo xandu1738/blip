@@ -321,7 +321,6 @@ export class App extends BaseComponent implements OnInit {
       });
     }
 
-
     if (this.user?.permissions?.includes('MANAGE_TICKETS')) {
       management.items.push({
         label: 'Bus Booking',
@@ -329,6 +328,17 @@ export class App extends BaseComponent implements OnInit {
         value: 1,
         command: () => {
           this.router.navigate(['//dashboard'])
+        }
+      });
+    }
+
+    if (this.user?.permissions?.includes('MANAGE_SCHEDULES')) {
+      management.items.push({
+        label: 'Trips',
+        icon: 'pi pi-play',
+        value: 10,
+        command: () => {
+          this.router.navigate(['/trips'])
         }
       });
     }
@@ -342,8 +352,6 @@ export class App extends BaseComponent implements OnInit {
           this.router.navigate(['/manage-subscriptions'])
         }
       })
-
-      return management;
     }
     return management;
   }

@@ -16,12 +16,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -34,8 +32,8 @@ public class TripService extends LocalUtilsService {
 
     public OperationReturnObject addTrip(JsonNode object) {
         JsonNode data = getRequestData(object);
-        requires(data, "route_id", "bus_id", "trip_date");
-        Long routeId = data.get("route_id").asLong();
+        requires(data, "schedule_id", "bus_id", "trip_date");
+        Long scheduleId = data.get("schedule_id").asLong();
         Long busId = data.get("bus_id").asLong();
         String td = data.get("trip_date").asText();
         LocalDate tripDate = LocalDate.parse(td);
@@ -44,9 +42,13 @@ public class TripService extends LocalUtilsService {
 
         TripModel tripModel = new TripModel();
         tripModel.setBusId(busId);
-        tripModel.setRouteId(routeId);
+        tripModel.setScheduleId(scheduleId);
         tripModel.setStatus(status);
         tripModel.setTripDate(tripDate);
+
+        if (data.has("driver_id")) {
+            tripModel.setDriverId(data.get("driver_id").asLong());
+        }
 
         if (data.has("set_off_time")) {
             tripModel.setSetOffTime(stringToTimestamp(data.get("set_off_time").asText()));
@@ -80,13 +82,20 @@ public class TripService extends LocalUtilsService {
 
         TripModel tripModel = repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Trip with ID " + id + " not found."));
-        Long routeId = data.get("route_id").asLong();
-        tripModel.setRouteId(routeId);
-        Long busId = data.get("bus_id").asLong();
-        // todo: reconcile trip seats to new bus seats. UNLESS we have some good number
-        // that has already booked seats then reject modification.
-        tripModel.setBusId(busId);
-        String td = data.get("trip_date").asText();
+
+        if (data.has("schedule_id")) {
+            Long scheduleId = data.get("schedule_id").asLong();
+            tripModel.setScheduleId(scheduleId);
+        }
+
+        if (data.has("bus_id")) {
+            Long busId = data.get("bus_id").asLong();
+            // todo: reconcile trip seats to new bus seats. UNLESS we have some good number
+            // that has already booked seats then reject modification.
+            tripModel.setBusId(busId);
+        }
+
+        String td = data.get("trip_date") != null ? data.get("trip_date").asText() : null;
         if (StringUtils.isNotBlank(td)) {
             LocalDate tripDate = LocalDate.parse(td);
             tripModel.setTripDate(tripDate);
@@ -97,6 +106,10 @@ public class TripService extends LocalUtilsService {
         }
         if (data.has("estimated_arrival_time")) {
             tripModel.setEstimatedArrivalTime(stringToTimestamp(data.get("estimated_arrival_time").asText()));
+        }
+
+        if (data.has("driver_id")) {
+            tripModel.setDriverId(data.get("driver_id").asLong());
         }
 
         repository.save(tripModel);

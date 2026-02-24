@@ -101,15 +101,25 @@ export interface RouteEdit {
 }
 
 
-export interface Trip {
+export interface Schedule {
+  id?: number;
   routeId: number;
+  daysOfWeek: string;
+  setOffTime: string;
+  expectedArrivalTime: string;
+  partnerCode: string;
+  status: string;
+}
+
+export interface Trip {
+  scheduleId: number;
   busId: number;
   tripDate: string; // yyyy-MM-dd
 }
 
 export interface TripEdit {
   id: number;
-  routeId: number;
+  scheduleId: number;
   busId: number;
   tripDate: string; // yyyy-MM-dd
 }

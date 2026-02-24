@@ -30,6 +30,8 @@ import { SchedulesComponent } from './components/management/schedules/schedules.
 import { ScheduleForm } from './components/management/schedule-form/schedule-form';
 import { Amenities } from './components/management/amenities/amenities';
 import { VehicleCategories } from './components/management/vehicle-categories/vehicle-categories';
+import { TripsList } from './components/management/trips/trips-list/trips-list';
+import { TripForm } from './components/management/trips/trip-form/trip-form';
 
 export const routes: Routes = [
   {
@@ -106,6 +108,26 @@ export const routes: Routes = [
   {
     path: 'schedule-form/:id',
     component: ScheduleForm,
+    canActivate: [authGuard, licenseGuard]
+  },
+  {
+    path: 'trips',
+    component: TripsList,
+    canActivate: [authGuard, licenseGuard]
+  },
+  {
+    path: 'trip-form',
+    component: TripForm,
+    canActivate: [authGuard, licenseGuard]
+  },
+  {
+    path: 'trip-form/:id',
+    component: TripForm,
+    canActivate: [authGuard, licenseGuard]
+  },
+  {
+    path: 'record-trip/:scheduleId',
+    component: TripForm,
     canActivate: [authGuard, licenseGuard]
   },
   {
