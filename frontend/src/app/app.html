@@ -1,7 +1,5 @@
-<!--<app-old-home></app-old-home>-->
 @if (!isLoggedIn) {
-<div class="">
-  <!--    <app-login></app-login>-->
+<div>
   <app-landing></app-landing>
 </div>
 } @else if (isLoggedIn && !isLicensed) {
@@ -9,88 +7,126 @@
   <app-subscriptions-list></app-subscriptions-list>
 </div>
 } @else {
-<div class="min-h-screen w-full home-screen">
+<div class="home-screen" [class.dark-mode]="isDarkMode">
+
   <!-- Header -->
-  <header class="flex items-center gap-8 px-6 home-header">
-    <div class="flex items-center gap-3">
-      <div class="rounded-lg p-2">
-        <div class="logo-avatar">
-          <span class="pi pi-car rounded-full text-white bg-blue-600 p-4" style="font-size: 20px;"></span>
-        </div>
+  <header class="home-header">
+
+    <!-- Hamburger (mobile) -->
+    <button class="hamburger-btn" (click)="toggleSidebar()" aria-label="Toggle menu">
+      <i class="pi pi-bars"></i>
+    </button>
+
+    <!-- Logo -->
+    <div class="flex items-center gap-3 logo-area">
+      <div class="logo-icon">
+        <span class="pi pi-car"></span>
       </div>
-      <div>
-        <div class="text-xl font-bold tracking-wide">BLIP</div>
-        <div class="text-[10px] tracking-widest">TRANSPORT CONTROL</div>
+      <div class="logo-text">
+        <div class="logo-name">BLIP</div>
+        <div class="logo-sub">TRANSPORT CONTROL</div>
       </div>
     </div>
 
-    <div class="flex items-center gap-4 ml-auto">
-      <p-button icon="pi pi-bell" [badge]="unreadCount > 0 ? unreadCount.toString() : undefined" badgeSeverity="danger"
-        severity="secondary" (onClick)="op.toggle($event)" />
+    <!-- Right: Theme + Notifications + User + Logout -->
+    <div class="header-right">
+
+      <!-- Theme toggle -->
+      <button class="icon-btn" (click)="toggleTheme()"
+        [title]="isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'" aria-label="Toggle theme">
+        <i [class]="isDarkMode ? 'pi pi-sun' : 'pi pi-moon'"></i>
+      </button>
+
+      <!-- Notifications -->
+      <button class="icon-btn relative" (click)="op.toggle($event)" aria-label="Notifications">
+        <i class="pi pi-bell"></i>
+        @if (unreadCount > 0) {
+        <span class="notif-badge">{{ unreadCount }}</span>
+        }
+      </button>
 
       <p-popover #op styleClass="notification-popover">
         <div class="flex flex-col w-80 max-h-96">
-          <div class="flex items-center justify-between p-4 border-b dark:border-gray-700">
-            <span class="font-bold">Notifications</span>
-            <button class="text-xs text-blue-500 hover:underline" (click)="markAllAsRead()">Mark all as read</button>
+          <div class="notif-header">
+            <span class="font-bold text-sm">Notifications</span>
+            <button class="mark-read-btn" (click)="markAllAsRead()">Mark all as read</button>
           </div>
           <div class="flex-1 overflow-y-auto">
             @if (notifications.length === 0) {
-            <div class="p-8 text-center text-gray-500">
-              <i class="pi pi-bell-slash text-2xl mb-2"></i>
-              <p>No notifications yet</p>
+            <div class="empty-notif">
+              <i class="pi pi-bell-slash text-2xl mb-2 block"></i>
+              <p class="text-sm">No notifications yet</p>
             </div>
             } @else {
             @for (n of notifications; track n.id) {
-            <div
-              class="p-4 border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer"
-              [class.bg-blue-50]="!n.read" [class.dark:bg-blue-900/10]="!n.read" (click)="markAsRead(n.id)">
+            <div class="notif-item" [class.notif-unread]="!n.read" (click)="markAsRead(n.id)">
               <div class="flex justify-between items-start mb-1">
                 <span class="font-semibold text-sm">{{ n.title }}</span>
-                <span class="text-[10px] text-gray-400">{{ n.timestamp | date:'shortTime' }}</span>
+                <span class="notif-time">{{ n.timestamp | date:'shortTime' }}</span>
               </div>
-              <p class="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">{{ n.message }}</p>
+              <p class="notif-msg">{{ n.message }}</p>
             </div>
             }
             }
           </div>
         </div>
       </p-popover>
-      <div class="flex items-center gap-3 px-4 py-2 rounded-lg cursor-pointer">
-        <div>
-          <div class="text-sm font-semibold">{{ user?.firstName }} {{ user?.lastName }}</div>
-          <div class="text-xs opacity-70">{{ user?.partnerCode | truncate }}</div>
+
+      <!-- User pill (hidden on xs) -->
+      <div class="user-pill hidden sm:flex items-center gap-3 cursor-pointer">
+        <p-avatar icon="pi pi-user" shape="circle" size="normal" />
+        <div class="user-info">
+          <div class="user-name">{{ user?.firstName }} {{ user?.lastName }}</div>
+          <div class="user-code">{{ user?.partnerCode | truncate }}</div>
         </div>
-        <p-avatar icon="pi pi-user" shape="circle" size="xlarge" />
       </div>
+
+      <!-- Logout -->
+      <button class="logout-btn" (click)="logout()" title="Sign out" aria-label="Sign out">
+        <i class="pi pi-sign-out"></i>
+        <span class="logout-label">Sign out</span>
+      </button>
+
     </div>
   </header>
 
-  <div class="flex h-[calc(100vh-80px)]">
+  <!-- Mobile sidebar backdrop -->
+  @if (sidebarOpen) {
+  <div class="sidebar-backdrop" (click)="toggleSidebar()"></div>
+  }
+
+  <div class="app-body">
+
     <!-- Sidebar -->
-    <aside class="w-64 flex flex-col py-6">
-      <nav class="flex-1 px-4 pb-4 space-y-1 side-panel">
+    <aside class="sidebar" [class.sidebar-open]="sidebarOpen">
+
+      <!-- Mobile close button -->
+      <div class="sidebar-mobile-header">
+        <span class="logo-name">BLIP</span>
+        <button class="icon-btn" (click)="toggleSidebar()">
+          <i class="pi pi-times"></i>
+        </button>
+      </div>
+
+      <nav class="side-panel flex-1 px-3 pb-4 space-y-0.5">
         @for (item of items; track item.label) {
-        <div class="mb-1">
-          <!-- Sub menu -->
+        <div>
+
           @if (!item?.items) {
-          <div class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-purple-600/10 cursor-pointer text-sm"
-            (keydown)="item.command?.()" (click)="item.command?.()">
-            <i [class]="item.icon" class="text-lg"></i>
-            <span class="text-sm">{{ item.label }}</span>
+          <div class="nav-item" (keydown)="item.command?.()" (click)="item.command?.(); sidebarOpen = false">
+            <i [class]="item.icon" class="nav-icon"></i>
+            <span class="nav-label">{{ item.label }}</span>
           </div>
           } @else {
           <p-accordion value="0">
             <p-accordion-panel value="{{item.value}}">
               <p-accordion-header>{{ item.label }}</p-accordion-header>
               <p-accordion-content>
-                <div class="mt-1 space-y-1">
+                <div class="mt-0.5 space-y-0.5">
                   @for (child of item.items; track child.label) {
-                  <a class="flex items-center gap-3 px-4 py-2 rounded-lg
-                                                           hover:bg-purple-600/10 cursor-pointer text-sm"
-                    (click)="child.command?.()">
-                    <i [class]="child.icon" class="text-base"></i>
-                    <span>{{ child.label }}</span>
+                  <a class="nav-item nav-child" (click)="child.command?.(); sidebarOpen = false">
+                    <i [class]="child.icon" class="nav-icon"></i>
+                    <span class="nav-label">{{ child.label }}</span>
                   </a>
                   }
                 </div>
@@ -98,15 +134,26 @@
             </p-accordion-panel>
           </p-accordion>
           }
+
         </div>
         }
       </nav>
+
+      <!-- Sidebar logout (mobile-friendly, bottom) -->
+      <div class="sidebar-footer">
+        <button class="sidebar-logout" (click)="logout()">
+          <i class="pi pi-sign-out"></i>
+          <span>Sign out</span>
+        </button>
+      </div>
+
     </aside>
 
     <!-- Main Content -->
-    <main class="flex-1 overflow-y-auto p-8 main-content">
+    <main class="main-content">
       <router-outlet></router-outlet>
     </main>
+
   </div>
 </div>
 }
