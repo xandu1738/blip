@@ -34,11 +34,11 @@
   --text-muted: #6b7280;
   --background: #f0f2f7;
   --surface: #ffffff;
-  --primary: #236731;
-  --primary-light: #e8f5ea;
-  --primary-dark: #1a4f25;
-  --secondary: #deffdb;
-  --accent: #17c964;
+  --primary: #6366f1;
+  --primary-light: #eef2ff;
+  --primary-dark: #4f46e5;
+  --secondary: #e0e7ff;
+  --accent: #818cf8;
   --border: #e5e7eb;
   --card: #ffffff;
   --radius-card: 14px;
@@ -55,8 +55,9 @@
   --text-muted: #9ca3af;
   --background: #0d0f1a;
   --surface: #161827;
-  --primary: #236731;
-  --primary-light: rgba(35, 103, 49, 0.15);
+  --primary: #818cf8;
+  --primary-light: rgba(99, 102, 241, 0.15);
+  --primary-dark: #6366f1;
   --border: #2a2d3e;
   --card: #161827;
   --shadow-card: 0 1px 4px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(0, 0, 0, 0.2);
@@ -117,7 +118,7 @@ body {
 .primary-button:hover {
   background-color: var(--primary-dark);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(35, 103, 49, 0.3);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
 }
 
 .secondary-button {
@@ -147,7 +148,7 @@ body {
 
 .p-inputtext:focus {
   border-color: var(--primary) !important;
-  box-shadow: 0 0 0 3px rgba(35, 103, 49, 0.12) !important;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12) !important;
 }
 
 .p-paginator {

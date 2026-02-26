@@ -119,7 +119,7 @@
 
 /* CTA banner */
 .cta-card {
-  background: linear-gradient(135deg, #1a4f25 0%, #236731 55%, #2d8a42 100%);
+  background: linear-gradient(135deg, #4f46e5 0%, #6366f1 55%, #818cf8 100%);
   border-radius: var(--radius-card);
   padding: 24px 20px;
   display: flex;
