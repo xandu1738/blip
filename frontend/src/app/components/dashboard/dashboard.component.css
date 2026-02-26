@@ -1,29 +1,557 @@
-/* Basic styling for the dashboard container */
-.dashboard-container {
+/* =========================================================
+   DASHBOARD — Responsive + Dark/Light Mode
+   ========================================================= */
+
+.dashboard {
   display: flex;
   flex-direction: column;
-  height: 100vh; /* Full viewport height */
+  gap: 18px;
 }
 
-/* Styling for the MegaMenu */
-.dashboard-megamenu {
-  background-color: #f8f9fa; /* Light background for the menu */
-  border-bottom: 1px solid #dee2e6; /* Separator line */
-  padding: 10px 20px;
+/* === Row 1 — Hero + CTA === */
+.row-hero {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 18px;
 }
 
-/* Styling for the content area */
-.dashboard-content {
-  flex-grow: 1; /* Takes up remaining space */
-  padding: 20px;
-  overflow-y: auto; /* Enable scrolling if content overflows */
-  background-color: #e9ecef; /* Slightly darker background for content */
+@media (max-width: 1024px) {
+  .row-hero {
+    grid-template-columns: 1fr;
+  }
 }
 
-.base-card{
-  background-color: var(--card);
+.hero-card {
+  padding: 24px 24px 18px;
 }
 
-.chart-card{
-  border: 1px solid rgba(128, 128, 128, 0.38);
+.hero-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+
+.label-sm {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+
+.hero-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0 0 4px;
+}
+
+.hero-code {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 0.15s;
+}
+
+.hero-code:hover {
+  color: var(--primary);
+}
+
+.hero-revenue {
+  text-align: right;
+}
+
+.revenue-value {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* Shared buttons */
+.btn-primary,
+.btn-outline,
+.btn-cta {
+  font-family: inherit;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 9px 16px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: white;
+  border: none;
+}
+
+.btn-primary:hover {
+  background: var(--primary-dark);
+  transform: translateY(-1px);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.btn-outline:hover {
+  border-color: var(--primary);
+  background: var(--primary-light);
+  color: var(--primary);
+}
+
+/* CTA banner */
+.cta-card {
+  background: linear-gradient(135deg, #4f46e5 0%, #6366f1 55%, #818cf8 100%);
+  border-radius: var(--radius-card);
+  padding: 24px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  overflow: hidden;
+  position: relative;
+}
+
+.cta-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 80% 50%, rgba(255, 255, 255, 0.09) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.cta-content {
+  flex: 1;
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+}
+
+.cta-label {
+  font-size: 0.65rem;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 4px;
+}
+
+.cta-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: white;
+  margin: 0 0 6px;
+}
+
+.cta-sub {
+  font-size: 0.73rem;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.5;
+  margin-bottom: 16px;
+  max-width: 240px;
+}
+
+.btn-cta {
+  background: white;
+  color: var(--primary-dark);
+  border: none;
+}
+
+.btn-cta:hover {
+  opacity: 0.92;
+  transform: translateY(-1px);
+}
+
+.cta-icon {
+  font-size: 4.5rem;
+  color: rgba(255, 255, 255, 0.12);
+  flex-shrink: 0;
+  margin-left: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 480px) {
+  .cta-icon {
+    display: none;
+  }
+}
+
+/* === Row 2 — Mini stat cards === */
+.row-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+
+@media (max-width: 1100px) {
+  .row-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .row-stats {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+
+.stat-mini {
+  padding: 18px;
+}
+
+.stat-body {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.stat-label {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.stat-value {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.01em;
+  line-height: 1;
+  margin-bottom: 5px;
+}
+
+.stat-sub {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+}
+
+.trend-up {
+  color: #16a34a;
+  font-weight: 600;
+}
+
+.trend-neutral {
+  color: var(--text-muted);
+}
+
+.stat-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.stat-icon .pi {
+  font-size: 1.05rem;
+}
+
+.icon-blue {
+  background: rgba(59, 130, 246, 0.12);
+  color: #3b82f6;
+}
+
+.icon-green {
+  background: rgba(22, 163, 74, 0.12);
+  color: #16a34a;
+}
+
+.icon-orange {
+  background: rgba(249, 115, 22, 0.12);
+  color: #f97316;
+}
+
+.icon-purple {
+  background: rgba(139, 92, 246, 0.12);
+  color: #8b5cf6;
+}
+
+/* === Row 3 — Trips + Expenses === */
+.row-bottom {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 18px;
+}
+
+@media (max-width: 1024px) {
+  .row-bottom {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Shared section header */
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.section-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0;
+}
+
+.btn-arrow {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: var(--primary-light);
+  color: var(--primary);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, color 0.2s;
+  font-size: 0.8rem;
+}
+
+.btn-arrow:hover {
+  background: var(--primary);
+  color: white;
+}
+
+/* Trips card */
+.trips-card {
+  padding: 18px 18px 0;
+  overflow-x: auto;
+}
+
+.trips-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+  min-width: 480px;
+}
+
+.trips-table thead tr {
+  border-bottom: 1px solid var(--border);
+}
+
+.trips-table th {
+  padding: 0 10px 10px;
+  text-align: left;
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.trip-row {
+  border-bottom: 1px solid var(--border);
+  transition: background 0.15s;
+}
+
+.trip-row:last-child {
+  border-bottom: none;
+}
+
+.trip-row:hover {
+  background: var(--background);
+}
+
+.trips-table td {
+  padding: 10px 10px;
+  vertical-align: middle;
+}
+
+.trip-date {
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  white-space: nowrap;
+}
+
+.trip-route {
+  font-weight: 500;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.trip-type {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.trip-amount {
+  font-weight: 600;
+  font-size: 0.8rem;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+/* Status badges */
+.status-badge {
+  display: inline-block;
+  padding: 3px 9px;
+  border-radius: 20px;
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.status-green {
+  background: rgba(22, 163, 74, 0.1);
+  color: #16a34a;
+}
+
+.status-amber {
+  background: rgba(245, 158, 11, 0.1);
+  color: #d97706;
+}
+
+.status-blue {
+  background: rgba(59, 130, 246, 0.1);
+  color: #3b82f6;
+}
+
+.status-gray {
+  background: rgba(107, 114, 128, 0.1);
+  color: #6b7280;
+}
+
+.see-more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 11px 0;
+  border-top: 1px solid var(--border);
+  margin-top: 4px;
+}
+
+.btn-see-more {
+  background: none;
+  border: none;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: color 0.15s;
+  font-family: inherit;
+}
+
+.btn-see-more:hover {
+  color: var(--primary);
+}
+
+/* === Expenses card === */
+.expenses-card {
+  padding: 18px;
+}
+
+.expense-totals {
+  display: flex;
+  gap: 0;
+  margin-bottom: 18px;
+}
+
+.expense-period {
+  flex: 1;
+  text-align: center;
+  padding: 0 8px;
+  border-right: 1px solid var(--border);
+}
+
+.expense-period:last-child {
+  border-right: none;
+}
+
+.period-label {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+  margin-bottom: 3px;
+}
+
+.period-value {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+
+.chart-section {
+  border-top: 1px solid var(--border);
+  padding-top: 14px;
+}
+
+.chart-label-row {
+  margin-bottom: 10px;
+}
+
+.chart-month-label {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.chart-body {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.donut-wrap {
+  flex-shrink: 0;
+}
+
+/* Legend */
+.expense-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  flex: 1;
+  min-width: 100px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.legend-label {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-weight: 500;
 }

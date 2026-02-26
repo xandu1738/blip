@@ -1,44 +1,31 @@
-import {Component, signal, Input, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {Header} from '../shared-components/Header/header/header';
-import {UIChart} from 'primeng/chart';
 import { ChartModule } from 'primeng/chart';
 
 interface Stat {
   label: string;
   value: string;
+  sub: string;
   icon: string;
-  color: string;
-  bgColor: string;
+  iconClass: string;
+  trend?: string;
+  trendUp?: boolean;
 }
 
-interface Activity {
+interface Trip {
+  date: string;
+  route: string;
   type: string;
-  id: string;
+  typeIcon: string;
   status: string;
-  client: string;
-  date: string;
-  statusColor: string;
-  icon: string;
+  statusClass: string;
+  amount: string;
 }
 
-interface Notification {
-  id: number;
-  type: string;
-  title: string;
-  message: string;
-  time: string;
-  color: string;
-}
-
-interface Expense {
-  id: number;
-  category: string;
-  description: string;
-  amount: number;
-  date: string;
-  vehicle?: string;
-  type: 'fuel' | 'maintenance' | 'salary' | 'insurance' | 'other';
+interface ExpenseSummary {
+  daily: string;
+  weekly: string;
+  monthly: string;
 }
 
 @Component({
@@ -48,264 +35,162 @@ interface Expense {
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
-export class DashboardComponent implements OnInit{
+export class DashboardComponent implements OnInit {
+
   ngOnInit() {
     this.initChart();
   }
 
+  /** Hero card info */
+  companyName = 'BLIP Transport Control';
+  partnerCode = 'BLP-KLA-2024';
+  totalRevenue = 'UGX 12,450,000';
+
+  /** Expense summary */
+  expenseSummary: ExpenseSummary = {
+    daily: 'UGX 450K',
+    weekly: 'UGX 2.8M',
+    monthly: 'UGX 11.2M',
+  };
+
+  /** Mini stat cards */
   stats: Stat[] = [
     {
       label: 'Total Bookings',
       value: '1,200',
-      icon: 'bus',
-      color: 'text-blue-600',
-      bgColor: 'bg-blue-50'
+      sub: '+8% this month',
+      icon: 'pi-ticket',
+      iconClass: 'icon-blue',
+      trendUp: true,
     },
     {
       label: 'Parcels Sent',
       value: '850',
-      icon: 'package',
-      color: 'text-green-600',
-      bgColor: 'bg-green-50'
+      sub: '+12% this month',
+      icon: 'pi-box',
+      iconClass: 'icon-green',
+      trendUp: true,
     },
     {
       label: 'Active Consignments',
       value: '150',
-      icon: 'truck',
-      color: 'text-purple-600',
-      bgColor: 'bg-purple-50'
-    },
-    {
-      label: 'Revenue',
-      value: 'UGX 12M',
-      icon: 'dollar-sign',
-      color: 'text-amber-600',
-      bgColor: 'bg-amber-50'
+      sub: '32 in transit',
+      icon: 'pi-truck',
+      iconClass: 'icon-orange',
     },
     {
       label: 'Fleet Utilization',
       value: '82%',
-      icon: 'activity',
-      color: 'text-indigo-600',
-      bgColor: 'bg-indigo-50'
+      sub: '18 of 22 vehicles',
+      icon: 'pi-gauge',
+      iconClass: 'icon-purple',
     },
-    {
-      label: 'Active Clients',
-      value: '430',
-      icon: 'users',
-      color: 'text-pink-600',
-      bgColor: 'bg-pink-50'
-    }
   ];
 
-  recentActivity: Activity[] = [
+  /** Recent trips table */
+  recentTrips: Trip[] = [
     {
-      type: 'Bus Booking',
-      id: '#B-12345',
+      date: 'Today',
+      route: 'Kampala → Mbarara',
+      type: 'Express Bus',
+      typeIcon: 'pi-car',
       status: 'Confirmed',
-      client: 'John Doe',
-      date: '2024-05-20',
-      statusColor: 'bg-green-100 text-green-800',
-      icon: 'bus'
+      statusClass: 'status-green',
+      amount: 'UGX 85,000',
     },
     {
-      type: 'Parcel Delivery',
-      id: '#P-67890',
+      date: 'Today',
+      route: 'Jinja → Kampala',
+      type: 'Parcel',
+      typeIcon: 'pi-box',
       status: 'In Transit',
-      client: 'Jane Smith',
-      date: '2024-05-19',
-      statusColor: 'bg-yellow-100 text-yellow-800',
-      icon: 'package'
+      statusClass: 'status-amber',
+      amount: 'UGX 32,000',
     },
     {
-      type: 'Freight Consignment',
-      id: '#C-54321',
+      date: '25 Feb',
+      route: 'Kampala → Gulu',
+      type: 'Express Bus',
+      typeIcon: 'pi-car',
       status: 'Delivered',
-      client: 'Bob Johnson',
-      date: '2024-05-18',
-      statusColor: 'bg-blue-100 text-blue-800',
-      icon: 'truck'
+      statusClass: 'status-blue',
+      amount: 'UGX 150,000',
     },
     {
-      type: 'Bus Booking',
-      id: '#B-98765',
+      date: '25 Feb',
+      route: 'Entebbe → Kampala',
+      type: 'Freight',
+      typeIcon: 'pi-truck',
+      status: 'Confirmed',
+      statusClass: 'status-green',
+      amount: 'UGX 220,000',
+    },
+    {
+      date: '24 Feb',
+      route: 'Kampala → Fort Portal',
+      type: 'Express Bus',
+      typeIcon: 'pi-car',
       status: 'Pending',
-      client: 'Alice Brown',
-      date: '2024-05-17',
-      statusColor: 'bg-gray-100 text-gray-800',
-      icon: 'bus'
-    }
+      statusClass: 'status-gray',
+      amount: 'UGX 90,000',
+    },
+    {
+      date: '24 Feb',
+      route: 'Masaka → Kampala',
+      type: 'Parcel',
+      typeIcon: 'pi-box',
+      status: 'Delivered',
+      statusClass: 'status-blue',
+      amount: 'UGX 28,000',
+    },
   ];
 
-  notifications: Notification[] = [
-    {
-      id: 1,
-      type: 'success',
-      title: 'Booking Confirmed',
-      message: 'Bus booking #B-12345 has been confirmed',
-      time: '5 min ago',
-      color: 'text-green-500'
-    },
-    {
-      id: 2,
-      type: 'warning',
-      title: 'Delivery Delay',
-      message: 'Parcel #P-67890 may experience delays due to weather',
-      time: '15 min ago',
-      color: 'text-amber-500'
-    },
-    {
-      id: 3,
-      type: 'info',
-      title: 'New Parcel Received',
-      message: 'Parcel #P-11223 has arrived at Kampala warehouse',
-      time: '1 hour ago',
-      color: 'text-blue-500'
-    },
-    {
-      id: 4,
-      type: 'success',
-      title: 'Payment Received',
-      message: 'Payment of UGX 450,000 received for booking #B-98765',
-      time: '2 hours ago',
-      color: 'text-green-500'
-    },
-    {
-      id: 5,
-      type: 'info',
-      title: 'Route Update',
-      message: 'Route Kampala-Mbarara has been updated with new stops',
-      time: '3 hours ago',
-      color: 'text-purple-500'
-    }
-  ];
+  /** Donut chart */
+  chartData: any;
+  chartOptions: any;
 
-  expenses: Expense[] = [
-    {
-      id: 1,
-      category: "Fuel",
-      description: "Diesel for UAH 234X - Kampala route",
-      amount: 450000,
-      date: "2024-10-13",
-      vehicle: "UAH 234X",
-      type: 'fuel'
-    },
-    {
-      id: 2,
-      category: "Maintenance",
-      description: "Oil change and brake service",
-      amount: 280000,
-      date: "2024-10-12",
-      vehicle: "UAG 567Y",
-      type: 'maintenance'
-    },
-    {
-      id: 3,
-      category: "Driver Salary",
-      description: "Weekly payment - 5 drivers",
-      amount: 1500000,
-      date: "2024-10-11",
-      type: 'salary'
-    },
-    {
-      id: 4,
-      category: "Insurance",
-      description: "Monthly premium - Fleet coverage",
-      amount: 800000,
-      date: "2024-10-10",
-      type: 'insurance'
-    },
-    {
-      id: 5,
-      category: "Fuel",
-      description: "Petrol for UAB 890Z - Jinja route",
-      amount: 320000,
-      date: "2024-10-13",
-      vehicle: "UAB 890Z",
-      type: 'fuel'
-    }
-  ];
-
-  getExpenseIcon(type: string): string {
-    const icons: {[key: string]: string} = {
-      'fuel': 'fuel',
-      'maintenance': 'wrench',
-      'salary': 'user',
-      'insurance': 'shield',
-      'other': 'receipt'
-    };
-    return icons[type] || 'receipt';
-  }
-
-  getExpenseColor(type: string): string {
-    const colors: {[key: string]: string} = {
-      'fuel': 'text-orange-500',
-      'maintenance': 'text-blue-500',
-      'salary': 'text-green-500',
-      'insurance': 'text-purple-500',
-      'other': 'text-gray-500'
-    };
-    return colors[type] || 'text-gray-500';
-  }
-
-  formatCurrency(amount: number): string {
-    return `UGX ${amount.toLocaleString()}`;
-  }
-
-  basicData: any;
-
-  basicOptions: any;
   initChart() {
-      const documentStyle = getComputedStyle(document.documentElement);
-      const textColor = documentStyle.getPropertyValue('--p-text-color');
-      const textColorSecondary = documentStyle.getPropertyValue('--p-text-muted-color');
-      const surfaceBorder = documentStyle.getPropertyValue('--p-content-border-color');
+    this.chartData = {
+      labels: ['Fuel', 'Maintenance', 'Salary', 'Insurance', 'Other'],
+      datasets: [
+        {
+          data: [4500000, 2800000, 1500000, 800000, 600000],
+          backgroundColor: [
+            '#f97316', // fuel — orange
+            '#3b82f6', // maintenance — blue
+            '#16a34a', // salary — green
+            '#8b5cf6', // insurance — purple
+            '#94a3b8', // other — slate
+          ],
+          borderWidth: 0,
+          hoverOffset: 6,
+        },
+      ],
+    };
 
-      this.basicData = {
-        labels: ['Q1', 'Q2', 'Q3', 'Q4'],
-        datasets: [
-          {
-            label: 'Sales',
-            data: [540, 325, 702, 620],
-            backgroundColor: [
-              'rgba(249, 115, 22, 0.2)',
-              'rgba(6, 182, 212, 0.2)',
-              'rgb(107, 114, 128, 0.2)',
-              'rgba(139, 92, 246, 0.2)',
-            ],
-            borderColor: ['rgb(249, 115, 22)', 'rgb(6, 182, 212)', 'rgb(107, 114, 128)', 'rgb(139, 92, 246)'],
-            borderWidth: 1,
-          },
-        ],
-      };
-
-      this.basicOptions = {
-        plugins: {
-          legend: {
-            labels: {
-              color: textColor,
+    this.chartOptions = {
+      cutout: '70%',
+      plugins: {
+        legend: {
+          display: false,
+        },
+        tooltip: {
+          callbacks: {
+            label: (ctx: any) => {
+              const val: number = ctx.raw;
+              return ` UGX ${val.toLocaleString()}`;
             },
           },
         },
-        scales: {
-          x: {
-            ticks: {
-              color: textColorSecondary,
-            },
-            grid: {
-              color: surfaceBorder,
-            },
-          },
-          y: {
-            beginAtZero: true,
-            ticks: {
-              color: textColorSecondary,
-            },
-            grid: {
-              color: surfaceBorder,
-            },
-          },
-        },
-      };
-    }
+      },
+    };
+  }
+
+  expenseCategories = [
+    { label: 'Fuel', color: '#f97316' },
+    { label: 'Maintenance', color: '#3b82f6' },
+    { label: 'Salary', color: '#16a34a' },
+    { label: 'Insurance', color: '#8b5cf6' },
+    { label: 'Other', color: '#94a3b8' },
+  ];
 }

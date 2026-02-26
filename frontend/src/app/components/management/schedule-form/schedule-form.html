@@ -16,43 +16,29 @@
       <!-- Route -->
       <div class="flex flex-col gap-2">
         <label for="route" class="text-sm font-semibold text-gray-700 dark:text-gray-300">Route</label>
-        <p-select id="route" [options]="routes" [(ngModel)]="trip.route_id" placeholder="Select Route" class="w-full"
-          [filter]="true"></p-select>
-      </div>
-
-      <!-- Vehicle -->
-      <div class="flex flex-col gap-2">
-        <label for="vehicle" class="text-sm font-semibold text-gray-700 dark:text-gray-300">Vehicle</label>
-        <p-select id="vehicle" [options]="vehicles" [(ngModel)]="trip.bus_id" placeholder="Select Vehicle"
+        <p-select id="route" [options]="routes" [(ngModel)]="schedule.route_id" placeholder="Select Route"
           class="w-full" [filter]="true"></p-select>
       </div>
 
-      <!-- Driver -->
+      <!-- Days of Week -->
       <div class="flex flex-col gap-2">
-        <label for="driver" class="text-sm font-semibold text-gray-700 dark:text-gray-300">Driver</label>
-        <p-select id="driver" [options]="drivers" [(ngModel)]="trip.driver_id" placeholder="Select Driver (Optional)"
-          class="w-full" [filter]="true" [showClear]="true"></p-select>
-      </div>
-
-      <!-- Date -->
-      <div class="flex flex-col gap-2">
-        <label for="date" class="text-sm font-semibold text-gray-700 dark:text-gray-300">Trip Date</label>
-        <p-datepicker id="date" [(ngModel)]="trip.trip_date" dateFormat="yy-mm-dd" placeholder="Select Date"
-          [style]="{'width':'100%'}" class="w-full"></p-datepicker>
+        <label for="days" class="text-sm font-semibold text-gray-700 dark:text-gray-300">Recurring Days</label>
+        <p-multiselect id="days" [options]="daysOptions" [(ngModel)]="schedule.days_of_week" placeholder="Select Days"
+          class="w-full" display="chip"></p-multiselect>
       </div>
 
       <!-- Set Off Time -->
       <div class="flex flex-col gap-2">
         <label for="set_off_time" class="text-sm font-semibold text-gray-700 dark:text-gray-300">Set Off Time</label>
-        <p-datepicker id="set_off_time" [(ngModel)]="trip.set_off_time" [timeOnly]="true" hourFormat="24"
+        <p-datepicker id="set_off_time" [(ngModel)]="schedule.set_off_time" [timeOnly]="true" hourFormat="24"
           placeholder="Select Set Off Time" [style]="{'width':'100%'}" class="w-full"></p-datepicker>
       </div>
 
-      <!-- Estimated Arrival Time -->
+      <!-- Expected Arrival Time -->
       <div class="flex flex-col gap-2">
-        <label for="arrival_time" class="text-sm font-semibold text-gray-700 dark:text-gray-300">Estimated Arrival
+        <label for="arrival_time" class="text-sm font-semibold text-gray-700 dark:text-gray-300">Expected Arrival
           Time</label>
-        <p-datepicker id="arrival_time" [(ngModel)]="trip.estimated_arrival_time" [timeOnly]="true" hourFormat="24"
+        <p-datepicker id="arrival_time" [(ngModel)]="schedule.expected_arrival_time" [timeOnly]="true" hourFormat="24"
           placeholder="Select Arrival Time" [style]="{'width':'100%'}" class="w-full"></p-datepicker>
       </div>
     </div>
@@ -60,8 +46,8 @@
     <div class="flex justify-end gap-3 mt-8 pt-6 border-t border-gray-100 dark:border-gray-700">
       <p-button label="Cancel" severity="secondary" [text]="true" (onClick)="cancel()"></p-button>
       <p-button [label]="isEditMode ? 'Update Schedule' : 'Create Schedule'"
-        [icon]="isEditMode ? 'pi pi-check' : 'pi pi-plus'" (onClick)="saveTrip()"
-        [disabled]="!trip.route_id || !trip.bus_id || !trip.trip_date"></p-button>
+        [icon]="isEditMode ? 'pi pi-check' : 'pi pi-plus'" (onClick)="saveSchedule()"
+        [disabled]="!schedule.route_id || !schedule.days_of_week || schedule.days_of_week.length === 0"></p-button>
     </div>
   </div>
 </div>

@@ -279,6 +279,10 @@ public abstract class LocalUtilsService {
         );
     }
 
+    public String getUserPartnerCode() {
+        return authenticatedUser().getPartnerCode();
+    }
+
     public String generateRandomString(Long length) {
         String string = UUID.randomUUID().toString().replaceAll("_", "").toUpperCase();
         if (length == null || length < 1) {

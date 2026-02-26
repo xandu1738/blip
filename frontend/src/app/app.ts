@@ -55,11 +55,17 @@ interface MenuItem {
   styleUrl: './app.css'
 })
 export class App extends BaseComponent implements OnInit {
-  isLoggedIn: boolean = false; // Add login state
-  isLicensed: boolean = false; // Add license state
+  isLoggedIn: boolean = false;
+  isLicensed: boolean = false;
   items: MenuItem[] = [];
   notifications: Notification[] = [];
   unreadCount: number = 0;
+
+  /** Sidebar open state (mobile) */
+  sidebarOpen: boolean = false;
+
+  /** Dark / Light theme */
+  isDarkMode: boolean = false;
 
   // constructor(
   //   protected commonService: CommonService,
@@ -121,8 +127,33 @@ export class App extends BaseComponent implements OnInit {
     this.notificationService.getNotifications().subscribe(n => this.notifications = n);
     this.notificationService.getUnreadCount().subscribe(c => this.unreadCount = c);
 
-    console.log(this.user?.permissions);
-    console.log(this.user?.permissions?.includes('MANAGE_USERS'));
+    // Restore theme preference
+    const savedTheme = localStorage.getItem('blip_theme');
+    this.isDarkMode = savedTheme === 'dark';
+    this.applyTheme();
+  }
+
+  toggleTheme() {
+    this.isDarkMode = !this.isDarkMode;
+    localStorage.setItem('blip_theme', this.isDarkMode ? 'dark' : 'light');
+    this.applyTheme();
+  }
+
+  private applyTheme() {
+    if (this.isDarkMode) {
+      document.documentElement.classList.add('dark-mode');
+    } else {
+      document.documentElement.classList.remove('dark-mode');
+    }
+  }
+
+  toggleSidebar() {
+    this.sidebarOpen = !this.sidebarOpen;
+  }
+
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/']);
   }
 
   configurePanelMenu() {
@@ -321,7 +352,6 @@ export class App extends BaseComponent implements OnInit {
       });
     }
 
-
     if (this.user?.permissions?.includes('MANAGE_TICKETS')) {
       management.items.push({
         label: 'Bus Booking',
@@ -329,6 +359,17 @@ export class App extends BaseComponent implements OnInit {
         value: 1,
         command: () => {
           this.router.navigate(['//dashboard'])
+        }
+      });
+    }
+
+    if (this.user?.permissions?.includes('MANAGE_SCHEDULES')) {
+      management.items.push({
+        label: 'Trips',
+        icon: 'pi pi-play',
+        value: 10,
+        command: () => {
+          this.router.navigate(['/trips'])
         }
       });
     }
@@ -342,8 +383,6 @@ export class App extends BaseComponent implements OnInit {
           this.router.navigate(['/manage-subscriptions'])
         }
       })
-
-      return management;
     }
     return management;
   }

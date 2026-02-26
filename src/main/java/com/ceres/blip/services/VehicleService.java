@@ -38,7 +38,7 @@ public class VehicleService extends LocalUtilsService {
     private final NotificationService notificationService;
 
     // Add a new vehicle for partner
-//    @CacheEvict(value = "vehicles", allEntries = true)
+    @CacheEvict(value = "vehicles", allEntries = true)
     public OperationReturnObject addNewVehicle(JsonNode object) {
         try {
             SystemUserModel authenticatedUser = authenticatedUser();
@@ -142,7 +142,7 @@ public class VehicleService extends LocalUtilsService {
     }
 
     // Edit Vehicle information
-//    @CacheEvict(value = {"vehicles", "vehicle"}, allEntries = true)
+    @CacheEvict(value = {"vehicles", "vehicle"}, allEntries = true)
     public OperationReturnObject editVehicleInformation(JsonNode object) {
         try {
             SystemUserModel authenticatedUser = authenticatedUser();
@@ -199,6 +199,7 @@ public class VehicleService extends LocalUtilsService {
     }
 
     // Assign Vehicle to partner
+    @CacheEvict(value = {"vehicles", "vehicle"}, allEntries = true)
     public OperationReturnObject assignVehicleToPartner(String partnerCode, Long vehicleId) {
         try {
             authenticatedUser();
@@ -216,7 +217,7 @@ public class VehicleService extends LocalUtilsService {
         }
     }
 
-//    @Cacheable(value = "vehicles", key = "#pageNumber + '-' + #pageSize")
+    @Cacheable(value = "vehicles", key = "#root.target.authenticatedUser().getPartnerCode() + '-' + #pageNumber + '-' + #pageSize")
     public OperationReturnObject vehiclesList(int pageNumber, int pageSize) throws AuthorizationRequiredException {
         requiresAuth();
         SystemUserModel authenticatedUser = authenticatedUser();
@@ -235,7 +236,7 @@ public class VehicleService extends LocalUtilsService {
         return new OperationReturnObject(200, "Vehicles list successfully fetched.", dto);
     }
 
-//    @Cacheable(value = "vehicle", key = "#vehicleId")
+    @Cacheable(value = "vehicle", key = "#root.target.authenticatedUser().getPartnerCode() + '-' + #vehicleId")
     public OperationReturnObject fetchVehicleDetails(Long vehicleId) throws AuthorizationRequiredException {
         requiresAuth();
         VehicleModel vehicleModel = vehicleRepository.findById(vehicleId)
