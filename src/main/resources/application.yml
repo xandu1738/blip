@@ -49,12 +49,12 @@ spring:
   profiles:
     active: dev
 
-  cloud:
-    gcp:
-      credentials:
-        location: ${gcpCredentialsFile}
-      config:
-        project-id: ${gcpProjectId}
+#  cloud:
+#    gcp:
+#      credentials:
+#        location: ${gcpCredentialsFile}
+#      config:
+#        project-id: ${gcpProjectId}
   data:
     redis:
       host: ${SPRING_REDIS_HOST:localhost}

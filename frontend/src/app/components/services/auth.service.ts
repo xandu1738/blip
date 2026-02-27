@@ -17,9 +17,9 @@ import { MessageService } from 'primeng/api';
   providedIn: 'root'
 })
 export class AuthService {
-  private _isLoggedIn = new BehaviorSubject<boolean>(false);
-  private _license = new BehaviorSubject<string>('EXPIRED');
-  private _currentUser = new BehaviorSubject<User | null>(null);
+  public _isLoggedIn = new BehaviorSubject<boolean>(false);
+  public _license = new BehaviorSubject<string>('ACTIVE');
+  public _currentUser = new BehaviorSubject<User | null>(null);
 
   isLoggedIn = this._isLoggedIn.asObservable();
   licensed = this._license.asObservable();
@@ -30,7 +30,7 @@ export class AuthService {
   private readonly REFRESH_TOKEN_KEY = 'blip_refresh_token';
   private readonly USER_KEY = 'blip_user';
 
-  constructor(private http: HttpClient, private messageService: MessageService) {
+  constructor(protected http: HttpClient, protected messageService: MessageService) {
     // Initialize with a demo user for testing
     // this.initializeDemoMode();
     this._isLoggedIn.next(this.hasValidToken());
@@ -52,14 +52,15 @@ export class AuthService {
           if (!returnObject) return;
 
           this.setTokens(returnObject?.accessToken, returnObject?.refreshToken);
-          let user = returnObject?.user;
-          user.permissions = returnObject?.permissions;
 
-          this.setUser(user);
+          const user = returnObject?.user;
+          if (user) {
+            user.permissions = returnObject?.permissions;
+            this.setUser(user);
+          }
 
-          this._license.next(returnObject?.licensed || 'EXPIRED')
+          this._license.next(returnObject?.license);
           this._isLoggedIn.next(true);
-          this._currentUser.next(returnObject?.user);
         }),
         catchError(this.handleError)
       );
@@ -145,18 +146,28 @@ export class AuthService {
     return this._currentUser.value;
   }
 
-  private setTokens(accessToken: string, refreshToken: string): void {
+  public setTokens(accessToken: string, refreshToken: string): void {
     localStorage.setItem(this.TOKEN_KEY, accessToken);
     localStorage.setItem(this.REFRESH_TOKEN_KEY, refreshToken);
   }
 
-  private setUser(user: User): void {
+  public setUser(user: User): void {
+    console.log('AuthService: Setting user:', user);
     localStorage.setItem(this.USER_KEY, JSON.stringify(user));
+
+    this._currentUser.next(user);
   }
 
   private getUserFromStorage(): User | null {
     const userStr = localStorage.getItem(this.USER_KEY);
     return userStr ? JSON.parse(userStr) : null;
+  }
+
+  public assignCurrentUser() {
+    const user = this.getUserFromStorage();
+    if (user) {
+      this._currentUser.next(user);
+    }
   }
 
   private hasValidToken(): boolean {
@@ -185,7 +196,7 @@ export class AuthService {
       errorMessage = error.error.message;
     } else {
       // Server-side error
-      if (error.error && error.error.message) {
+      if (error.error?.message) {
         errorMessage = error.error.message;
       } else if (error.status === 0) {
         errorMessage = 'Unable to connect to server. Please check your connection.';
@@ -204,12 +215,11 @@ export class AuthService {
         summary: 'Error',
         detail: response?.returnMessage || 'Invalid Credentials'
       });
-      return;
     }
   }
 
   hasPermission(permission: string): boolean {
     const user = this._currentUser.value;
-    return !!(user && user.permissions && user.permissions.includes(permission));
+    return !!(user?.permissions?.includes(permission));
   }
 }

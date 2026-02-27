@@ -152,7 +152,6 @@ body {
 }
 
 .p-paginator {
-  background: var(--background) !important;
   color: var(--text) !important;
 }
 
@@ -177,7 +176,6 @@ body {
 }
 
 .p-accordioncontent-content {
-  background-color: var(--background) !important;
   color: var(--text) !important;
 }
 
@@ -196,7 +194,6 @@ body {
 
 .p-datatable .p-datatable-thead>tr>th {
   background-color: var(--card);
-  color: var(--text);
   border-bottom: 1px solid var(--border);
   font-weight: 600;
   font-size: 0.75rem;

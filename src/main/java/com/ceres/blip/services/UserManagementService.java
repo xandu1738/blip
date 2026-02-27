@@ -85,6 +85,7 @@ public class UserManagementService extends LocalUtilsService {
         response.put(ACCESS_TOKEN, accessToken); // this is the jwt token the user can user from now on.
         response.put(REFRESH_TOKEN, refreshToken); // this is the jwt token the user can user from now on.
         response.put("user", profile);
+        response.put("license", "ACTIVE"); // fixme: this is just a placeholder. You can implement actual license checking logic here.
         response.put("permissions", permission);
         return new OperationReturnObject(200, "Welcome back " + userDetails.getUsername(), response);
     }

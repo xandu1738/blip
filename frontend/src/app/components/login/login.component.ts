@@ -50,27 +50,30 @@ export class LoginComponent extends BaseComponent implements OnInit {
 
     this.loaderService.display(true);
 
-    this.authService.login(this.username, this.password).subscribe({
-      next: (response) => {
-        console.log(response);
-        if (!response) return;
-        if (response?.user?.partnerCode && response?.license !== 'ACTIVE') {
-          this.router.navigate(['/subscriptions'])
+    this.authService.login(this.username, this.password)
+      .subscribe({
+        next: (response) => {
+          if (!response) return;
+
+          this.user = response?.user;
+          console.log("Login 59 ", this.user,response.license);
+
+          if (response?.user?.partnerCode && response?.license !== 'ACTIVE') {
+            this.router.navigate(['/subscriptions'])
+              .catch(err => console.error('Login redirect error:', err));
+            return;
+          }
+          this.router.navigate(['/dashboard'])
             .catch(err => console.error('Login redirect error:', err));
-          return;
+        },
+        error: (error) => {
+          this.showError(error.message || 'Login failed. Please check your credentials.');
+          console.error('Login error:', error);
+        },
+        complete: () => {
+          this.isLoading = false;
+          this.loaderService.display(false);
         }
-        this.router.navigate(['/dashboard'])
-          .catch(err => console.error('Login redirect error:', err));
-      },
-      error: (error) => {
-        console.log("error found")
-        this.showError(error.message || 'Login failed. Please check your credentials.');
-        console.error('Login error:', error);
-      },
-      complete: () => {
-        this.isLoading = false;
-        this.loaderService.display(false);
-      }
-    });
+      });
   }
 }

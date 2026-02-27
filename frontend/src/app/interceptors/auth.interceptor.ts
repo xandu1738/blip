@@ -8,14 +8,14 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, ne
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  // Skip interceptor for login and create-user endpoints
-  if (req.url.includes('/login') || req.url.includes('/create-user')) {
+  // Skip interceptor for login
+  if (req.url.includes('/login')) {
     return next(req);
   }
 
   const token = authService.getAccessToken();
 
-  // Add token to request if available
+  // Add the access token to the request if available
   let authReq = req;
   if (token) {
     // For demo tokens, just add basic headers without Authorization
