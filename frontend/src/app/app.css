@@ -412,7 +412,7 @@
 }
 
 .nav-child {
-  padding-left: 30px;
+  padding-left: 15px;
 }
 
 /* Accordion overrides */
@@ -422,12 +422,12 @@
   font-weight: 500 !important;
   color: var(--text-muted) !important;
   border-radius: 8px !important;
-  background: transparent !important;
+  /*background: transparent !important;*/
 }
 
 ::ng-deep .p-accordioncontent-content {
   padding: 4px 0 0 !important;
-  background: transparent !important;
+  /*background: transparent !important;*/
 }
 
 ::ng-deep .p-accordion {

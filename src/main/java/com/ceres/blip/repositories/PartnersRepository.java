@@ -1,7 +1,6 @@
 package com.ceres.blip.repositories;
 
 import com.ceres.blip.models.database.PartnerModel;
-import jakarta.mail.Part;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

@@ -13,6 +13,7 @@ import {AuthService} from './auth.service';
 export abstract class BaseComponent implements OnInit {
   ngOnInit() {
     this.user = this.authService.getCurrentUser();
+    console.log("Base Component init ",this.user);
   }
 
   constructor(
