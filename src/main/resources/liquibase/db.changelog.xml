@@ -18,6 +18,5 @@
     <include file="/changes/drivers_init.sql" relativeToChangelogFile="true"/>
     <include file="/changes/add_trip_times.sql" relativeToChangelogFile="true"/>
     <include file="/changes/vehicle_category.sql" relativeToChangelogFile="true"/>
-    <include file="/changes/file_management.sql" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>
