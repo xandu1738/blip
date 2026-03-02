@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Accordion, AccordionContent, AccordionHeader, AccordionPanel} from 'primeng/accordion';
 import {AutoComplete} from 'primeng/autocomplete';
 import {Button} from 'primeng/button';
@@ -8,11 +8,18 @@ import {FloatLabel} from 'primeng/floatlabel';
 import {FormsModule} from '@angular/forms';
 import {InputText} from 'primeng/inputtext';
 import {NgOptimizedImage} from '@angular/common';
-import {PrimeTemplate} from 'primeng/api';
+import {ConfirmationService, MessageService, PrimeTemplate} from 'primeng/api';
 import {TableModule} from 'primeng/table';
 import {Tooltip} from 'primeng/tooltip';
 import {ButtonModule} from 'primeng/button';
 import {DialogModule} from 'primeng/dialog';
+import {Amenity} from '../../models/amenity.model';
+import {BaseComponent} from '../../services/base-component';
+import {ManagementService} from '../../services/management.service';
+import {LoaderService} from '../../services/loader.service';
+import {DialogService} from 'primeng/dynamicdialog';
+import {AuthService} from '../../services/auth.service';
+import {RemoteService} from '../../services/remoteService';
 
 @Component({
   selector: 'app-districts',
@@ -38,16 +45,30 @@ import {DialogModule} from 'primeng/dialog';
   templateUrl: './districts.html',
   styleUrl: './districts.css',
 })
-export class Districts {
-  protected userData: any = {};
-  protected filteredPartners: any[] = [];
-  protected filteredPackages: any[] = [];
+export class Districts extends BaseComponent implements OnInit{
+  userData: any = {};
+  filteredPartners: any[] = [];
+  filteredPackages: any[] = [];
+  amenities: Amenity[] = [];
   protected partnerDetails: any = {
     district_name: '',
     active: false,
   };
 
   search: any = { pageNumber: 0, pageSize: 15, totalRecords: 0 };
+
+
+  constructor(
+    protected managementService: ManagementService,
+    loaderService: LoaderService,
+    dialogService: DialogService,
+    confirmationService: ConfirmationService,
+    messageService: MessageService,
+    authService: AuthService,
+    helper: RemoteService
+  ) {
+    super(authService, helper, loaderService, dialogService, confirmationService, messageService);
+  }
 
   loadLazy(event: any): void {
     if (event) {
@@ -69,6 +90,17 @@ export class Districts {
 
   addPartner(): void {
     this.showAddDialog = true;
+  }
+
+
+  loadAmenities() {
+    this.managementService.fetchDistricts().subscribe({
+      next: (res) => {
+        if (res.returnObject) {
+          this.districts = res.returnObject;
+        }
+      }
+    });
   }
 
 
