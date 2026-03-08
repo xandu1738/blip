@@ -7,24 +7,61 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: '@Test1234'
     ports:
-      - "5434:5432"   # Host 5434 -> Container 5432
+      - "5434:5432" # Host 5434 -> Container 5432
     volumes:
       - blip-data:/var/lib/postgresql/data
 
   redis:
     image: redis:7
     container_name: blip-redis
-#    command: redis-server --requirepass '@Crypto1234'
+    #    command: redis-server --requirepass '@Crypto1234'
     ports:
-      - "6379:6379"   # Host 6379 -> Container 6379
+      - "6379:6379" # Host 6379 -> Container 6379
     volumes:
-        - redis-data:/data
+      - redis-data:/data
 
-  zipkin:
-    image: openzipkin/zipkin:2.23.0
-    container_name: blip-zipkin
+  # OpenTelemetry Collector
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.96.0
+    command: [ "--config=/etc/otel-collector-config.yaml" ]
+    volumes:
+      - ./src/main/resources/otel/otel-collector-config.yaml:/etc/otel-collector-config.yaml
     ports:
-      - "9411:9411"  # Host 9411 -> Container 9411
+      - "4317:4317" # OTLP gRPC receiver
+      - "4318:4318" # OTLP HTTP receiver
+    depends_on:
+      - tempo
+      - mimir
+
+  # Tracing backend
+  tempo:
+    image: grafana/tempo:latest
+    command: [ "-config.file=/etc/tempo.yaml" ]
+    volumes:
+      - ./src/main/resources/otel/tempo.yaml:/etc/tempo.yaml
+    ports:
+      - "3200:3200" # tempo
+
+  # Metrics backend
+  mimir:
+    image: grafana/mimir:latest
+    command: [ "-config.file=/etc/mimir.yaml" ]
+    volumes:
+      - ./src/main/resources/otel/mimir.yaml:/etc/mimir.yaml
+    ports:
+      - "9009:9009"
+
+  # Visualization
+  grafana:
+    image: grafana/grafana:latest
+    environment:
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: Admin
+      GF_AUTH_DISABLE_LOGIN_FORM: "true"
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./src/main/resources/otel/grafana-datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml
 
   app:
     build:
@@ -45,7 +82,7 @@ services:
     depends_on:
       - db
       - redis
-      - zipkin
+      - otel-collector
 
 volumes:
   blip-data:
