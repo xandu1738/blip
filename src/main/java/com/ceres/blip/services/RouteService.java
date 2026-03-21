@@ -1,5 +1,6 @@
 package com.ceres.blip.services;
 
+import com.ceres.blip.annotations.base.RequiresAuthentication;
 import com.ceres.blip.models.database.PartnerModel;
 import com.ceres.blip.models.database.RouteModel;
 import com.ceres.blip.models.database.SystemUserModel;
@@ -95,10 +96,10 @@ public class RouteService extends LocalUtilsService {
     }
 
     //Edit route details
+    @RequiresAuthentication
     @CachePut(value = "routes", key = "#object.data.id")
     public OperationReturnObject editRouteDetails(JsonNode object) {
         try {
-            requiresAuth();
             requires(object, DATA);
             JsonNode data = getRequestData(object);
             requires(data, ROUTE_ID);
@@ -177,9 +178,9 @@ public class RouteService extends LocalUtilsService {
         }
     }
 
+    @RequiresAuthentication
     public OperationReturnObject filterRoutes(String query) {
         try {
-            requiresAuth();
             List<RouteModel> routes = routeRepository.findAllByOriginContainingIgnoreCaseOrDestinationContainingIgnoreCase(
                     query,
                     query,

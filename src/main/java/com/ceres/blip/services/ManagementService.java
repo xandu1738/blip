@@ -1,7 +1,7 @@
 package com.ceres.blip.services;
 
+import com.ceres.blip.annotations.base.RequiresAuthentication;
 import com.ceres.blip.dtos.OperationReturnObject;
-import com.ceres.blip.exceptions.AuthorizationRequiredException;
 import com.ceres.blip.models.database.AmenityModel;
 import com.ceres.blip.models.database.SystemRoleModel;
 import com.ceres.blip.models.database.SystemUserModel;
@@ -93,9 +93,9 @@ public class ManagementService extends LocalUtilsService {
         return new OperationReturnObject(200, "Vehicle Categories fetched successfully", vehicleCategoryRepository.findAll());
     }
 
+    @RequiresAuthentication
     @CacheEvict(value = {"amenities"}, allEntries = true)
-    public OperationReturnObject addAmenity(JsonNode object) throws AuthorizationRequiredException {
-        requiresAuth();
+    public OperationReturnObject addAmenity(JsonNode object) {
         JsonNode data = getRequestData(object);
         requires(data, "name", "description");
 

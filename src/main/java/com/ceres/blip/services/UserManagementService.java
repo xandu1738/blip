@@ -1,5 +1,6 @@
 package com.ceres.blip.services;
 
+import com.ceres.blip.annotations.base.RequiresAuthentication;
 import com.ceres.blip.config.ApplicationConf;
 import com.ceres.blip.config.JwtUtility;
 import com.ceres.blip.dtos.*;
@@ -90,8 +91,8 @@ public class UserManagementService extends LocalUtilsService {
         return new OperationReturnObject(200, "Welcome back " + userDetails.getUsername(), response);
     }
 
+    @RequiresAuthentication
     public OperationReturnObject refreshToken(JsonNode request, HttpServletRequest httpServletRequest) throws AuthorizationRequiredException {
-        requiresAuth();
         requires(request, "data");
 
         try {
@@ -178,9 +179,9 @@ public class UserManagementService extends LocalUtilsService {
         return new OperationReturnObject(200, "User created successfully", null);
     }
 
+    @RequiresAuthentication
     @Cacheable(value = "users", key = "#pageNumber + '-' + #pageSize")
     public OperationReturnObject usersList(int pageNumber, int pageSize) throws AuthorizationRequiredException {
-        requiresAuth();
 
         Optional<Map<String, Object>> userCount = systemUserRepository.userCount();
 
@@ -198,9 +199,9 @@ public class UserManagementService extends LocalUtilsService {
         return new OperationReturnObject(200, "Users list successfully", listResponseDto);
     }
 
+    @RequiresAuthentication
     @Cacheable(value = "user", key = "#id")
     public OperationReturnObject usersProfile(Long id) throws AuthorizationRequiredException {
-        requiresAuth();
         if (id == null) {
             throw new IllegalStateException("Please specify user's ID");
         }

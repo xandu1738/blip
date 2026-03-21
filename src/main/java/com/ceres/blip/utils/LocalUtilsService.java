@@ -90,11 +90,11 @@ public abstract class LocalUtilsService {
     /**
      * This prevents a user from accessing a service if they are not logged in
      */
-    public void requiresAuth() throws AuthorizationRequiredException {
-        if (Boolean.FALSE.equals(isAuthenticated())) {
-            throw new AuthorizationRequiredException(AUTHENTICATION_REQUIRED);
-        }
-    }
+//    public void requiresAuth() throws AuthorizationRequiredException {
+//        if (Boolean.FALSE.equals(isAuthenticated())) {
+//            throw new AuthorizationRequiredException(AUTHENTICATION_REQUIRED);
+//        }
+//    }
 
     /**
      * Returns the currently logged-in user.
@@ -102,14 +102,24 @@ public abstract class LocalUtilsService {
      * @return SystemUserModel | UserDetails
      */
     public SystemUserModel authenticatedUser() {
-        if (Boolean.TRUE.equals(isAuthenticated())) {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            return userRepository.findByEmail(userDetails.getUsername()).orElseThrow(
-                    () -> new IllegalStateException("USER NOT FOUND")
-            );
+        if (Boolean.FALSE.equals(isAuthenticated())) {
+            throw new IllegalArgumentException(AUTHENTICATION_REQUIRED);
         }
-        throw new IllegalArgumentException(AUTHENTICATION_REQUIRED);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) {
+            throw new IllegalStateException(AUTHENTICATION_REQUIRED);
+        }
+
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+
+        if (userDetails == null) {
+            throw new IllegalStateException(AUTHENTICATION_REQUIRED);
+        }
+
+        return userRepository.findByEmail(userDetails.getUsername()).orElseThrow(
+                () -> new IllegalStateException("USER NOT FOUND")
+        );
     }
 
     /**
@@ -299,7 +309,6 @@ public abstract class LocalUtilsService {
                 () -> new IllegalStateException(String.format("Partner with code %s not found. Please contact admin to set up.", partnerCode))
         );
     }
-
 
 
     public ModuleModel getModule(String moduleCode) {

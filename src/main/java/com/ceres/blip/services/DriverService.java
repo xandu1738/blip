@@ -1,5 +1,6 @@
 package com.ceres.blip.services;
 
+import com.ceres.blip.annotations.base.RequiresAuthentication;
 import com.ceres.blip.dtos.ListResponseDto;
 import com.ceres.blip.dtos.OperationReturn;
 import com.ceres.blip.dtos.OperationReturnObject;
@@ -92,9 +93,9 @@ public class DriverService extends LocalUtilsService {
         }
     }
 
+    @RequiresAuthentication
 //    @Cacheable(value = "drivers", key = "#pageNumber + '-' + #pageSize")
     public OperationReturnObject listDrivers(int pageNumber, int pageSize) throws AuthorizationRequiredException {
-        requiresAuth();
         SystemUserModel authenticatedUser = authenticatedUser();
         List<DriverModel> drivers;
 
@@ -110,9 +111,9 @@ public class DriverService extends LocalUtilsService {
                 new ListResponseDto((long) drivers.size(), drivers));
     }
 
+    @RequiresAuthentication
 //    @Cacheable(value = "driver", key = "#driverId")
     public OperationReturnObject fetchDriverDetails(Long driverId) throws AuthorizationRequiredException {
-        requiresAuth();
         DriverModel driver = driverRepository.findById(driverId)
                 .orElseThrow(() -> new IllegalArgumentException("Driver not found"));
         return new OperationReturnObject(200, "Driver details successfully fetched", driver);

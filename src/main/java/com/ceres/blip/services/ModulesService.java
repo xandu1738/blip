@@ -1,5 +1,6 @@
 package com.ceres.blip.services;
 
+import com.ceres.blip.annotations.base.RequiresAuthentication;
 import com.ceres.blip.exceptions.AuthorizationRequiredException;
 import com.ceres.blip.models.database.ModuleModel;
 import com.ceres.blip.models.database.PartnerModel;
@@ -58,9 +59,9 @@ public class ModulesService extends LocalUtilsService{
         return new OperationReturnObject(200, "Module successfully added.", moduleModel);
     }
 
+    @RequiresAuthentication
     public OperationReturnObject editModule(JsonNode request) throws AuthorizationRequiredException {
         belongsTo(AppDomains.BACK_OFFICE);
-        requiresAuth();
         requires(request, "data");
         JsonNode data = getRequestData(request);
         requires(data, "code");
