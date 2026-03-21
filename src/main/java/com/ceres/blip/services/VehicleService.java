@@ -1,5 +1,6 @@
 package com.ceres.blip.services;
 
+import com.ceres.blip.annotations.base.RequiresAuthentication;
 import com.ceres.blip.dtos.ListResponseDto;
 import com.ceres.blip.exceptions.AuthorizationRequiredException;
 import com.ceres.blip.models.database.PartnerModel;
@@ -217,9 +218,9 @@ public class VehicleService extends LocalUtilsService {
         }
     }
 
+    @RequiresAuthentication
     @Cacheable(value = "vehicles", key = "#root.target.authenticatedUser().getPartnerCode() + '-' + #pageNumber + '-' + #pageSize")
     public OperationReturnObject vehiclesList(int pageNumber, int pageSize) throws AuthorizationRequiredException {
-        requiresAuth();
         SystemUserModel authenticatedUser = authenticatedUser();
         List<VehicleModel> vehicles = null;
 
@@ -236,9 +237,9 @@ public class VehicleService extends LocalUtilsService {
         return new OperationReturnObject(200, "Vehicles list successfully fetched.", dto);
     }
 
+    @RequiresAuthentication
     @Cacheable(value = "vehicle", key = "#root.target.authenticatedUser().getPartnerCode() + '-' + #vehicleId")
     public OperationReturnObject fetchVehicleDetails(Long vehicleId) throws AuthorizationRequiredException {
-        requiresAuth();
         VehicleModel vehicleModel = vehicleRepository.findById(vehicleId)
                 .orElseThrow(() -> new IllegalArgumentException("Vehicle not found"));
         return new OperationReturnObject(200, "Vehicle details successfully fetched.", vehicleModel);

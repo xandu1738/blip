@@ -1,5 +1,6 @@
 package com.ceres.blip.services;
 
+import com.ceres.blip.annotations.base.RequiresAuthentication;
 import com.ceres.blip.dtos.ListResponseDto;
 import com.ceres.blip.exceptions.AuthorizationRequiredException;
 import com.ceres.blip.models.database.PartnerModel;
@@ -166,10 +167,10 @@ public class PartnersService extends LocalUtilsService {
         return new OperationReturnObject(200, "Partner info successfully updated.", saved);
     }
 
+    @RequiresAuthentication
     @Cacheable(value = "partners", key = "#pageNumber + '-' + #pageSize")
     public OperationReturnObject fetchPartnersList(int pageNumber, int pageSize) throws AuthorizationRequiredException {
         belongsTo(AppDomains.BACK_OFFICE);
-        requiresAuth();
 
         List<PartnerModel> partners = partnersRepository.findAll(PageRequest.of(pageNumber, pageSize))
                 .toList();
@@ -184,10 +185,10 @@ public class PartnersService extends LocalUtilsService {
         return new OperationReturnObject(200, "Partners list successfully fetched.", listResponseDto);
     }
 
+    @RequiresAuthentication
     @CachePut(value = "partners", key = "#request.data.id")
     public OperationReturnObject updatePartnerStatus(JsonNode request) throws AuthorizationRequiredException {
         belongsTo(AppDomains.BACK_OFFICE);
-        requiresAuth();
         JsonNode data = getRequestData(request);
         requires(data, "id", ACTIVE.name());
 
@@ -204,9 +205,9 @@ public class PartnersService extends LocalUtilsService {
         return new OperationReturnObject(200, "Partner successfully " + status + ".", saved);
     }
 
+    @RequiresAuthentication
     @Cacheable(value = "partner", key = "#partnerCode")
     public OperationReturnObject partnerProfile(String partnerCode) throws AuthorizationRequiredException {
-        requiresAuth();
 
         if (StringUtils.isBlank(partnerCode)) {
             throw new IllegalArgumentException("Partner code cannot be empty");
