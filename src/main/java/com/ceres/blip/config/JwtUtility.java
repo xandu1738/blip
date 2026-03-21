@@ -6,7 +6,6 @@ import com.ceres.blip.repositories.SystemRoleRepository;
 import com.ceres.blip.repositories.SystemUserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,8 +17,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
-import java.security.Key;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
@@ -158,11 +157,11 @@ public class JwtUtility {
         claims.put(PERMISSIONS, permissions);
         return Jwts
                 .builder()
-                .setClaims(claims)
-                .setSubject(userDetails.getUsername())
-                .setIssuedAt(user.getLastLoggedInAt())
-                .setExpiration(new Date(now + JWT_TOKEN_VALIDITY * 1000))
-                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .claims(claims)
+                .subject(userDetails.getUsername())
+                .issuedAt(user.getLastLoggedInAt())
+                .expiration(new Date(now + JWT_TOKEN_VALIDITY * 1000))
+                .signWith(getSigningKey(), Jwts.SIG.HS256)
                 .compact();
     }
 
@@ -176,11 +175,11 @@ public class JwtUtility {
         claims.put(TOKEN_TYPE, "REFRESH");
         return Jwts
                 .builder()
-                .setClaims(claims)
-                .setSubject(userDetails.getUsername())
-                .setIssuedAt(user.getLastLoggedInAt())
-                .setExpiration(new Date(now + JWT_TOKEN_VALIDITY * 1000))
-                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .claims(claims)
+                .subject(userDetails.getUsername())
+                .issuedAt(user.getLastLoggedInAt())
+                .expiration(new Date(now + JWT_TOKEN_VALIDITY * 1000))
+                .signWith(getSigningKey(), Jwts.SIG.HS256)
                 .compact();
     }
 
@@ -191,14 +190,14 @@ public class JwtUtility {
 
     private Claims extractAllClaims(String token) {
         return Jwts
-                .parserBuilder()
-                .setSigningKey(getSigningKey())
+                .parser()
+                .verifyWith(getSigningKey())
                 .build()
-                .parseClaimsJws(token)
-                .getBody();
+                .parseSignedClaims(token)
+                .getPayload();
     }
 
-    private Key getSigningKey() {
+    private SecretKey getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secret);
         return Keys.hmacShaKeyFor(keyBytes);
     }
