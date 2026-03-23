@@ -2,7 +2,6 @@ package com.ceres.blip.api;
 
 import com.ceres.blip.dtos.*;
 import com.ceres.blip.models.database.LicenseKeyModel;
-import com.ceres.blip.repositories.LicenseKeyRepository;
 import com.ceres.blip.services.LicenseGenerationService;
 import com.ceres.blip.services.LicenseValidationService;
 import com.ceres.blip.utils.LicenseActivationResult;
@@ -15,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,7 +22,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Tag(name = "License", description = "License Management API")
 public class LicenseController {
-    private final LicenseKeyRepository licenseKeyRepository;
 
     private final LicenseGenerationService keyGeneratorService;
 
@@ -35,22 +32,13 @@ public class LicenseController {
      */
     @PostMapping("/generate")
     public ResponseEntity<GenerateLicenseResponse> generateLicenses(@RequestBody @Valid GenerateLicenseRequest request) {
-        List<String> generatedKeys = keyGeneratorService.generateKeys(
+        List<LicenseKeyModel> savedLicenses = keyGeneratorService.generateAndSaveLicenses(
                 request.count(),
-                request.productId()
+                request.productId(),
+                request.partnerCode(),
+                request.expiryDate(),
+                request.maxActivations()
         );
-
-        List<LicenseKeyModel> savedLicenses = new ArrayList<>();
-        for (String key : generatedKeys) {
-            LicenseKeyModel license = new LicenseKeyModel();
-            license.setLicenseKey(key);
-            license.setProductId(request.productId());
-            license.setPartnerCode(request.partnerCode());
-            license.setExpiryDate(request.expiryDate());
-            license.setMaxActivations(request.maxActivations());
-
-            savedLicenses.add(licenseKeyRepository.save(license));
-        }
 
         List<@Size(max = 100) @NotNull String> licenseKeys = savedLicenses.stream()
                 .map(LicenseKeyModel::getLicenseKey)
@@ -118,7 +106,7 @@ public class LicenseController {
      */
     @GetMapping("/{licenseKey}")
     public ResponseEntity<LicenseKeyModel> getLicenseDetails(@PathVariable String licenseKey) {
-        Optional<LicenseKeyModel> optionalLicense = licenseKeyRepository.findByLicenseKey(licenseKey);
+        Optional<LicenseKeyModel> optionalLicense = validationService.getLicenseDetails(licenseKey);
         if (optionalLicense.isEmpty()) {
             return ResponseEntity.notFound().build();
         }

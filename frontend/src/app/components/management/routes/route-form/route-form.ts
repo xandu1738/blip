@@ -8,7 +8,6 @@ import {AuthService} from '../../../services/auth.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {RemoteService} from '../../../services/remoteService';
 import {FormsModule} from '@angular/forms';
-import {InputText} from 'primeng/inputtext';
 import {Button} from 'primeng/button';
 import {Select} from 'primeng/select';
 import {InputNumber} from 'primeng/inputnumber';
@@ -18,7 +17,6 @@ import {InputNumber} from 'primeng/inputnumber';
   standalone: true,
   imports: [
     FormsModule,
-    InputText,
     Button,
     Select,
     InputNumber

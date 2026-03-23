@@ -11,10 +11,10 @@ import {Button} from 'primeng/button';
 import {DatePipe} from '@angular/common';
 import {RemoteService} from '../../../services/remoteService';
 import {Accordion, AccordionContent, AccordionHeader, AccordionPanel} from 'primeng/accordion';
-import {DomainPicker} from '../../../fragments/domain-picker/domain-picker';
 import {FormsModule} from '@angular/forms';
 import {InputText} from 'primeng/inputtext';
-import {RolePicker} from '../../../fragments/role-picker/role-picker'; // Add this import
+
+// Add this import
 
 @Component({
   selector: 'app-vehicles-list',
@@ -27,10 +27,8 @@ import {RolePicker} from '../../../fragments/role-picker/role-picker'; // Add th
     AccordionContent,
     AccordionHeader,
     AccordionPanel,
-    DomainPicker,
     FormsModule,
-    InputText,
-    RolePicker
+    InputText
   ],
   templateUrl: './vehicles-list.html',
   styleUrl: './vehicles-list.css'

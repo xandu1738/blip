@@ -5,8 +5,7 @@ import {Router, RouterOutlet} from '@angular/router';
 import {Events} from './components/services/events';
 import {AuthService} from './components/services/auth.service';
 import {LoaderService} from './components/services/loader.service';
-import {Button} from 'primeng/button';
-import {SubscriptionsList} from './components/Subscriptions/subscriptions-list/subscriptions-list';
+import {SubscriptionsList} from './components/subscriptions/subscriptions-list/subscriptions-list';
 import {LandingComponent} from './components/common/landing/landing.component';
 import {Accordion, AccordionContent, AccordionHeader, AccordionPanel} from 'primeng/accordion';
 import {ConfirmDialog} from 'primeng/confirmdialog';
@@ -37,7 +36,6 @@ interface MenuItem {
     TableModule,
     Avatar,
     RouterOutlet,
-    Button,
     SubscriptionsList,
     LandingComponent,
     Accordion,

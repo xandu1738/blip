@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {BaseComponent} from '../../services/base-component';
 import {Button} from 'primeng/button';
-import {Users} from '../../UserManagement/users/users';
-import {Roles} from '../../UserManagement/roles/roles';
-import {Domains} from '../../UserManagement/domains/domains';
+import {Users} from '../../user-management/users/users';
+import {Roles} from '../../user-management/roles/roles';
+import {Domains} from '../../user-management/domains/domains';
 
 @Component({
   selector: 'app-access-management',
