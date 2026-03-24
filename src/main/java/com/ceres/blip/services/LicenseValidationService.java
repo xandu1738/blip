@@ -69,6 +69,13 @@ public class LicenseValidationService extends LocalUtilsService {
     }
 
     /**
+     * Get license details
+     */
+    public Optional<LicenseKeyModel> getLicenseDetails(String licenseKey) {
+        return licenseKeyRepository.findByLicenseKey(licenseKey);
+    }
+
+    /**
      * Activate license
      */
     public LicenseActivationResult activateLicense(String licenseKey, LicenseActivationRequest request) {

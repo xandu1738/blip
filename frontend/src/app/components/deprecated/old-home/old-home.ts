@@ -5,7 +5,7 @@ import {LoginComponent} from "../../login/login.component";
 import {Menubar} from "primeng/menubar";
 import {Ripple} from "primeng/ripple";
 import {Router, RouterOutlet} from "@angular/router";
-import {SubscriptionsList} from "../../Subscriptions/subscriptions-list/subscriptions-list";
+import {SubscriptionsList} from "../../subscriptions/subscriptions-list/subscriptions-list";
 import {Toast} from "primeng/toast";
 import {MenuItem} from 'primeng/api';
 import {CommonService} from '../../services/commonService';

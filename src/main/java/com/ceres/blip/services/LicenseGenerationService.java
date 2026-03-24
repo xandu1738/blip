@@ -3,11 +3,17 @@ package com.ceres.blip.services;
 import com.ceres.blip.utils.LocalUtilsService;
 import org.springframework.stereotype.Service;
 
+import com.ceres.blip.models.database.LicenseKeyModel;
+import com.ceres.blip.repositories.LicenseKeyRepository;
+import lombok.RequiredArgsConstructor;
+
 import java.security.SecureRandom;
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class LicenseGenerationService extends LocalUtilsService {
+    private final LicenseKeyRepository licenseKeyRepository;
     private static final String CHARACTERS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
     private static final int KEY_LENGTH = 25;
     private static final int SEGMENT_LENGTH = 5;
@@ -63,6 +69,27 @@ public class LicenseGenerationService extends LocalUtilsService {
             keys.add(key);
         }
         return new ArrayList<>(keys);
+    }
+
+    /**
+     * Generate and save multiple license keys
+     */
+    public List<LicenseKeyModel> generateAndSaveLicenses(int count, String productId, String partnerCode, Date expiryDate, int maxActivations) {
+        List<String> generatedKeys = generateKeys(count, productId);
+        List<LicenseKeyModel> savedLicenses = new ArrayList<>();
+        for (String key : generatedKeys) {
+            LicenseKeyModel license = new LicenseKeyModel();
+            license.setLicenseKey(key);
+            license.setProductId(productId);
+            license.setPartnerCode(partnerCode);
+            if (expiryDate != null) {
+                license.setExpiryDate(new java.sql.Timestamp(expiryDate.getTime()));
+            }
+            license.setMaxActivations(maxActivations);
+
+            savedLicenses.add(licenseKeyRepository.save(license));
+        }
+        return savedLicenses;
     }
 
     /**
