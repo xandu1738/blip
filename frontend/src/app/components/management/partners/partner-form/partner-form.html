@@ -1,0 +1,76 @@
+<div class="card p-6 rounded-2xl shadow-sm border border-gray-100 bg-[var(--card)] max-w-5xl mx-auto mt-6">
+  <div class="flex justify-between items-center mb-6 border-b pb-4">
+    <div>
+      <h2 class="text-2xl font-bold">{{ isEditMode ? 'Edit partner details' : 'Add partner details' }}</h2>
+      <p class="text-gray-500 text-sm">Update information for {{ partner.partnerName || 'New Partner' }}</p>
+    </div>
+    <p-button label="Cancel" severity="secondary" outlined="true" (onClick)="cancel()"></p-button>
+  </div>
+
+  <div class="mb-8">
+    <h3 class="font-semibold text-lg mb-4">Partner logo</h3>
+    <div class="flex items-center gap-6">
+      <div
+        class="w-24 h-24  justify-center  items-center rounded-2xl bg-orange-500 overflow-hidden flex shrink-0 shadow-md">
+        @if (partner.logo) {
+          <img [src]="partner.logo" alt="Logo" class="w-full h-full object-cover"/>
+        } @else {
+          <div class="w-8 h-8 rounded-full border-4 border-white border-dashed"></div>
+        }
+      </div>
+      <div>
+        @if (partner.partnerCode) {
+          <p class="text-gray-500 mb-2">Partner Code: <span
+            class="font-semibold text-lg">{{ partner.partnerCode }}</span></p>
+        }
+        <input type="file" id="logoInput" class="hidden" accept="image/png, image/jpeg"
+               (change)="onLogoUpload($event)"/>
+        <p-button label="Upload new logo" outlined="true" severity="secondary" size="small"
+                  (onClick)="triggerFileInput()"></p-button>
+        <p class="text-xs text-gray-500 mt-2">Recommended size: 400x400px. PNG or JPG format.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="mb-8 border-t pt-6">
+    <h3 class="font-semibold text-lg mb-4">Basic information</h3>
+    <div class="grid grid-cols-2 gap-6">
+      <div class="flex flex-col gap-2">
+        <label for="partnerName" class="font-medium">Partner name <span class="text-red-500">*</span></label>
+        <input pInputText id="partnerName" [(ngModel)]="partner.partnerName" placeholder="Enter partner name"/>
+      </div>
+      <div class="flex flex-col gap-2">
+        <label for="status" class="font-medium">Status</label>
+        <p-autoComplete id="status" [suggestions]="filteredStatuses" dropdown="true"
+                        (completeMethod)="searchStatus($event)" [(ngModel)]="statusText" class="w-full"
+                        [style]="{'width':'100%'}"></p-autoComplete>
+      </div>
+    </div>
+  </div>
+
+  <div class="mb-8 border-t pt-6">
+    <h3 class="font-semibold text-lg mb-4">Account details</h3>
+    <div class="grid grid-cols-2 gap-6">
+      <div class="flex flex-col gap-2">
+        <label for="accountNumber" class="font-medium">Account number</label>
+        <input pInputText id="accountNumber" [(ngModel)]="partner.accountNumber" placeholder="Enter account number"/>
+        <p class="text-xs text-gray-400">Leave blank if not assigned</p>
+      </div>
+      <div class="flex flex-col gap-2">
+        <label for="accountId" class="font-medium">Account ID</label>
+        <p-inputNumber id="accountId" [(ngModel)]="partner.accountId" [useGrouping]="false"
+                       placeholder="Enter account ID" class="w-full"
+                       [style]="{'width':'100%'}"></p-inputNumber>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex justify-end gap-3 mt-8 border-t pt-6">
+    @if (isEditMode) {
+      <p-button label="Delete" severity="danger" outlined="true"
+                (onClick)="archivePartner()"></p-button>
+    }
+
+    <p-button label="Save" (onClick)="savePartner()"></p-button>
+  </div>
+</div>

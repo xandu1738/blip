@@ -54,10 +54,10 @@ interface Partner {
     FileUpload,
     Tooltip
   ],
-  templateUrl: './register.html',
-  styleUrls: ['./register.css']
+  templateUrl: './partners.html',
+  styleUrls: ['./partners.css']
 })
-export class RegisterComponent extends BaseComponent implements OnInit {
+export class Partners extends BaseComponent implements OnInit {
   constructor(
     helper: RemoteService,
     loaderService: LoaderService,
@@ -69,7 +69,7 @@ export class RegisterComponent extends BaseComponent implements OnInit {
     protected router: Router,
     protected notificationService: NotificationService
   ) {
-    super(authService,helper, loaderService, dialogService, confirmationService, messageService);
+    super(authService, helper, loaderService, dialogService, confirmationService, messageService);
     this.filteredPackages = [...this.packages];
   }
 
@@ -227,5 +227,57 @@ export class RegisterComponent extends BaseComponent implements OnInit {
       this.search.pageSize = $event.rows;
       this.loadPartnersFromServer();
     }
+  }
+
+  protected viewPartner(partner: any) {
+    this.router.navigate(['/partner-form', partner.partnerCode]);
+  }
+
+  protected archivePartner(partner: any) {
+    let confirmationRequest = {
+      message: "Are you sure you want to archive  partner " + partner.partnerName + "?",
+      header: "Archive Partner",
+      icon: "pi pi-exclamation-triangle",
+      onConfirm: () => {
+        this.sendGetOrPostRequestToServer(
+          "partners/archive-partner",
+          {data: partner},
+          true,
+          (response: ApiResponse<any>) => {
+            if (response?.returnCode != 200) {
+              this.showError(response?.returnMessage);
+              return;
+            }
+            this.showSuccess(response?.returnMessage);
+            this.loadPartnersFromServer();
+          }
+        )
+      }
+    };
+    this.confirmDialog(confirmationRequest)
+  }
+
+  protected restorePartner(partner: any) {
+    let confirmationRequest = {
+      message: "Are you sure you want to restore  partner " + partner.partnerName + "?",
+      header: "Restore Partner",
+      icon: "pi pi-exclamation-triangle",
+      onConfirm: () => {
+        this.sendGetOrPostRequestToServer(
+          "partners/update-partner-status",
+          {data: {...partner, active: true}},
+          true,
+          (response: ApiResponse<any>) => {
+            if (response?.returnCode != 200) {
+              this.showError(response?.returnMessage);
+              return;
+            }
+            this.showSuccess(response?.returnMessage);
+            this.loadPartnersFromServer();
+          }
+        )
+      }
+    };
+    this.confirmDialog(confirmationRequest);
   }
 }

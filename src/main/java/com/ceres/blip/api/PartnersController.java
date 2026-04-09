@@ -1,6 +1,5 @@
 package com.ceres.blip.api;
 
-import com.ceres.blip.exceptions.AuthorizationRequiredException;
 import com.ceres.blip.services.PartnersService;
 import com.ceres.blip.dtos.OperationReturnObject;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -28,17 +27,27 @@ public class PartnersController {
     }
 
     @PostMapping("/update-partner-status")
-    public ResponseEntity<OperationReturnObject> updatePartnerStatus(@RequestBody JsonNode request) throws AuthorizationRequiredException {
+    public ResponseEntity<OperationReturnObject> updatePartnerStatus(@RequestBody JsonNode request) {
         return ResponseEntity.ok(partnersService.updatePartnerStatus(request));
     }
 
+    @PostMapping("/archive-partner")
+    public ResponseEntity<OperationReturnObject> archivePartner(@RequestBody JsonNode request) {
+        return ResponseEntity.ok(partnersService.archivePartner(request));
+    }
+
     @GetMapping("/list/{pageNumber}/{pageSize}")
-    public ResponseEntity<OperationReturnObject> fetchPartnersList(@PathVariable int pageNumber, @PathVariable int pageSize) throws AuthorizationRequiredException {
+    public ResponseEntity<OperationReturnObject> fetchPartnersList(@PathVariable int pageNumber, @PathVariable int pageSize) {
         return ResponseEntity.ok(partnersService.fetchPartnersList(pageNumber, pageSize));
     }
 
+    @PostMapping("/list")
+    public ResponseEntity<OperationReturnObject> filterPartnersList(@RequestBody JsonNode request) {
+        return ResponseEntity.ok(partnersService.filterPartnersList(request));
+    }
+
     @GetMapping("/profile/{partnerCode}")
-    public ResponseEntity<OperationReturnObject> partnerProfile(@PathVariable String partnerCode) throws AuthorizationRequiredException {
+    public ResponseEntity<OperationReturnObject> partnerProfile(@PathVariable String partnerCode) {
         return ResponseEntity.ok(partnersService.partnerProfile(partnerCode));
     }
 }

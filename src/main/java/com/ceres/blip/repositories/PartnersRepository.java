@@ -1,10 +1,13 @@
 package com.ceres.blip.repositories;
 
 import com.ceres.blip.models.database.PartnerModel;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -12,6 +15,8 @@ import java.util.Optional;
 public interface PartnersRepository extends JpaRepository<PartnerModel, Long> {
     Optional<PartnerModel> findByPartnerName(String partnerName);
     Optional<PartnerModel> findByPartnerCode(String partnerCode);
-    @Query("SELECT COUNT(p.id) AS count FROM PartnerModel p")
+    Page<PartnerModel> findByArchivedFalse(Pageable pageable);
+    List<PartnerModel> findByArchivedFalse();
+    @Query("SELECT COUNT(p.id) AS count FROM PartnerModel p WHERE p.archived = false")
     Optional<Map<String,Object>> partnersCount();
 }

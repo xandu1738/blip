@@ -2,7 +2,6 @@ package com.ceres.blip.services;
 
 import com.ceres.blip.annotations.base.RequiresAuthentication;
 import com.ceres.blip.dtos.ListResponseDto;
-import com.ceres.blip.exceptions.AuthorizationRequiredException;
 import com.ceres.blip.models.database.PartnerModel;
 import com.ceres.blip.models.enums.AppDomains;
 import com.ceres.blip.models.enums.BlipPackages;
@@ -169,7 +168,7 @@ public class PartnersService extends LocalUtilsService {
 
     @RequiresAuthentication
     @Cacheable(value = "partners", key = "#pageNumber + '-' + #pageSize")
-    public OperationReturnObject fetchPartnersList(int pageNumber, int pageSize) throws AuthorizationRequiredException {
+    public OperationReturnObject fetchPartnersList(int pageNumber, int pageSize) {
         belongsTo(AppDomains.BACK_OFFICE);
 
         List<PartnerModel> partners = partnersRepository.findAll(PageRequest.of(pageNumber, pageSize))
@@ -186,19 +185,37 @@ public class PartnersService extends LocalUtilsService {
     }
 
     @RequiresAuthentication
-    @CachePut(value = "partners", key = "#request.data.id")
-    public OperationReturnObject updatePartnerStatus(JsonNode request) throws AuthorizationRequiredException {
+    @Cacheable(value = "partnerList")
+    public OperationReturnObject filterPartnersList(JsonNode request) {
+        belongsTo(AppDomains.BACK_OFFICE);
+
+        List<PartnerModel> partners = partnersRepository.findByArchivedFalse();
+        //Total count of partners
+        Optional<Map<String, Object>> partnersCount = partnersRepository.partnersCount();
+
+        Long count = 10L;
+        if (partnersCount.isPresent()) {
+            count = (Long) partnersCount.get().get("count");
+        }
+        ListResponseDto listResponseDto = new ListResponseDto(count, partners);
+        return new OperationReturnObject(200, "Partners list successfully fetched.", listResponseDto);
+    }
+
+    @RequiresAuthentication
+    @CacheEvict(value = "partners", allEntries = true)
+    public OperationReturnObject updatePartnerStatus(JsonNode request) {
         belongsTo(AppDomains.BACK_OFFICE);
         JsonNode data = getRequestData(request);
-        requires(data, "id", ACTIVE.name());
+        requires(data, "id", ACTIVE.getValue());
 
         Long id = data.get("id").asLong();
-        Boolean active = data.get(ACTIVE.name()).asBoolean();
+        Boolean active = data.get(ACTIVE.getValue()).asBoolean();
 
         PartnerModel partnerModel = partnersRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Partner with ID " + id + " not found."));
 
         partnerModel.setActive(active);
+        partnerModel.setArchived(false);
         PartnerModel saved = partnersRepository.save(partnerModel);
 
         String status = active ? "activated" : "deactivated";
@@ -206,8 +223,27 @@ public class PartnersService extends LocalUtilsService {
     }
 
     @RequiresAuthentication
+    @CacheEvict(value = "partners", allEntries = true)
+    public OperationReturnObject archivePartner(JsonNode request) {
+        belongsTo(AppDomains.BACK_OFFICE);
+        JsonNode data = getRequestData(request);
+        requires(data, "id");
+
+        Long id = data.get("id").asLong();
+
+        PartnerModel partnerModel = partnersRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Partner with ID " + id + " not found."));
+
+        partnerModel.setArchived(true);
+        partnerModel.setActive(false);
+        PartnerModel saved = partnersRepository.save(partnerModel);
+
+        return new OperationReturnObject(200, "Partner successfully archived.", saved);
+    }
+
+    @RequiresAuthentication
     @Cacheable(value = "partner", key = "#partnerCode")
-    public OperationReturnObject partnerProfile(String partnerCode) throws AuthorizationRequiredException {
+    public OperationReturnObject partnerProfile(String partnerCode) {
 
         if (StringUtils.isBlank(partnerCode)) {
             throw new IllegalArgumentException("Partner code cannot be empty");

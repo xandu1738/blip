@@ -122,24 +122,54 @@
           <td class="truncate">{{ partner?.accountId || '---' }}</td>
           <td class="truncate">{{ partner?.businessReference || '---' }}</td>
           <td class="truncate">
-<!--            <span [class.text-green-500]="partner.active" [class.text-red-500]="!partner.active">-->
-<!--              {{ partner?.active ? 'Active' : 'Inactive' }}-->
-<!--            </span>-->
             @if (partner?.active) {
               <span class="px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded-full break-all">Active</span>
-            }  @else {
+            } @else {
               <span class="px-2 py-1 text-xs bg-gray-100 text-red-700 rounded-full break-all">Inactive</span>
             }
           </td>
-          <td class="truncate">{{ partner?.package || '---' }}</td>
+          <td class="truncate">
+            @if (partner?.packageField === 'TRANSPORT') {
+              <span
+                class="px-2 py-1 text-xs bg-green-100 text-green-700 rounded-full break-all">{{ partner?.packageField }}</span>
+            } @else if (partner?.packageField === 'LOGISTICS') {
+              <span
+                class="px-2 py-1 text-xs bg-yellow-100 text-yellow-700 rounded-full break-all">{{ partner?.packageField }}</span>
+            } @else {
+              <span
+                class="px-2 py-1 text-xs bg-gray-100 text-gray-700 rounded-full break-all">{{ partner?.packageField || '---' }}</span>
+            }
+          </td>
           <td class="truncate">
             <div class="flex gap-2">
-              <p-button size="small" [rounded]="true" severity="primary" icon="pi pi-eye" [outlined]="true"
-                        pTooltip="View Partner" tooltipPosition="bottom"></p-button>
-              <p-button size="small" [rounded]="true" severity="info" icon="pi pi-pencil" [outlined]="true"
-                        pTooltip="Edit Partner" tooltipPosition="bottom"></p-button>
-              <p-button size="small" [rounded]="true" severity="warn" icon="pi pi-trash" [outlined]="true"
-                        pTooltip="Archive Partner" tooltipPosition="bottom"></p-button>
+              <p-button size="small"
+                        [rounded]="true"
+                        severity="info"
+                        (onClick)="viewPartner(partner)"
+                        icon="pi pi-pencil"
+                        [outlined]="true"
+                        pTooltip="Edit Partner"
+                        tooltipPosition="bottom"></p-button>
+              @if (partner?.archived) {
+                <p-button size="small"
+                          [rounded]="true"
+                          severity="success"
+                          (onClick)="restorePartner(partner)"
+                          icon="pi pi-refresh"
+                          [outlined]="true"
+                          pTooltip="Restore Partner"
+                          tooltipPosition="bottom"></p-button>
+              } @else {
+                <p-button size="small"
+                          [rounded]="true"
+                          severity="warn"
+                          (onClick)="archivePartner(partner)"
+                          icon="pi pi-trash"
+                          [outlined]="true"
+                          pTooltip="Archive Partner"
+                          tooltipPosition="bottom"></p-button>
+              }
+
             </div>
           </td>
         </tr>
