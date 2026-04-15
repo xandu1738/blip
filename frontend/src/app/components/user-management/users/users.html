@@ -20,13 +20,13 @@
               <div class="w-full lg:w-1/4 mb-4 lg:mb-0">
                 <label for="search_name" class="block text-sm font-medium mb-1 pl-1">Name</label>
                 <input pInputText type="text" id="search_name" placeholder="Search by Name" [(ngModel)]="userData.name"
-                  class="w-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition" />
+                       class="w-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"/>
               </div>
 
               <div class="w-full lg:w-1/4 mb-4 lg:mb-0">
                 <label for="acc" class="block text-sm font-medium mb-1 pl-1">Email</label>
                 <input pInputText type="email" id="acc" placeholder="Search by Email" [(ngModel)]="userData.email"
-                  class="w-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition" />
+                       class="w-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"/>
               </div>
 
               <div class="w-full lg:w-1/4 mb-4 lg:mb-0">
@@ -55,13 +55,12 @@
     </p-accordion>
   </div>
 
-  <p-table [value]="usersList" [paginator]="true" showGridlines [rows]="15" lazy="true"
-    [totalRecords]="search.totalRecords" (onLazyLoad)="loadLazy($event)" [tableStyle]="{ 'min-width': '50rem' }"
-    [rowsPerPageOptions]="[15, 20,50,100]">
-    <ng-template #header>
+  <p-table [value]="usersList" [paginator]="true" [rows]="15" lazy="true"
+           [totalRecords]="search.totalRecords" (onLazyLoad)="loadLazy($event)"
+           [rowsPerPageOptions]="[15, 20,50,100]">
+    <ng-template pTemplate="header">
       <tr>
-        <th id="fname">First Name</th>
-        <th id="lname">Last Name</th>
+        <th id="fname">Full Name</th>
         <th id="email">Email</th>
         <th id="phoneNumber">Phone Number</th>
         <th id="partnerCode">Partner Code</th>
@@ -72,10 +71,9 @@
         <th id="last-login">Last Login</th>
       </tr>
     </ng-template>
-    <ng-template #body let-customer>
+    <ng-template pTemplate="body" let-customer>
       <tr>
-        <td>{{ customer?.firstName || '---' }}</td>
-        <td>{{ customer?.lastName || '---' }}</td>
+        <td>{{ customer?.firstName }} {{ customer?.lastName }}</td>
         <td>{{ customer?.email || '---' }}</td>
         <td>{{ customer?.phoneNumber || '---' }}</td>
         <td>{{ customer?.partnerCode || '---' }}</td>
@@ -88,14 +86,3 @@
     </ng-template>
   </p-table>
 </div>
-
-<!--<p-dialog-->
-<!--  header="Register User"-->
-<!--  [(visible)]="showAddDialog"-->
-<!--  [modal]="true"-->
-<!--  [style]="{ width: '500px' }"-->
-<!--  [closable]="true">-->
-
-<!--  -->
-
-<!--</p-dialog>-->

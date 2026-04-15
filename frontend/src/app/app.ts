@@ -64,15 +64,6 @@ export class App extends BaseComponent implements OnInit {
 
   /** Dark / Light theme */
   isDarkMode: boolean = false;
-
-  // constructor(
-  //   protected commonService: CommonService,
-  //   protected eventService: Events,
-  //   protected router: Router,
-  //   protected authService: AuthService,
-  //   protected loaderService: LoaderService
-  // ) { // Inject Router and AuthService
-  // }
   constructor(
     protected eventService: Events,
     protected router: Router,
@@ -183,17 +174,6 @@ export class App extends BaseComponent implements OnInit {
       this.items?.push(configMenu);
     }
 
-    if (this.user?.permissions?.includes('MANAGE_MODULES')) {
-      this.items?.push({
-        label: 'Modules',
-        icon: 'pi pi-verified',
-        value: 1,
-        command: () => {
-          this.router.navigate(['/configuration'])
-        }
-      });
-    }
-
     let mgt = this.getManagementMenu();
     mgt.items ??= [];
     if (mgt.items?.length > 0) {
@@ -263,62 +243,39 @@ export class App extends BaseComponent implements OnInit {
         }
       });
     }
-    if (this.user?.permissions?.includes('MANAGE_DRIVERS')) {
+
+    if (this.user?.permissions?.includes('MANAGE_USERS')) {
       config.items.push({
-        label: 'Drivers',
-        icon: 'pi pi-user',
-        value: 2,
+        label: 'Access Management',
+        icon: 'pi pi-users',
+        value: 0,
         command: () => {
-          this.router.navigate(['/drivers'])
+          this.router.navigate(['/access'])
         }
       });
     }
-    if (this.user?.permissions?.includes('MANAGE_VEHICLES')) {
+    if (this.user?.permissions?.includes('MANAGE_LICENSES')) {
       config.items.push({
-          value: 3,
-          label: 'Vehicles',
-          icon: 'pi pi-car',
-          command: () => {
-            this.router.navigate(['/vehicles'])
-          }
-        }
-      )
-    }
-
-    if (this.user?.permissions?.includes('MANAGE_ROUTES')) {
-      config.items.push({
-          value: 4,
-          label: 'Routes',
-          icon: 'pi pi-gauge',
-          command: () => {
-            this.router.navigate(['/routes'])
-          }
-        }
-      );
-    }
-
-    if (this.user?.permissions?.includes('MANAGE_SCHEDULES')) {
-      config.items.push({
-        value: 7,
-        label: 'Schedules',
-        icon: 'pi pi-calendar',
+        value: 6,
+        label: 'Licenses',
+        icon: 'pi pi-check-circle',
         command: () => {
-          this.router.navigate(['/schedules'])
+          this.router.navigate(['/manage-subscriptions'])
         }
       })
     }
 
-    if (this.user?.permissions?.includes('MANAGE_FARES')) {
-      config.items.push({
-          value: 5,
-          label: 'Fares and Charges',
-          icon: 'pi pi-megaphone',
-          command: () => {
-            this.router.navigate(['/dashboard'])
-          }
+    if (this.user?.permissions?.includes('MANAGE_MODULES')) {
+      config.items?.push({
+        label: 'Modules',
+        icon: 'pi pi-verified',
+        value: 1,
+        command: () => {
+          this.router.navigate(['/modules'])
         }
-      )
+      });
     }
+
     return config;
   }
 
@@ -331,16 +288,61 @@ export class App extends BaseComponent implements OnInit {
     }
 
     management.items ??= [];
-
-    if (this.user?.permissions?.includes('MANAGE_USERS')) {
+    if (this.user?.permissions?.includes('MANAGE_DRIVERS')) {
       management.items.push({
-        label: 'Access Management',
-        icon: 'pi pi-users',
-        value: 0,
+        label: 'Drivers',
+        icon: 'pi pi-user',
+        value: 2,
         command: () => {
-          this.router.navigate(['/access'])
+          this.router.navigate(['/drivers'])
         }
       });
+    }
+    if (this.user?.permissions?.includes('MANAGE_VEHICLES')) {
+      management.items.push({
+          value: 3,
+          label: 'Vehicles',
+          icon: 'pi pi-car',
+          command: () => {
+            this.router.navigate(['/vehicles'])
+          }
+        }
+      )
+    }
+
+    if (this.user?.permissions?.includes('MANAGE_ROUTES')) {
+      management.items.push({
+          value: 4,
+          label: 'Routes',
+          icon: 'pi pi-gauge',
+          command: () => {
+            this.router.navigate(['/routes'])
+          }
+        }
+      );
+    }
+
+    if (this.user?.permissions?.includes('MANAGE_SCHEDULES')) {
+      management.items.push({
+        value: 7,
+        label: 'Schedules',
+        icon: 'pi pi-calendar',
+        command: () => {
+          this.router.navigate(['/schedules'])
+        }
+      })
+    }
+
+    if (this.user?.permissions?.includes('MANAGE_FARES')) {
+      management.items.push({
+          value: 5,
+          label: 'Fares and Charges',
+          icon: 'pi pi-megaphone',
+          command: () => {
+            this.router.navigate(['/dashboard'])
+          }
+        }
+      )
     }
 
     if (this.user?.permissions?.includes('MANAGE_TICKETS')) {
@@ -363,17 +365,6 @@ export class App extends BaseComponent implements OnInit {
           this.router.navigate(['/trips'])
         }
       });
-    }
-
-    if (this.user?.permissions?.includes('MANAGE_LICENSES')) {
-      management.items.push({
-        value: 6,
-        label: 'Licenses',
-        icon: 'pi pi-check-circle',
-        command: () => {
-          this.router.navigate(['/manage-subscriptions'])
-        }
-      })
     }
     return management;
   }

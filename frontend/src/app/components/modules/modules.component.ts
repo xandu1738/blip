@@ -18,7 +18,7 @@ import {ConfirmationService, MessageService} from 'primeng/api';
 import {Tooltip} from 'primeng/tooltip';
 
 @Component({
-  selector: 'app-configuration',
+  selector: 'app-modules',
   standalone: true,
   imports: [
     TableModule,
@@ -34,10 +34,10 @@ import {Tooltip} from 'primeng/tooltip';
     FloatLabel,
     Tooltip
   ],
-  templateUrl: './configuration.html',
-  styleUrl: './configuration.css'
+  templateUrl: './modules.component.html',
+  styleUrl: './modules.component.css'
 })
-export class Configuration extends BaseComponent {
+export class Modules extends BaseComponent {
   modules = [
     {
       id: 1,

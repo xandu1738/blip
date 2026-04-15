@@ -9,7 +9,7 @@ import { SettingsComponent } from './components/settings/settings.component';
 import { LoginComponent } from './components/login/login.component';
 import { Partners } from './components/partners/partners';
 import { authGuard } from './guards/auth.guard';
-import { Configuration } from './components/configuration/configuration';
+import { Modules } from './components/modules/modules.component';
 import { Users } from './components/user-management/users/users';
 import { SubscriptionsList } from './components/subscriptions/subscriptions-list/subscriptions-list';
 import { licenseGuard } from './guards/license-guard';
@@ -167,7 +167,7 @@ export const routes: Routes = [
     canActivate: [authGuard, licenseGuard]
   },
   {
-    path: 'modules',
+    path: 'parcels',
     component: ParcelsComponent,
     canActivate: [authGuard, licenseGuard]
   },
@@ -212,8 +212,8 @@ export const routes: Routes = [
     canActivate: [authGuard, licenseGuard]
   },
   {
-    path: 'configuration',
-    component: Configuration,
+    path: 'modules',
+    component: Modules,
     canActivate: [authGuard, licenseGuard]
   },
   {

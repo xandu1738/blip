@@ -96,12 +96,9 @@
         <tr class="">
           <th id="logo" style="width: 8%">Logo</th>
           <th id="partnerName" style="width: 15%">Partner Name</th>
-          <th id="accNo" style="width: 10%">Account Number</th>
           <th id="person" style="width: 12%">Contact Person</th>
           <th id="phone" style="width: 10%">Contact Phone</th>
-          <th id="accn" style="width: 10%">Account ID</th>
-          <th id="reference" style="width: 12%">Business Reference</th>
-          <th id="active" style="width: 8%">Active</th>
+          <th id="active" style="width: 8%">Status</th>
           <th id="pkg" style="width: 10%">Package</th>
           <th id="act" style="width: 15%">Actions</th>
         </tr>
@@ -116,11 +113,8 @@
             }
           </td>
           <td class="truncate">{{ partner?.partnerName || '---' }}</td>
-          <td class="truncate">{{ partner?.accountNumber || '---' }}</td>
           <td class="truncate">{{ partner?.contactPerson || '---' }}</td>
           <td class="truncate">{{ partner?.contactPhone || '---' }}</td>
-          <td class="truncate">{{ partner?.accountId || '---' }}</td>
-          <td class="truncate">{{ partner?.businessReference || '---' }}</td>
           <td class="truncate">
             @if (partner?.active) {
               <span class="px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded-full break-all">Active</span>
@@ -146,9 +140,9 @@
                         [rounded]="true"
                         severity="info"
                         (onClick)="viewPartner(partner)"
-                        icon="pi pi-pencil"
+                        icon="pi pi-eye"
                         [outlined]="true"
-                        pTooltip="Edit Partner"
+                        pTooltip="View Partner"
                         tooltipPosition="bottom"></p-button>
               @if (partner?.archived) {
                 <p-button size="small"
