@@ -19,4 +19,6 @@ public interface SubscriptionRepository extends JpaRepository<SubscriptionModel,
             LIMIT :pageSize OFFSET :pageNumber
             """)
     Optional<Map<String, Object>> getSubscriptions(String partnerCode, int pageNumber, int pageSize);
+
+    long countByModuleCode(String moduleCode);
 }

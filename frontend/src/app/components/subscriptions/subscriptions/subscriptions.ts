@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {BaseComponent} from '../../services/base-component';
+import {BaseComponent} from '../../../services/base-component';
 import {PrimeTemplate} from 'primeng/api';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {TableModule} from 'primeng/table';

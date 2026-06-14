@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
-import {BaseComponent} from '../../services/base-component';
-import {RemoteService} from '../../services/remoteService';
-import {LoaderService} from '../../services/loader.service';
+import {BaseComponent} from '../../../services/base-component';
+import {RemoteService} from '../../../services/remoteService';
+import {LoaderService} from '../../../services/loader.service';
 import {DialogService, DynamicDialogConfig, DynamicDialogRef} from 'primeng/dynamicdialog';
 import {ConfirmationService, MessageService} from 'primeng/api';
-import {AuthService} from '../../services/auth.service';
+import {AuthService} from '../../../services/auth.service';
 import {Router} from '@angular/router';
 import {Message} from 'primeng/message';
 import {InputText} from 'primeng/inputtext';

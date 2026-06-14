@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {BaseComponent} from '../../services/base-component';
+import {BaseComponent} from '../../../services/base-component';
 import {Button} from 'primeng/button';
 import {Dialog} from 'primeng/dialog';
 import {FormsModule} from '@angular/forms';

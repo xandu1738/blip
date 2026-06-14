@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {RemoteService} from './remoteService';
 import {AuthService} from './auth.service';
 import {Observable} from 'rxjs';
-import {Vehicle} from '../models/vehicle.model';
+import {Vehicle} from '../components/models/vehicle.model';
 
 @Injectable({
   providedIn: 'root'

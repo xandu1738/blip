@@ -5,14 +5,17 @@ import {ButtonModule} from 'primeng/button';
 import {InputTextModule} from 'primeng/inputtext';
 import {FormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
-import {AuthService} from '../services/auth.service';
+import {AuthService} from '../../services/auth.service';
 import {Router} from '@angular/router';
-import {NotificationService} from '../services/notification.service';
-import {LoaderService} from '../services/loader.service';
+import {NotificationService} from '../../services/notification.service';
+import {LoaderService} from '../../services/loader.service';
 import {Accordion, AccordionContent, AccordionHeader, AccordionPanel} from 'primeng/accordion';
 import {FloatLabel} from 'primeng/floatlabel';
-import {BaseComponent} from '../services/base-component';
-import {RemoteService} from '../services/remoteService';
+import {BaseComponent} from '../../services/base-component';
+import {ModulesService} from '../../services/modules.service';
+import {ModuleModel} from '../models/module.model';
+import {ApiResponse} from '../models/user.models';
+import {RemoteService} from '../../services/remoteService';
 import {DialogService} from 'primeng/dynamicdialog';
 import {ConfirmationService, MessageService} from 'primeng/api';
 import {Tooltip} from 'primeng/tooltip';
@@ -38,42 +41,28 @@ import {Tooltip} from 'primeng/tooltip';
   styleUrl: './modules.component.css'
 })
 export class Modules extends BaseComponent {
-  modules = [
-    {
-      id: 1,
-      name: "Transport Management",
-      code: "TRANSPORT_MANAGEMENT",
-      description: "Complete passenger transport system including bus booking, route management, vehicle tracking, and fare management",
-      createdAt: new Date('2024-01-15'),
-      createdBy: 1
-    },
-    {
-      id: 2,
-      name: "Logistics Management",
-      code: "LOGISTICS_MANAGEMENT",
-      description: "Comprehensive logistics solution for parcel delivery, consignment tracking, fleet management, and delivery proof",
-      createdAt: new Date('2024-01-20'),
-      createdBy: 1
-    },
-  ];
-
-  // Mock subscriptions data - in real app would come from backend
-  subscriptions = [
-    {moduleCode: "TRANSPORT_MANAGEMENT", partnerCount: 15},
-    {moduleCode: "LOGISTICS_MANAGEMENT", partnerCount: 12},
-    {moduleCode: "ROUTE_OPTIMIZATION", partnerCount: 8},
-    {moduleCode: "PAYMENT_PROCESSING", partnerCount: 20},
-    {moduleCode: "FLEET_ANALYTICS", partnerCount: 6}
-  ];
-
-
-  searchQuery = '';
+  modules: ModuleModel[] = [];
+  isLoading = false;
   showAddDialog = false;
+  showDetailDialog = false;
+  isEditMode = false;
 
-  newModule = {
+  selectedModule: ModuleModel = {};
+  moduleStats: any = {};
+
+  newModule: ModuleModel = {
     name: '',
     code: '',
     description: ''
+  };
+
+  search: any = {
+    pageNumber: 0,
+    pageSize: 15,
+    totalRecords: 0,
+    module_name: '',
+    category: '',
+    status: ''
   };
 
   constructor(
@@ -85,29 +74,60 @@ export class Modules extends BaseComponent {
     authService: AuthService,
     protected remoteService: RemoteService,
     protected router: Router,
-    protected notificationService: NotificationService
+    protected notificationService: NotificationService,
+    private modulesService: ModulesService
   ) {
     super(authService, helper, loaderService, dialogService, confirmationService, messageService);
   }
 
-  get filteredModules() {
-    return this.modules.filter(m =>
-      m.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-      m.description.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-      m.code.toLowerCase().includes(this.searchQuery.toLowerCase())
-    );
+  override ngOnInit(): void {
   }
 
-  getActiveSubscriptionsCount(): number {
-    return this.subscriptions.reduce((total, sub) => total + sub.partnerCount, 0);
+  loadModules() {
+    this.isLoading = true;
+    this.loaderService.display(true);
+    this.modulesService.fetchModules(this.search.pageNumber, this.search.pageSize).subscribe({
+      next: (response: ApiResponse<any>) => {
+        if (response.returnCode === 200) {
+          this.modules = response.returnObject.content;
+          this.search.totalRecords = response.returnObject.totalElements;
+        } else {
+          this.showError(response.returnMessage);
+        }
+      },
+      error: (err) => this.showError('Failed to load modules'),
+      complete: () => {
+        this.isLoading = false;
+        this.loaderService.display(false);
+      }
+    });
   }
 
-  getModuleSubscriptions(moduleCode: string): number {
-    const subscription = this.subscriptions.find(s => s.moduleCode === moduleCode);
-    return subscription ? subscription.partnerCount : 0;
+  loadLazy(event: any) {
+    this.search.pageNumber = event.first / event.rows;
+    this.search.pageSize = event.rows;
+    this.loadModules();
   }
+
+  // get filteredModules() {
+  //   return this.modules.filter(m =>
+  //     m?.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+  //     m?.description.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+  //     m?.code.toLowerCase().includes(this.searchQuery.toLowerCase())
+  //   );
+  // }
+
+  // getActiveSubscriptionsCount(): number {
+  //   return this.subscriptions.reduce((total, sub) => total + sub.partnerCount, 0);
+  // }
+  //
+  // getModuleSubscriptions(moduleCode: string): number {
+  //   const subscription = this.subscriptions.find(s => s.moduleCode === moduleCode);
+  //   return subscription ? subscription.partnerCount : 0;
+  // }
 
   openAddDialog() {
+    this.isEditMode = false;
     this.newModule = {
       name: '',
       code: '',
@@ -116,61 +136,87 @@ export class Modules extends BaseComponent {
     this.showAddDialog = true;
   }
 
-  addModule() {
-    if (!this.newModule.name.trim() || !this.newModule.description.trim()) {
-      this.showWarning('Please fill in all fields before saving');
+  openEditDialog(module: ModuleModel) {
+    this.isEditMode = true;
+    this.newModule = { ...module };
+    this.showAddDialog = true;
+  }
+
+  saveModule() {
+    if (!this.newModule.name?.trim() || !this.newModule.description?.trim()) {
+      this.showWarning('Please fill in all required fields');
       return;
     }
 
-    // Auto-generate code from name if not provided
-    const code = this.newModule.code.trim() ||
-      this.newModule.name.toUpperCase().replaceAll(/\s+/g, '_')
-        .replaceAll(/[^A-Z0-9_]/g, '');
+    const action = this.isEditMode ?
+      this.modulesService.editModule(this.newModule) :
+      this.modulesService.addModule(this.newModule);
 
-    const module = {
-      id: this.modules.length + 1,
-      name: this.newModule.name,
-      code: code,
-      description: this.newModule.description,
-      createdAt: new Date(),
-      createdBy: 1 // Current user ID
-    };
-
-    this.modules.push(module);
-    this.showSuccess(`Module '${module.name}' added successfully`);
-    this.showAddDialog = false;
+    this.loaderService.display(true);
+    action.subscribe({
+      next: (response: ApiResponse<any>) => {
+        if (response.returnCode === 200) {
+          this.showSuccess(response.returnMessage);
+          this.showAddDialog = false;
+          this.loadModules();
+        } else {
+          this.showError(response.returnMessage);
+        }
+      },
+      error: (err) => this.showError('Operation failed'),
+      complete: () => this.loaderService.display(false)
+    });
   }
-
-  // New method implementations for transport/logistics modules
-  protected search: any = {};
 
   refreshModules() {
-    this.showInfo('Refreshing modules list...');
-    // In real app, would call ModulesService.modulesList()
-    setTimeout(() => {
-      this.showSuccess('Modules list refreshed successfully');
-    }, 1000);
+    this.loadModules();
   }
 
-  viewModule(module: any) {
-    this.showInfo(`Viewing details for ${module.name}`);
-    // In real app, would navigate to module details page or open detail modal
-    console.log('View module:', module);
+  viewModule(module: ModuleModel) {
+    this.loaderService.display(true);
+    this.modulesService.fetchModuleDetail(module.id!).subscribe({
+      next: (response: ApiResponse<any>) => {
+        if (response.returnCode === 200) {
+          this.selectedModule = response.returnObject.module;
+          this.moduleStats = response.returnObject.stats;
+          this.showDetailDialog = true;
+        } else {
+          this.showError(response.returnMessage);
+        }
+      },
+      error: (err) => this.showError('Failed to fetch module details'),
+      complete: () => this.loaderService.display(false)
+    });
   }
 
-  editModule(module: any) {
-    this.showInfo(`Editing ${module.name}`);
-    // In real app, would open edit modal with module data
-    console.log('Edit module:', module);
+  archiveModule(module: ModuleModel) {
+    this.confirmDialog({
+      message: `Are you sure you want to archive the module '${module.name}'?`,
+      header: 'Confirm Archiving',
+      icon: 'pi pi-exclamation-triangle',
+      onConfirm: () => {
+        this.loaderService.display(true);
+        this.modulesService.archiveModule(module.id!).subscribe({
+          next: (response: ApiResponse<any>) => {
+            if (response.returnCode === 200) {
+              this.showSuccess(response.returnMessage);
+              this.loadModules();
+            } else {
+              this.showError(response.returnMessage);
+            }
+          },
+          error: (err) => this.showError('Failed to archive module'),
+          complete: () => this.loaderService.display(false)
+        });
+      }
+    });
   }
 
-  viewSubscriptions(module: any) {
-    this.showInfo(`Viewing subscriptions for ${module.name}`);
-    // In real app, would show partners subscribed to this module
-    console.log('View subscriptions for module:', module);
+  viewSubscriptions(module: ModuleModel) {
+    this.router.navigate(['/subscriptions'], { queryParams: { moduleCode: module.code } });
   }
 
-  protected filterModules() {
-    console.log("Filtering...")
+  filterModules() {
+    this.loadModules();
   }
 }

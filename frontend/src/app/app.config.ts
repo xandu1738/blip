@@ -61,7 +61,6 @@ const CustomPreset = definePreset(Lara, {
   }
 });
 
-
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),

@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {BaseComponent} from '../../services/base-component';
+import {BaseComponent} from '../../../services/base-component';
 import {Button} from 'primeng/button';
 import {Users} from '../../user-management/users/users';
 import {Roles} from '../../user-management/roles/roles';

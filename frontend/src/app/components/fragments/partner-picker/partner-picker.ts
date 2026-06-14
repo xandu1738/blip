@@ -1,12 +1,12 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {BaseComponent} from '../../services/base-component';
-import {RemoteService} from '../../services/remoteService';
-import {LoaderService} from '../../services/loader.service';
+import {BaseComponent} from '../../../services/base-component';
+import {RemoteService} from '../../../services/remoteService';
+import {LoaderService} from '../../../services/loader.service';
 import {DialogService} from 'primeng/dynamicdialog';
 import {ConfirmationService, MessageService} from 'primeng/api';
-import {AuthService} from '../../services/auth.service';
+import {AuthService} from '../../../services/auth.service';
 import {Router} from '@angular/router';
-import {NotificationService} from '../../services/notification.service';
+import {NotificationService} from '../../../services/notification.service';
 import {AutoComplete} from 'primeng/autocomplete';
 import {FormsModule} from '@angular/forms';
 

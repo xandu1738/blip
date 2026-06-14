@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { RemoteService } from './remoteService';
 import { AuthService } from './auth.service';
 import { Observable } from 'rxjs';
-import { Driver } from '../models/driver.model';
+import { Driver } from '../components/models/driver.model';
 
 @Injectable({
     providedIn: 'root'
@@ -42,8 +42,7 @@ export class DriversService {
 
     deleteDriver(driverId: number): Observable<any> {
         return this.remoteService.sendDeleteToServer(
-            `${this.authService.apiUrl}/drivers/${driverId}`,
-            ''
+            `${this.authService.apiUrl}/drivers/${driverId}`
         );
     }
 }

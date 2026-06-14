@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { RemoteService } from './remoteService';
 import { Observable } from 'rxjs';
-import { Amenity } from '../models/amenity.model';
-import { VehicleCategory } from '../models/vehicle-category.model';
-import { environment } from '../../../environments/environment';
+import { Amenity } from '../components/models/amenity.model';
+import { VehicleCategory } from '../components/models/vehicle-category.model';
+import { environment } from '../../environments/environment';
 
 @Injectable({
     providedIn: 'root'

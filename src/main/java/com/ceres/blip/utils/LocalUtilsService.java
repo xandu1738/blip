@@ -15,9 +15,11 @@ import com.ceres.blip.repositories.SystemUserRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.micrometer.common.util.StringUtils;
 import jakarta.annotation.Nullable;
+import jakarta.persistence.criteria.Predicate;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -359,6 +361,68 @@ public abstract class LocalUtilsService {
 
     private boolean checkMatch(String msisdn) {
         return msisdn.matches(LocalUtilsService.UG_PHONE_REGEX);
+    }
+
+    /**
+     * This method builds a search specification for a given search query and fields.
+     *
+     */
+    protected <T> Specification<T> buildSearchSpec(String search, List<String> fields) {
+        return (root, query, cb) -> {
+            if (search == null || search.trim().isEmpty()) {
+                return cb.conjunction(); // no filtering
+            }
+
+            String pattern = "%" + search.toLowerCase() + "%";
+
+            List<Predicate> predicates = new ArrayList<>();
+
+            for (String field : fields) {
+                predicates.add(
+                        cb.like(
+                                cb.lower(root.get(field).as(String.class)),
+                                pattern
+                        )
+                );
+            }
+
+            return cb.or(predicates.toArray(new Predicate[0]));
+        };
+    }
+
+    /**
+     * This method builds a search specification for a given search query and field parameters.
+     *
+     */
+    public <T> Specification<T> buildSearchSpec(Map<String, Object> filters) {
+        return (root, query, cb) -> {
+
+            if (filters == null || filters.isEmpty()) {
+                return cb.conjunction();
+            }
+
+            List<Predicate> predicates = new ArrayList<>();
+            filters.forEach((field, value) -> {
+                if (value == null) return;
+                try {
+                    // validate field exists
+                    root.get(field);
+
+                    if (value instanceof String) {
+                        String pattern = "%" + value.toString().toLowerCase() + "%";
+                        predicates.add(cb.like(cb.lower(root.get(field).as(String.class)), pattern));
+                        return;
+                    }
+                    // exact match for non-strings
+                    predicates.add(cb.equal(root.get(field), value));
+                } catch (Exception ignored) {
+                    // ignore invalid fields safely
+                    throw new IllegalStateException("Invalid search field: " + field);
+                }
+            });
+
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
     }
 }
 

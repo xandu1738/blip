@@ -1,6 +1,3 @@
-/**
- * Created by John Maq on 4/27/2017.
- */
 import {Injectable} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 

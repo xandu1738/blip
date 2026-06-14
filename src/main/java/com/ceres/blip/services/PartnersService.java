@@ -1,7 +1,7 @@
 package com.ceres.blip.services;
 
 import com.ceres.blip.annotations.base.RequiresAuthentication;
-import com.ceres.blip.dtos.ListResponseDto;
+import com.ceres.blip.dtos.mappers.ResponseDtoMapper;
 import com.ceres.blip.models.database.PartnerModel;
 import com.ceres.blip.models.enums.AppDomains;
 import com.ceres.blip.models.enums.BlipPackages;
@@ -10,7 +10,9 @@ import com.ceres.blip.repositories.PartnersRepository;
 import com.ceres.blip.utils.LocalUtilsService;
 import com.ceres.blip.utils.LocalFileManager;
 import com.ceres.blip.dtos.OperationReturnObject;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.EnumUtils;
@@ -18,11 +20,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -34,6 +39,7 @@ public class PartnersService extends LocalUtilsService {
 
     private final LocalFileManager localFileManager;
     private final PartnersRepository partnersRepository;
+    private final ResponseDtoMapper responseDtoMapper;
 
 
     @CacheEvict(value = "partners", allEntries = true)
@@ -167,21 +173,47 @@ public class PartnersService extends LocalUtilsService {
     }
 
     @RequiresAuthentication
-    @Cacheable(value = "partners", key = "#pageNumber + '-' + #pageSize")
-    public OperationReturnObject fetchPartnersList(int pageNumber, int pageSize) {
+    @Cacheable(value = "partners", key = "#params['pageNumber'] + '-' + #params['pageSize']")
+    public OperationReturnObject fetchPartnersList(Map<String, Object> params) {
         belongsTo(AppDomains.BACK_OFFICE);
+        int pageNumber = (int) params.get("pageNumber");
+        int pageSize = (int) params.get("pageSize");
+        String sortField = (String) params.get("sortField");
+//        String search = (String) params.get("search");
+        Integer sortOrder = (Integer) params.get("sortOrder");
 
-        List<PartnerModel> partners = partnersRepository.findAll(PageRequest.of(pageNumber, pageSize))
-                .toList();
-        //Total count of partners
-        Optional<Map<String, Object>> partnersCount = partnersRepository.partnersCount();
-
-        Long count = 10L;
-        if (partnersCount.isPresent()) {
-            count = (Long) partnersCount.get().get("count");
+        if (StringUtils.isNotBlank(sortField)) {
+            sortField = "id";
+            sortOrder = -1;
         }
-        ListResponseDto listResponseDto = new ListResponseDto(count, partners);
-        return new OperationReturnObject(200, "Partners list successfully fetched.", listResponseDto);
+        Specification<PartnerModel> spec = null;
+//        if (StringUtils.isNotBlank(search)) {
+//            ObjectMapper mapper = new ObjectMapper();
+//            search = search.trim();
+//            try {
+//                JsonNode searchObj = mapper.readTree(search);
+//                Map<String, Object> map = mapper.readValue(searchObj.toString(), Map.class);
+//
+//                spec = buildSearchSpec(map);
+//            } catch (JsonProcessingException e) {
+//                throw new IllegalStateException(e.getMessage());
+//            }
+//
+//        }
+
+        Sort sort = Sort.by(
+                sortOrder > 0 ?
+                        Sort.Direction.ASC :
+                        Sort.Direction.DESC, sortField);
+
+        Page<PartnerModel> partners;
+        PageRequest pageable = PageRequest.of(pageNumber, pageSize, sort);
+//        if (spec != null) {
+//            partners = partnersRepository.findAll(spec, pageable);
+//        } else {
+            partners = partnersRepository.findAll(pageable);
+//        }
+        return responseDtoMapper.apply(partners);
     }
 
     @RequiresAuthentication
@@ -189,16 +221,8 @@ public class PartnersService extends LocalUtilsService {
     public OperationReturnObject filterPartnersList(JsonNode request) {
         belongsTo(AppDomains.BACK_OFFICE);
 
-        List<PartnerModel> partners = partnersRepository.findByArchivedFalse();
-        //Total count of partners
-        Optional<Map<String, Object>> partnersCount = partnersRepository.partnersCount();
-
-        Long count = 10L;
-        if (partnersCount.isPresent()) {
-            count = (Long) partnersCount.get().get("count");
-        }
-        ListResponseDto listResponseDto = new ListResponseDto(count, partners);
-        return new OperationReturnObject(200, "Partners list successfully fetched.", listResponseDto);
+        Page<PartnerModel> partners = partnersRepository.findByArchivedFalse(Pageable.ofSize(20));
+        return responseDtoMapper.apply(partners);
     }
 
     @RequiresAuthentication

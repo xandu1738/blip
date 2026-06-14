@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { RemoteService } from './remoteService';
 import { AuthService } from './auth.service';
 import { Observable } from 'rxjs';
-import { PartnerModel } from '../models/partner.model';
+import { PartnerModel } from '../components/models/partner.model';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +18,7 @@ export class PartnersService {
   public fetchPartnerProfile(partnerCode: string): Observable<any> {
     return this.remoteService.sendGetToServer(`${this.authService.apiUrl}/partners/profile/${partnerCode}`);
   }
-  
+
   public addPartner(partner: PartnerModel): Observable<any> {
     return this.remoteService.sendPostToServer(`${this.authService.apiUrl}/partners/add-partner`, { data: partner });
   }

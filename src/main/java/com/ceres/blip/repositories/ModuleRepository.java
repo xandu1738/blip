@@ -9,4 +9,6 @@ import java.util.Optional;
 @Repository
 public interface ModuleRepository extends JpaRepository<ModuleModel, Long> {
     Optional<ModuleModel> findByCode(String code);
+
+    org.springframework.data.domain.Page<ModuleModel> findByArchivedFalse(org.springframework.data.domain.Pageable pageable);
 }

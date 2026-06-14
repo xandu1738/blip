@@ -1,6 +1,6 @@
 import {CanActivateFn} from '@angular/router';
 import {inject} from '@angular/core';
-import {AuthService} from '../components/services/auth.service';
+import {AuthService} from '../services/auth.service';
 
 export const subscriptionsGuard: CanActivateFn = (route, state) => {
 

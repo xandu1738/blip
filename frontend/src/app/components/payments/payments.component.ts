@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {BaseComponent} from '../services/base-component';
+import {BaseComponent} from '../../services/base-component';
 
 @Component({
   selector: 'app-payments',

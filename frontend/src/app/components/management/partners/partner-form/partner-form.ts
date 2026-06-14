@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { PartnersService } from '../../../services/partners.service';
+import { PartnersService } from '../../../../services/partners.service';
 import { PartnerModel } from '../../../models/partner.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';

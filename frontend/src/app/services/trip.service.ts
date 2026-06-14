@@ -33,6 +33,6 @@ export class TripService {
     }
 
     removeTrip(id: number): Observable<any> {
-        return this.helper.sendDeleteToServer(`${this.apiUrl}/remove/${id}`,"");
+        return this.helper.sendDeleteToServer(`${this.apiUrl}/remove/${id}`);
     }
 }

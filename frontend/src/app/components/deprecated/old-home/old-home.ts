@@ -8,10 +8,10 @@ import {Router, RouterOutlet} from "@angular/router";
 import {SubscriptionsList} from "../../subscriptions/subscriptions-list/subscriptions-list";
 import {Toast} from "primeng/toast";
 import {MenuItem} from 'primeng/api';
-import {CommonService} from '../../services/commonService';
-import {Events} from '../../services/events';
-import {AuthService} from '../../services/auth.service';
-import {LoaderService} from '../../services/loader.service';
+import {CommonService} from '../../../services/commonService';
+import {Events} from '../../../services/events';
+import {AuthService} from '../../../services/auth.service';
+import {LoaderService} from '../../../services/loader.service';
 
 @Component({
   selector: 'app-old-home',
