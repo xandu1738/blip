@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {environment} from '../../../environments/environment';
+import {environment} from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -41,9 +41,8 @@ export class RemoteService {
     return this.httpClient.put(url, data, options);
   }
 
-  sendDeleteToServer(url: string, data: string): Observable<any> {
+  sendDeleteToServer(url: string): Observable<any> {
     this.logDevMode("Will use url " + url)
-    this.logDevMode("Sending to server " + data)
     let options = {
       headers: new HttpHeaders({
         'Content-Type': 'text/plain',
@@ -53,7 +52,7 @@ export class RemoteService {
     return this.httpClient.delete(url, options);
   }
 
-  sendGetToServer(url: string): Observable<any> {
+  sendGetToServer(url: string, params: any = undefined): Observable<any> {
     this.logDevMode("Will use url " + url);
     const accessToken = localStorage.getItem("blip_access_token");
     const headers = new HttpHeaders({
@@ -62,7 +61,15 @@ export class RemoteService {
       'Authorization': `Bearer ${accessToken}`
     });
 
-    return this.httpClient.get(url, {headers});
+    let httpParams = new HttpParams();
+    if (params) {
+      Object.keys(params).forEach(key => {
+        console.log(key, params[key]);
+        httpParams = httpParams.set(key, params[key]);
+      });
+    }
+
+    return this.httpClient.get(url, {headers: headers, params: httpParams});
   }
 
 

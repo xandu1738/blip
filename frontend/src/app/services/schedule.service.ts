@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { RemoteService } from './remoteService';
 import { Observable } from 'rxjs';
-import { ApiResponse, Schedule } from '../models/user.models';
+import { ApiResponse, Schedule } from '../components/models/user.models';
 import { AuthService } from './auth.service';
 
 @Injectable({
@@ -26,6 +26,6 @@ export class ScheduleService {
     }
 
     removeSchedule(id: number): Observable<ApiResponse<any>> {
-        return this.helper.sendDeleteToServer(`${this.apiUrl}/remove/${id}`, "");
+        return this.helper.sendDeleteToServer(`${this.apiUrl}/remove/${id}`);
     }
 }

@@ -4,7 +4,7 @@ import { ButtonModule } from 'primeng/button';
 import { SelectModule } from 'primeng/select';
 import { FormsModule } from '@angular/forms';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { ConsignmentService } from '../../services/consignment.service';
+import { ConsignmentService } from '../../../services/consignment.service';
 import { MessageService } from 'primeng/api';
 import { TextareaModule } from 'primeng/textarea';
 

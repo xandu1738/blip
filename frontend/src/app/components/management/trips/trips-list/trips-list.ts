@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { BaseComponent } from '../../../services/base-component';
-import { TripService } from '../../../services/trip.service';
-import { LoaderService } from '../../../services/loader.service';
+import { BaseComponent } from '../../../../services/base-component';
+import { TripService } from '../../../../services/trip.service';
+import { LoaderService } from '../../../../services/loader.service';
 import { DialogService } from 'primeng/dynamicdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { AuthService } from '../../../services/auth.service';
+import { AuthService } from '../../../../services/auth.service';
 import { Router } from '@angular/router';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
-import { RemoteService } from '../../../services/remoteService';
+import { RemoteService } from '../../../../services/remoteService';
 import { TooltipModule } from 'primeng/tooltip';
 
 @Component({

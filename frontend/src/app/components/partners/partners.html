@@ -14,69 +14,57 @@
 
 <div class="p-4 w-full select-none relative">
   <div class="my-3">
-    <p-accordion value="0">
-      <p-accordion-panel value="0">
-        <p-accordion-header>Filter</p-accordion-header>
-        <p-accordion-content>
-          <!-- Search Filters Card -->
-          <div class="p-6 mb-6">
-            <div class="flex justify-between gap-1.5 my-3">
-              <!-- Partner Name -->
-              <p-floatlabel class="mt-3 md:w-1/3 sm:w-full xs:w-full">
-                <label for="search_name" class="block text-sm font-medium mb-1">
-                  Partner Name
-                </label>
-                <input
-                  pInputText
-                  type="text"
-                  id="search_name"
-                  [(ngModel)]="userData.partner_name"
-                  class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-                />
-              </p-floatlabel>
-              <p-floatlabel class="mt-3 md:w-1/3 sm:w-full xs:w-full">
-                <label for="acc" class="block text-sm font-medium mb-1">
-                  Account Number
-                </label>
-                <input
-                  pInputText
-                  type="text"
-                  id="acc"
-                  [(ngModel)]="userData.account_number"
-                  class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-                />
-              </p-floatlabel>
-              <p-floatlabel class="mt-3 md:w-1/3 sm:w-full xs:w-full">
-                <label for="bref" class="block text-sm font-medium mb-1">
-                  Business Reference
-                </label>
-                <input
-                  pInputText
-                  type="text"
-                  id="bref"
-                  [(ngModel)]="userData.business_reference"
-                  class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-                />
-              </p-floatlabel>
-            </div>
-            <!-- Search Button -->
-            <div class="flex justify-end pt-2">
-              <p-button
-                (onClick)="filterPartners()"
-                icon="pi pi-search"
-                label="Search"
-                size="small"
-                severity="primary"
-              >
-              </p-button>
-            </div>
-
-          </div>
-
-        </p-accordion-content>
-      </p-accordion-panel>
-
-    </p-accordion>
+    <p-panel header="Filter" [toggleable]="true" [collapsed]="true">
+      <div class="flex justify-between gap-1.5 my-3">
+        <!-- Partner Name -->
+        <p-floatlabel class="mt-3 md:w-1/3 sm:w-full xs:w-full">
+          <label for="search_name" class="block text-sm font-medium mb-1">
+            Partner Name
+          </label>
+          <input
+            pInputText
+            type="text"
+            id="search_name"
+            (change)="buildSearchQuery('partnerName',$event)"
+            class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+          />
+        </p-floatlabel>
+        <p-floatlabel class="mt-3 md:w-1/3 sm:w-full xs:w-full">
+          <label for="acc" class="block text-sm font-medium mb-1">
+            Account Number
+          </label>
+          <input
+            pInputText
+            type="text"
+            (change)="buildSearchQuery('accountNumber',$event)"
+            id="acc"
+            class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+          />
+        </p-floatlabel>
+        <p-floatlabel class="mt-3 md:w-1/3 sm:w-full xs:w-full">
+          <label for="bref" class="block text-sm font-medium mb-1">
+            Business Reference
+          </label>
+          <input
+            pInputText
+            type="text"
+            id="bref"
+            (change)="buildSearchQuery('businessReference',$event)"
+            class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+          />
+        </p-floatlabel>
+      </div>
+      <!-- Search Button -->
+      <div class="flex justify-end pt-2">
+        <p-button
+          (onClick)="filterPartners()"
+          icon="pi pi-search"
+          label="Search"
+          size="small"
+          severity="primary">
+        </p-button>
+      </div>
+    </p-panel>
   </div>
 
   <!-- Partners Table -->
@@ -96,12 +84,9 @@
         <tr class="">
           <th id="logo" style="width: 8%">Logo</th>
           <th id="partnerName" style="width: 15%">Partner Name</th>
-          <th id="accNo" style="width: 10%">Account Number</th>
           <th id="person" style="width: 12%">Contact Person</th>
           <th id="phone" style="width: 10%">Contact Phone</th>
-          <th id="accn" style="width: 10%">Account ID</th>
-          <th id="reference" style="width: 12%">Business Reference</th>
-          <th id="active" style="width: 8%">Active</th>
+          <th id="active" style="width: 8%">Status</th>
           <th id="pkg" style="width: 10%">Package</th>
           <th id="act" style="width: 15%">Actions</th>
         </tr>
@@ -116,30 +101,57 @@
             }
           </td>
           <td class="truncate">{{ partner?.partnerName || '---' }}</td>
-          <td class="truncate">{{ partner?.accountNumber || '---' }}</td>
           <td class="truncate">{{ partner?.contactPerson || '---' }}</td>
           <td class="truncate">{{ partner?.contactPhone || '---' }}</td>
-          <td class="truncate">{{ partner?.accountId || '---' }}</td>
-          <td class="truncate">{{ partner?.businessReference || '---' }}</td>
           <td class="truncate">
-<!--            <span [class.text-green-500]="partner.active" [class.text-red-500]="!partner.active">-->
-<!--              {{ partner?.active ? 'Active' : 'Inactive' }}-->
-<!--            </span>-->
             @if (partner?.active) {
               <span class="px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded-full break-all">Active</span>
-            }  @else {
+            } @else {
               <span class="px-2 py-1 text-xs bg-gray-100 text-red-700 rounded-full break-all">Inactive</span>
             }
           </td>
-          <td class="truncate">{{ partner?.package || '---' }}</td>
+          <td class="truncate">
+            @if (partner?.packageField === 'TRANSPORT') {
+              <span
+                class="px-2 py-1 text-xs bg-green-100 text-green-700 rounded-full break-all">{{ partner?.packageField }}</span>
+            } @else if (partner?.packageField === 'LOGISTICS') {
+              <span
+                class="px-2 py-1 text-xs bg-yellow-100 text-yellow-700 rounded-full break-all">{{ partner?.packageField }}</span>
+            } @else {
+              <span
+                class="px-2 py-1 text-xs bg-gray-100 text-gray-700 rounded-full break-all">{{ partner?.packageField || '---' }}</span>
+            }
+          </td>
           <td class="truncate">
             <div class="flex gap-2">
-              <p-button size="small" [rounded]="true" severity="primary" icon="pi pi-eye" [outlined]="true"
-                        pTooltip="View Partner" tooltipPosition="bottom"></p-button>
-              <p-button size="small" [rounded]="true" severity="info" icon="pi pi-pencil" [outlined]="true"
-                        pTooltip="Edit Partner" tooltipPosition="bottom"></p-button>
-              <p-button size="small" [rounded]="true" severity="warn" icon="pi pi-trash" [outlined]="true"
-                        pTooltip="Archive Partner" tooltipPosition="bottom"></p-button>
+              <p-button size="small"
+                        [rounded]="true"
+                        severity="info"
+                        (onClick)="viewPartner(partner)"
+                        icon="pi pi-eye"
+                        [outlined]="true"
+                        pTooltip="View Partner"
+                        tooltipPosition="bottom"></p-button>
+              @if (partner?.archived) {
+                <p-button size="small"
+                          [rounded]="true"
+                          severity="success"
+                          (onClick)="restorePartner(partner)"
+                          icon="pi pi-refresh"
+                          [outlined]="true"
+                          pTooltip="Restore Partner"
+                          tooltipPosition="bottom"></p-button>
+              } @else {
+                <p-button size="small"
+                          [rounded]="true"
+                          severity="warn"
+                          (onClick)="archivePartner(partner)"
+                          icon="pi pi-trash"
+                          [outlined]="true"
+                          pTooltip="Archive Partner"
+                          tooltipPosition="bottom"></p-button>
+              }
+
             </div>
           </td>
         </tr>

@@ -4,7 +4,7 @@ import {Observable} from 'rxjs';
 import {LoaderService} from './loader.service';
 import {DialogService} from 'primeng/dynamicdialog';
 import {ConfirmationService, MessageService} from 'primeng/api';
-import {User} from '../models/user.models';
+import {User} from '../components/models/user.models';
 import {AuthService} from './auth.service';
 
 @Directive({

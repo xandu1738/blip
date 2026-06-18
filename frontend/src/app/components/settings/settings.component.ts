@@ -5,16 +5,16 @@ import {ButtonDirective, ButtonModule} from 'primeng/button';
 import {InputText, InputTextModule} from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { AuthService } from '../services/auth.service';
+import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
-import { NotificationService } from '../services/notification.service';
-import { LoaderService } from '../services/loader.service';
-import {BaseComponent} from '../services/base-component';
-import {Events} from '../services/events';
-import {RemoteService} from '../services/remoteService';
+import { NotificationService } from '../../services/notification.service';
+import { LoaderService } from '../../services/loader.service';
+import {BaseComponent} from '../../services/base-component';
+import {Events} from '../../services/events';
+import {RemoteService} from '../../services/remoteService';
 import {DialogService} from 'primeng/dynamicdialog';
 import {ConfirmationService, MessageService} from 'primeng/api';
-import {SocketService} from '../services/socket.service';
+import {SocketService} from '../../services/socket.service';
 
 @Component({
   selector: 'app-settings',

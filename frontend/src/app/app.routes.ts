@@ -7,9 +7,9 @@ import { PaymentsComponent } from './components/payments/payments.component';
 import { ReportsComponent } from './components/reports/reports.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { LoginComponent } from './components/login/login.component';
-import { RegisterComponent } from './components/register/register.component';
+import { Partners } from './components/partners/partners';
 import { authGuard } from './guards/auth.guard';
-import { Configuration } from './components/configuration/configuration';
+import { Modules } from './components/modules/modules.component';
 import { Users } from './components/user-management/users/users';
 import { SubscriptionsList } from './components/subscriptions/subscriptions-list/subscriptions-list';
 import { licenseGuard } from './guards/license-guard';
@@ -32,6 +32,7 @@ import { Amenities } from './components/management/amenities/amenities';
 import { VehicleCategories } from './components/management/vehicle-categories/vehicle-categories';
 import { TripsList } from './components/management/trips/trips-list/trips-list';
 import { TripForm } from './components/management/trips/trip-form/trip-form';
+import { PartnerForm } from './components/management/partners/partner-form/partner-form';
 
 export const routes: Routes = [
   {
@@ -62,12 +63,22 @@ export const routes: Routes = [
     component: UserForm
   },
   {
-    path: 'register',
-    component: RegisterComponent
+    path: 'partners',
+    component: Partners
+  },
+  // {
+  //   path: 'partners',
+  //   component: PartnerForm,
+  //   canActivate: [authGuard, licenseGuard]
+  // },
+  {
+    path: 'partner-form',
+    component: PartnerForm,
+    canActivate: [authGuard, licenseGuard]
   },
   {
-    path: 'partners',
-    component: ParcelsComponent,
+    path: 'partner-form/:id',
+    component: PartnerForm,
     canActivate: [authGuard, licenseGuard]
   },
   {
@@ -156,7 +167,7 @@ export const routes: Routes = [
     canActivate: [authGuard, licenseGuard]
   },
   {
-    path: 'modules',
+    path: 'parcels',
     component: ParcelsComponent,
     canActivate: [authGuard, licenseGuard]
   },
@@ -201,8 +212,8 @@ export const routes: Routes = [
     canActivate: [authGuard, licenseGuard]
   },
   {
-    path: 'configuration',
-    component: Configuration,
+    path: 'modules',
+    component: Modules,
     canActivate: [authGuard, licenseGuard]
   },
   {

@@ -3,12 +3,11 @@
     <h1 class="text-3xl font-bold mb-2">Access Management</h1>
     <p class="my-4">Manage Account Access Information</p>
     <div class="flex gap-2">
-      <p-button label="System Users" [rounded]="true" (onClick)="toggleManagement('USERS')" severity="secondary"/>
-      <p-button label="Roles Management" [rounded]="true" (onClick)="toggleManagement('ROLES')" severity="secondary"/>
-      <p-button label="Domains" [rounded]="true" (onClick)="toggleManagement('DOMAINS')" severity="secondary"/>
+      <p-button size="small" label="System Users" [rounded]="true" (onClick)="toggleManagement('USERS')" severity="secondary"/>
+      <p-button size="small" label="Roles Management" [rounded]="true" (onClick)="toggleManagement('ROLES')" severity="secondary"/>
+      <p-button size="small" label="Domains" [rounded]="true" (onClick)="toggleManagement('DOMAINS')" severity="secondary"/>
     </div>
   </div>
-
 
   <div class="my-4">
     @if (showUserManagement) {

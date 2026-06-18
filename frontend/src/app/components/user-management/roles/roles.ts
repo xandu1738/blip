@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {BaseComponent} from '../../services/base-component';
+import {BaseComponent} from '../../../services/base-component';
 import {Accordion, AccordionContent, AccordionHeader, AccordionPanel} from 'primeng/accordion';
 import {Button} from 'primeng/button';
 import {DomainPicker} from '../../fragments/domain-picker/domain-picker';

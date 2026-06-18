@@ -1,0 +1,267 @@
+<div class="">
+
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-6">
+    <div>
+      <h1 class="text-3xl font-bold font-sans mb-2">Modules & Subscriptions</h1>
+      <p class="mx-4 text-gray-600">Manage transport and logistics business modules available for partner
+        subscription</p>
+    </div>
+    <div class="flex gap-3">
+      <p-button
+        (onClick)="refreshModules()"
+        icon="pi pi-refresh"
+        size="small"
+        [outlined]="true"
+        severity="secondary">
+      </p-button>
+      <p-button
+        (onClick)="openAddDialog()"
+        icon="pi pi-plus"
+        label="Add Module"
+        size="small">
+      </p-button>
+    </div>
+  </div>
+
+  <!-- Quick Stats (Dynamic) -->
+<!--  <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">-->
+<!--    <div class="stat-card p-4 rounded-lg shadow-sm border border-gray-100 bg-white">-->
+<!--      <div class="flex items-center justify-between">-->
+<!--        <div>-->
+<!--          <p class="text-sm text-gray-500 mb-1">Total Modules</p>-->
+<!--          <p class="font-bold text-2xl text-gray-800">{{ search.totalRecords }}</p>-->
+<!--        </div>-->
+<!--        <div class="bg-blue-50 p-3 rounded-full">-->
+<!--          <span class="text-blue-600 text-xl">📦</span>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    &lt;!&ndash; Other stats can be added here if needed &ndash;&gt;-->
+<!--  </div>-->
+
+
+<!--  <div class="my-3">-->
+<!--    <p-accordion value="0">-->
+<!--      <p-accordion-panel value="0">-->
+<!--        <p-accordion-header>Filter</p-accordion-header>-->
+<!--        <p-accordion-content>-->
+<!--          <div class="p-4">-->
+<!--            <div class="flex flex-wrap gap-4 items-end">-->
+<!--              <p-floatlabel class="md:w-1/4 sm:w-full">-->
+<!--                <label for="search_name">Module Name</label>-->
+<!--                <input-->
+<!--                  pInputText-->
+<!--                  type="text"-->
+<!--                  id="search_name"-->
+<!--                  [(ngModel)]="search.module_name"-->
+<!--                  class="w-full"-->
+<!--                />-->
+<!--              </p-floatlabel>-->
+<!--              <p-button-->
+<!--                (onClick)="filterModules()"-->
+<!--                icon="pi pi-search"-->
+<!--                label="Search"-->
+<!--                size="small"-->
+<!--              >-->
+<!--              </p-button>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </p-accordion-content>-->
+<!--      </p-accordion-panel>-->
+<!--    </p-accordion>-->
+<!--  </div>-->
+
+  <!-- Modules Table -->
+  <div class="relative shadow-sm border border-gray-200 overflow-y-auto below">
+    <p-table [value]="modules"
+             class="small-word-grid"
+             [rows]="search.pageSize"
+             [paginator]="true"
+             [lazy]="true"
+             [totalRecords]="search.totalRecords"
+             (onLazyLoad)="loadLazy($event)"
+             [rowsPerPageOptions]="[15, 20, 50, 100]"
+             [tableStyle]="{ 'min-width': '100%' }" stripedRows>
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 50px">Icon</th>
+          <th pSortableColumn="name">Module Name <p-sortIcon field="name"></p-sortIcon></th>
+          <th pSortableColumn="code">Module Code <p-sortIcon field="code"></p-sortIcon></th>
+          <th>Description</th>
+          <th class="text-center">Actions</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-module>
+        <tr>
+          <td class="text-center">
+            @if (module?.name?.toLowerCase()?.includes('transport')) {
+              <span class="text-2xl">🚌</span>
+            } @else if (module?.name?.toLowerCase()?.includes('logistics')) {
+              <span class="text-2xl">📦</span>
+            } @else {
+              <span class="text-2xl">⚙️</span>
+            }
+          </td>
+          <td>
+            <div class="font-semibold">{{ module?.name }}</div>
+            <div class="text-xs text-gray-500">Created {{ module?.createdAt | date:'MMM d, y' }}</div>
+          </td>
+          <td>
+            <span class="font-mono text-sm bg-gray-100 px-2 py-1 rounded">{{ module?.code }}</span>
+          </td>
+          <td class="max-w-xs truncate" [pTooltip]="module?.description">
+            {{ module?.description }}
+          </td>
+          <td>
+            <div class="flex gap-2 justify-center">
+              <p-button size="small"
+                        [rounded]="true"
+                        severity="info"
+                        (onClick)="viewModule(module)"
+                        icon="pi pi-eye"
+                        [outlined]="true"
+                        pTooltip="View Details"
+                        tooltipPosition="bottom"></p-button>
+              <p-button size="small"
+                        [rounded]="true"
+                        severity="success"
+                        (onClick)="openEditDialog(module)"
+                        icon="pi pi-pencil"
+                        [outlined]="true"
+                        pTooltip="Edit Module"
+                        tooltipPosition="bottom"></p-button>
+              <p-button size="small"
+                        [rounded]="true"
+                        severity="warn"
+                        (onClick)="archiveModule(module)"
+                        icon="pi pi-trash"
+                        [outlined]="true"
+                        pTooltip="Archive Module"
+                        tooltipPosition="bottom"></p-button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="5" class="text-center py-8">
+            <p class="text-gray-500">No modules found</p>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+</div>
+
+<!-- Add/Edit Module Dialog -->
+<p-dialog [header]="isEditMode ? 'Edit Business Module' : 'Add New Business Module'"
+          [(visible)]="showAddDialog"
+          [modal]="true"
+          [style]="{ width: '600px' }"
+          [closable]="true">
+
+  <div class="space-y-6 pt-4">
+    <div class="space-y-4">
+      <div>
+        <label class="block font-medium mb-1">Module Name *</label>
+        <input
+          type="text"
+          pInputText
+          [(ngModel)]="newModule.name"
+          placeholder="e.g., Fleet Management"
+          class="w-full"/>
+      </div>
+
+      <div>
+        <label class="block font-medium mb-1">Module Code</label>
+        <input
+          type="text"
+          pInputText
+          [(ngModel)]="newModule.code"
+          [disabled]="isEditMode"
+          placeholder="AUTO_GENERATED"
+          class="w-full"/>
+        @if (isEditMode) {
+          <p class="text-xs text-info mt-1">Module code cannot be changed after creation.</p>
+        }
+      </div>
+
+      <div>
+        <label class="block font-medium mb-1">Module Description *</label>
+        <textarea
+          pInputText
+          [(ngModel)]="newModule.description"
+          rows="4"
+          placeholder="Describe implementation details..."
+          class="w-full"></textarea>
+      </div>
+    </div>
+
+    <div class="flex justify-end gap-3 pt-6 border-t border-gray-100">
+      <p-button
+        label="Cancel"
+        icon="pi pi-times"
+        severity="secondary"
+        [outlined]="true"
+        (onClick)="showAddDialog = false">
+      </p-button>
+      <p-button
+        [label]="isEditMode ? 'Update Module' : 'Create Module'"
+        [icon]="isEditMode ? 'pi pi-check' : 'pi pi-plus'"
+        severity="success"
+        (onClick)="saveModule()">
+      </p-button>
+    </div>
+  </div>
+</p-dialog>
+
+<!-- Module Detail Dialog with Statistics -->
+<p-dialog header="Module Details"
+          [(visible)]="showDetailDialog"
+          [modal]="true"
+          [style]="{ width: '500px' }"
+          [closable]="true">
+
+  <div class="space-y-6 pt-4" *ngIf="selectedModule">
+    <div class="flex items-center gap-4 border-b pb-4 border-gray-100">
+      <div class="bg-blue-50 p-4 rounded-xl">
+        <span class="text-4xl">📦</span>
+      </div>
+      <div>
+        <h2 class="text-2xl font-bold">{{ selectedModule.name }}</h2>
+        <span class="font-mono text-sm bg-gray-100 px-3 py-1 rounded-full text-gray-500">{{ selectedModule.code }}</span>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4">
+      <div class="bg-gray-50 p-4 rounded-lg">
+        <p class="text-xs text-gray-500 uppercase font-semibold mb-1">Subscriptions</p>
+        <p class="text-2xl font-bold text-blue-600">{{ moduleStats?.subscriptionCount || 0 }}</p>
+        <p class="text-xs text-gray-400">Total active partners</p>
+      </div>
+      <div class="bg-gray-50 p-4 rounded-lg">
+        <p class="text-xs text-gray-500 uppercase font-semibold mb-1">Created Date</p>
+        <p class="text-lg font-semibold">{{ selectedModule.createdAt | date:'mediumDate' }}</p>
+        <p class="text-xs text-gray-400">System initialization</p>
+      </div>
+    </div>
+
+    <div>
+      <h3 class="font-semibold mb-2">Description</h3>
+      <p class="text-gray-600 leading-relaxed">{{ selectedModule.description }}</p>
+    </div>
+
+    <div class="flex justify-end pt-4 border-t border-gray-100">
+      <p-button
+        label="Close"
+        icon="pi pi-times"
+        severity="secondary"
+        (onClick)="showDetailDialog = false">
+      </p-button>
+    </div>
+  </div>
+</p-dialog>

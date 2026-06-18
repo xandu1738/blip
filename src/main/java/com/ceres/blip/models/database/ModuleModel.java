@@ -38,4 +38,6 @@ public class ModuleModel {
     @Column(name = "created_by")
     private Long createdBy;
 
+    @Column(name = "archived")
+    private Boolean archived = false;
 }

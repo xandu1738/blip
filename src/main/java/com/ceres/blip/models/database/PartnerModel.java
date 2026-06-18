@@ -41,6 +41,9 @@ public class PartnerModel {
     @Column(name = "active")
     private Boolean active = false;
 
+    @Column(name = "archived")
+    private Boolean archived = false;
+
     @Column(name = "logo", length = Integer.MAX_VALUE)
     private String logo;
 

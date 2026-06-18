@@ -20,6 +20,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -88,12 +89,22 @@ public class ModulesService extends LocalUtilsService{
     }
 
     public OperationReturnObject modulesList(int pageNumber, int pageSize) {
-        Page<ModuleModel> modules = repository.findAll(PageRequest.of(pageNumber, pageSize));
+        Page<ModuleModel> modules = repository.findByArchivedFalse(PageRequest.of(pageNumber, pageSize));
         return new OperationReturnObject(200, "Modules list successfully fetched.", modules);
     }
 
     public OperationReturnObject moduleDetail(Long id) {
-        return new OperationReturnObject(200, "Module details successfully fetched.", repository.findById(id).orElse(null));
+        ModuleModel module = repository.findById(id).orElse(null);
+        if (module == null) {
+            return new OperationReturnObject(404, "Module not found.", null);
+        }
+
+        long subscriptionCount = subscriptionRepository.countByModuleCode(module.getCode());
+        Map<String, Object> data = new HashMap<>();
+        data.put("module", module);
+        data.put("stats", Map.of("subscriptionCount", subscriptionCount));
+
+        return new OperationReturnObject(200, "Module details successfully fetched.", data);
     }
 
     public OperationReturnObject removeModule(Long id) {
@@ -101,13 +112,11 @@ public class ModulesService extends LocalUtilsService{
             throw new IllegalArgumentException("Module ID cannot be null");
         }
 
-        Optional<ModuleModel> module = repository.findById(id);
-        if (module.isEmpty()) {
-            throw new IllegalArgumentException("Module with ID " + id + " not found.");
-        }
+        ModuleModel module = repository.findById(id).orElseThrow(() -> new IllegalArgumentException("Module with ID " + id + " not found."));
+        module.setArchived(true);
+        repository.save(module);
 
-        repository.deleteById(id);
-        return new OperationReturnObject(200, "Module successfully removed.", null);
+        return new OperationReturnObject(200, "Module successfully archived.", null);
     }
 
     public OperationReturnObject subscribeToModule(JsonNode request) {

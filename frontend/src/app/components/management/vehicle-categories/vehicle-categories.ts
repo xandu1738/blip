@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { BaseComponent } from '../../services/base-component';
-import { ManagementService } from '../../services/management.service';
-import { LoaderService } from '../../services/loader.service';
+import { BaseComponent } from '../../../services/base-component';
+import { ManagementService } from '../../../services/management.service';
+import { LoaderService } from '../../../services/loader.service';
 import { DialogService } from 'primeng/dynamicdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { AuthService } from '../../services/auth.service';
-import { RemoteService } from '../../services/remoteService';
+import { AuthService } from '../../../services/auth.service';
+import { RemoteService } from '../../../services/remoteService';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';

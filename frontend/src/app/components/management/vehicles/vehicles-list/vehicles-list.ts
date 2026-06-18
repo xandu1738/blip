@@ -1,18 +1,20 @@
 import {Component, OnInit} from '@angular/core';
-import {BaseComponent} from '../../../services/base-component';
-import {VehicleService} from '../../../services/vehicle.service';
-import {LoaderService} from '../../../services/loader.service';
+import {BaseComponent} from '../../../../services/base-component';
+import {VehicleService} from '../../../../services/vehicle.service';
+import {LoaderService} from '../../../../services/loader.service';
 import {DialogService} from 'primeng/dynamicdialog';
 import {ConfirmationService, MessageService} from 'primeng/api';
-import {AuthService} from '../../../services/auth.service';
+import {AuthService} from '../../../../services/auth.service';
 import {Router} from '@angular/router';
 import {TableModule} from 'primeng/table';
 import {Button} from 'primeng/button';
 import {DatePipe} from '@angular/common';
-import {RemoteService} from '../../../services/remoteService';
+import {RemoteService} from '../../../../services/remoteService';
 import {Accordion, AccordionContent, AccordionHeader, AccordionPanel} from 'primeng/accordion';
 import {FormsModule} from '@angular/forms';
 import {InputText} from 'primeng/inputtext';
+import {Amenities} from '../../amenities/amenities';
+import {VehicleCategories} from '../../vehicle-categories/vehicle-categories';
 
 // Add this import
 
@@ -28,7 +30,9 @@ import {InputText} from 'primeng/inputtext';
     AccordionHeader,
     AccordionPanel,
     FormsModule,
-    InputText
+    InputText,
+    Amenities,
+    VehicleCategories
   ],
   templateUrl: './vehicles-list.html',
   styleUrl: './vehicles-list.css'
@@ -37,6 +41,9 @@ export class VehiclesList extends BaseComponent implements OnInit {
   vehicles: any[] = [];
   totalRecords: number = 0;
   loading: boolean = false;
+  showVehicles: boolean = true;
+  showAmenities: boolean = false;
+  showCategories: boolean = false;
   first: number = 0;
   rows: number = 10;
   protected vehicleData: any = {};
@@ -89,5 +96,27 @@ export class VehiclesList extends BaseComponent implements OnInit {
 
   protected filterVehicles() {
     //Placeholder for filtering logic
+  }
+
+  protected toggleTab(code: string) {
+    switch (code) {
+      case 'AMENITIES':
+        this.showAmenities = true;
+        this.showCategories = false;
+        this.showVehicles = false;
+        break;
+      case 'CATEGORIES':
+        this.showAmenities = false;
+        this.showCategories = true;
+        this.showVehicles = false;
+        break;
+      case 'VEHICLES':
+        this.showAmenities = false;
+        this.showCategories = false;
+        this.showVehicles = true;
+        break;
+      default:
+        throw new Error("Invalid management code!");
+    }
   }
 }

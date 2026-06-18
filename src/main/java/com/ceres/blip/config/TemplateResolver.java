@@ -1,4 +1,4 @@
-package com.ceres.blip.utils.mail;
+package com.ceres.blip.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

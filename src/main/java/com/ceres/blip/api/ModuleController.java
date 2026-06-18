@@ -43,6 +43,6 @@ public class ModuleController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<OperationReturnObject> deleteModule(@PathVariable Long id) {
-        return ResponseEntity.ok(modulesService.moduleDetail(id));
+        return ResponseEntity.ok(modulesService.removeModule(id));
     }
 }

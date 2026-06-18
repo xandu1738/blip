@@ -2,20 +2,20 @@ import {Component, OnInit} from '@angular/core';
 import {TableModule} from 'primeng/table';
 import {Avatar} from 'primeng/avatar';
 import {Router, RouterOutlet} from '@angular/router';
-import {Events} from './components/services/events';
-import {AuthService} from './components/services/auth.service';
-import {LoaderService} from './components/services/loader.service';
+import {Events} from './services/events';
+import {AuthService} from './services/auth.service';
+import {LoaderService} from './services/loader.service';
 import {SubscriptionsList} from './components/subscriptions/subscriptions-list/subscriptions-list';
 import {LandingComponent} from './components/common/landing/landing.component';
 import {Accordion, AccordionContent, AccordionHeader, AccordionPanel} from 'primeng/accordion';
 import {ConfirmDialog} from 'primeng/confirmdialog';
 import {Toast} from 'primeng/toast';
-import {BaseComponent} from './components/services/base-component';
-import {RemoteService} from './components/services/remoteService';
+import {BaseComponent} from './services/base-component';
+import {RemoteService} from './services/remoteService';
 import {DialogService} from 'primeng/dynamicdialog';
 import {ConfirmationService, MessageService} from 'primeng/api';
-import {SocketService} from './components/services/socket.service';
-import {NotificationService, Notification} from './components/services/notification.service';
+import {SocketService} from './services/socket.service';
+import {NotificationService, Notification} from './services/notification.service';
 import {TruncatePipe} from './pipes/truncate-pipe';
 import {PopoverModule} from 'primeng/popover';
 import {BadgeModule} from 'primeng/badge';
@@ -64,15 +64,6 @@ export class App extends BaseComponent implements OnInit {
 
   /** Dark / Light theme */
   isDarkMode: boolean = false;
-
-  // constructor(
-  //   protected commonService: CommonService,
-  //   protected eventService: Events,
-  //   protected router: Router,
-  //   protected authService: AuthService,
-  //   protected loaderService: LoaderService
-  // ) { // Inject Router and AuthService
-  // }
   constructor(
     protected eventService: Events,
     protected router: Router,
@@ -183,17 +174,6 @@ export class App extends BaseComponent implements OnInit {
       this.items?.push(configMenu);
     }
 
-    if (this.user?.permissions?.includes('MANAGE_MODULES')) {
-      this.items?.push({
-        label: 'Modules',
-        icon: 'pi pi-verified',
-        value: 1,
-        command: () => {
-          this.router.navigate(['/configuration'])
-        }
-      });
-    }
-
     let mgt = this.getManagementMenu();
     mgt.items ??= [];
     if (mgt.items?.length > 0) {
@@ -259,85 +239,43 @@ export class App extends BaseComponent implements OnInit {
         icon: 'pi pi-ticket',
         value: 0,
         command: () => {
-          this.router.navigate(['/register'])
+          this.router.navigate(['/partners'])
         }
       });
     }
-    if (this.user?.permissions?.includes('MANAGE_DRIVERS')) {
+
+    if (this.user?.permissions?.includes('MANAGE_USERS')) {
       config.items.push({
-        label: 'Drivers',
-        icon: 'pi pi-user',
-        value: 2,
+        label: 'Access Management',
+        icon: 'pi pi-users',
+        value: 0,
         command: () => {
-          this.router.navigate(['/drivers'])
+          this.router.navigate(['/access'])
         }
       });
     }
-    if (this.user?.permissions?.includes('MANAGE_VEHICLES')) {
+    if (this.user?.permissions?.includes('MANAGE_LICENSES')) {
       config.items.push({
-          value: 3,
-          label: 'Vehicles',
-          icon: 'pi pi-car',
-          command: () => {
-            this.router.navigate(['/vehicles'])
-          }
-        }
-      )
-    }
-
-    if (this.user?.permissions?.includes('MANAGE_ROUTES')) {
-      config.items.push({
-          value: 4,
-          label: 'Routes',
-          icon: 'pi pi-gauge',
-          command: () => {
-            this.router.navigate(['/routes'])
-          }
-        }
-      );
-    }
-
-    if (this.user?.permissions?.includes('MANAGE_SCHEDULES')) {
-      config.items.push({
-        value: 7,
-        label: 'Schedules',
-        icon: 'pi pi-calendar',
+        value: 6,
+        label: 'Licenses',
+        icon: 'pi pi-check-circle',
         command: () => {
-          this.router.navigate(['/schedules'])
+          this.router.navigate(['/manage-subscriptions'])
         }
       })
     }
 
-    if (this.user?.permissions?.includes('MANAGE_VEHICLES')) {
-      config.items.push({
-        value: 8,
-        label: 'Amenities',
-        icon: 'pi pi-list',
+    if (this.user?.permissions?.includes('MANAGE_MODULES')) {
+      config.items?.push({
+        label: 'Modules',
+        icon: 'pi pi-verified',
+        value: 1,
         command: () => {
-          this.router.navigate(['/amenities'])
-        }
-      });
-      config.items.push({
-        value: 9,
-        label: 'Vehicle Categories',
-        icon: 'pi pi-tags',
-        command: () => {
-          this.router.navigate(['/vehicle-categories'])
+          this.router.navigate(['/modules'])
         }
       });
     }
 
-    if (this.user?.permissions?.includes('MANAGE_FARES')) {
-      config.items.push({
-          value: 5,
-          label: 'Fares and Charges',
-          icon: 'pi pi-megaphone',
-          command: () => {
-            this.router.navigate(['/dashboard'])
-          }
-        }
-      )
-    }
     return config;
   }
 
@@ -350,16 +288,61 @@ export class App extends BaseComponent implements OnInit {
     }
 
     management.items ??= [];
-
-    if (this.user?.permissions?.includes('MANAGE_USERS')) {
+    if (this.user?.permissions?.includes('MANAGE_DRIVERS')) {
       management.items.push({
-        label: 'Access Management',
-        icon: 'pi pi-users',
-        value: 0,
+        label: 'Drivers',
+        icon: 'pi pi-user',
+        value: 2,
         command: () => {
-          this.router.navigate(['/access'])
+          this.router.navigate(['/drivers'])
         }
       });
+    }
+    if (this.user?.permissions?.includes('MANAGE_VEHICLES')) {
+      management.items.push({
+          value: 3,
+          label: 'Vehicles',
+          icon: 'pi pi-car',
+          command: () => {
+            this.router.navigate(['/vehicles'])
+          }
+        }
+      )
+    }
+
+    if (this.user?.permissions?.includes('MANAGE_ROUTES')) {
+      management.items.push({
+          value: 4,
+          label: 'Routes',
+          icon: 'pi pi-gauge',
+          command: () => {
+            this.router.navigate(['/routes'])
+          }
+        }
+      );
+    }
+
+    if (this.user?.permissions?.includes('MANAGE_SCHEDULES')) {
+      management.items.push({
+        value: 7,
+        label: 'Schedules',
+        icon: 'pi pi-calendar',
+        command: () => {
+          this.router.navigate(['/schedules'])
+        }
+      })
+    }
+
+    if (this.user?.permissions?.includes('MANAGE_FARES')) {
+      management.items.push({
+          value: 5,
+          label: 'Fares and Charges',
+          icon: 'pi pi-megaphone',
+          command: () => {
+            this.router.navigate(['/dashboard'])
+          }
+        }
+      )
     }
 
     if (this.user?.permissions?.includes('MANAGE_TICKETS')) {
@@ -382,17 +365,6 @@ export class App extends BaseComponent implements OnInit {
           this.router.navigate(['/trips'])
         }
       });
-    }
-
-    if (this.user?.permissions?.includes('MANAGE_LICENSES')) {
-      management.items.push({
-        value: 6,
-        label: 'Licenses',
-        icon: 'pi pi-check-circle',
-        command: () => {
-          this.router.navigate(['/manage-subscriptions'])
-        }
-      })
     }
     return management;
   }

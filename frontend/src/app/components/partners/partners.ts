@@ -2,24 +2,25 @@ import {Component, HostListener, OnInit} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {CommonModule, NgOptimizedImage} from '@angular/common';
 import {Router} from '@angular/router';
-import {AuthService} from '../services/auth.service';
-import {NotificationService} from '../services/notification.service';
-import {LoaderService} from '../services/loader.service';
+import {AuthService} from '../../services/auth.service';
+import {NotificationService} from '../../services/notification.service';
+import {LoaderService} from '../../services/loader.service';
 import {TableModule} from 'primeng/table';
 import {Dialog, DialogModule} from 'primeng/dialog';
 import {Button} from 'primeng/button';
 import {InputText} from 'primeng/inputtext';
-import {RemoteService} from '../services/remoteService';
+import {RemoteService} from '../../services/remoteService';
 import {AccordionModule} from 'primeng/accordion';
 import {FloatLabelModule} from 'primeng/floatlabel';
 import {DatePickerModule} from 'primeng/datepicker';
 import {AutoComplete} from 'primeng/autocomplete';
 import {FileUpload} from 'primeng/fileupload';
-import {BaseComponent} from '../services/base-component';
+import {BaseComponent} from '../../services/base-component';
 import {DialogService} from 'primeng/dynamicdialog';
 import {ConfirmationService, MessageService} from 'primeng/api';
 import {ApiResponse} from '../models/user.models';
 import {Tooltip} from 'primeng/tooltip';
+import {Panel} from 'primeng/panel';
 
 interface Partner {
   // "partner_name", "account_number", "contact_person", "contact_phone", "account_id", "business_reference", "active", "package"
@@ -52,12 +53,13 @@ interface Partner {
     AutoComplete,
     Button,
     FileUpload,
-    Tooltip
+    Tooltip,
+    Panel
   ],
-  templateUrl: './register.html',
-  styleUrls: ['./register.css']
+  templateUrl: './partners.html',
+  styleUrls: ['./partners.css']
 })
-export class RegisterComponent extends BaseComponent implements OnInit {
+export class Partners extends BaseComponent implements OnInit {
   constructor(
     helper: RemoteService,
     loaderService: LoaderService,
@@ -69,7 +71,7 @@ export class RegisterComponent extends BaseComponent implements OnInit {
     protected router: Router,
     protected notificationService: NotificationService
   ) {
-    super(authService,helper, loaderService, dialogService, confirmationService, messageService);
+    super(authService, helper, loaderService, dialogService, confirmationService, messageService);
     this.filteredPackages = [...this.packages];
   }
 
@@ -114,7 +116,7 @@ export class RegisterComponent extends BaseComponent implements OnInit {
   filteredPackages: any[];
 
   override ngOnInit(): void {
-    // this.loadPartnersFromServer();
+    super.ngOnInit();
   }
 
 
@@ -134,7 +136,7 @@ export class RegisterComponent extends BaseComponent implements OnInit {
     this.loaderService.display(true);
 
     this.remoteService
-      .sendGetToServer(`${this.authService.apiUrl}/partners/list/${this.search.pageNumber}/${this.search.pageSize}`)
+      .sendGetToServer(`${this.authService.apiUrl}/partners/list`, this.search)
       .subscribe({
         next: (response) => {
           this.partners = response?.returnObject?.rows || [];
@@ -143,6 +145,7 @@ export class RegisterComponent extends BaseComponent implements OnInit {
           this.filteredPartners = [...this.partners];
         },
         error: (error) => {
+          this.isLoading = false;
           console.error(error);
           this.showError(error.message || 'Failed to load partners');
         },
@@ -225,7 +228,74 @@ export class RegisterComponent extends BaseComponent implements OnInit {
     if ($event) {
       this.search.pageNumber = $event.first;
       this.search.pageSize = $event.rows;
-      this.loadPartnersFromServer();
+      this.search.sortField = $event.sortField;
+      this.search.sortOrder = $event.sortOrder;
     }
+    this.loadPartnersFromServer();
+  }
+
+  protected viewPartner(partner: any) {
+    this.router.navigate(['/partner-form', partner.partnerCode]);
+  }
+
+  protected archivePartner(partner: any) {
+    let confirmationRequest = {
+      message: "Are you sure you want to archive  partner " + partner.partnerName + "?",
+      header: "Archive Partner",
+      icon: "pi pi-exclamation-triangle",
+      onConfirm: () => {
+        this.sendGetOrPostRequestToServer(
+          "partners/archive-partner",
+          {data: partner},
+          true,
+          (response: ApiResponse<any>) => {
+            if (response?.returnCode != 200) {
+              this.showError(response?.returnMessage);
+              return;
+            }
+            this.showSuccess(response?.returnMessage);
+            this.loadPartnersFromServer();
+          }
+        )
+      }
+    };
+    this.confirmDialog(confirmationRequest)
+  }
+
+  protected restorePartner(partner: any) {
+    let confirmationRequest = {
+      message: "Are you sure you want to restore  partner " + partner.partnerName + "?",
+      header: "Restore Partner",
+      icon: "pi pi-exclamation-triangle",
+      onConfirm: () => {
+        this.sendGetOrPostRequestToServer(
+          "partners/update-partner-status",
+          {data: {...partner, active: true}},
+          true,
+          (response: ApiResponse<any>) => {
+            if (response?.returnCode != 200) {
+              this.showError(response?.returnMessage);
+              return;
+            }
+            this.showSuccess(response?.returnMessage);
+            this.loadPartnersFromServer();
+          }
+        )
+      }
+    };
+    this.confirmDialog(confirmationRequest);
+  }
+
+  protected buildSearchQuery(field: string, $event: any) {
+    let searchObj = this.search?.search;
+    let value = $event.target.value;
+
+    if (searchObj) {
+      searchObj = JSON.stringify({...searchObj, [field]: value});
+      this.search = {...this.search, search: JSON.stringify(searchObj)};
+      return;
+    }
+    searchObj = {[field]: $event?.target?.value};
+    this.search = {...this.search, search: JSON.stringify(searchObj)};
   }
 }
